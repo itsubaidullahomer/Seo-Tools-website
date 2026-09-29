@@ -3,6 +3,7 @@ import { absoluteUrl } from "@/config/site";
 import { categories } from "@/lib/tools/categories";
 import { getAllTools, getToolsByCategory, toolPath } from "@/lib/tools/registry";
 import { getAllPosts } from "@/lib/blog";
+import { MIN_TOOLS_FOR_INDEXED_CATEGORY } from "@/lib/seo/metadata";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const tools = getAllTools();
@@ -22,7 +23,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl("/disclaimer"), lastModified: new Date("2026-09-29"), changeFrequency: "yearly", priority: 0.2 },
   ];
 
-  const categoryPages: MetadataRoute.Sitemap = categories.map((c) => ({
+  const categoryPages: MetadataRoute.Sitemap = categories
+    .filter((c) => getToolsByCategory(c.slug).length >= MIN_TOOLS_FOR_INDEXED_CATEGORY)
+    .map((c) => ({
     url: absoluteUrl(`/category/${c.slug}`),
     lastModified: latest(getToolsByCategory(c.slug).map((t) => t.dateModified)),
     changeFrequency: "weekly",

@@ -68,10 +68,14 @@ export function buildToolMetadata(tool: ToolMeta): Metadata {
   });
 }
 
+/** Category hubs with fewer tools than this are noindexed (thin page) until they fill up. */
+export const MIN_TOOLS_FOR_INDEXED_CATEGORY = 3;
+
 export function buildCategoryMetadata(category: Category, count: number): Metadata {
   return buildPageMetadata({
-    title: `${category.name} – ${count} Free Online Tools`,
+    title: count >= MIN_TOOLS_FOR_INDEXED_CATEGORY ? `${category.name} – ${count} Free Online Tools` : category.name,
     description: category.description,
     path: `/category/${category.slug}`,
+    noindex: count < MIN_TOOLS_FOR_INDEXED_CATEGORY,
   });
 }

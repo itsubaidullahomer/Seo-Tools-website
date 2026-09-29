@@ -68,10 +68,10 @@ export const categories = [
   },
   {
     slug: "converters",
-    name: "Unit & Value Converters",
+    name: "Number & Format Converters",
     shortName: "Converters",
     description:
-      "Free converters for CSS units, colors, numbers and measurements: px to rem, hex to RGB, binary to decimal, temperature, length, weight and more.",
+      "Free converters that show the formula: CSS units like px to rem, military time, Roman numerals, numbers to words, Morse code and more. Instant and private.",
     intro:
       "Quick, accurate conversions with the formula shown, so you learn the relationship instead of just getting a number.",
     icon: "arrow-left-right",
@@ -90,12 +90,12 @@ export const categories = [
   },
   {
     slug: "social-media",
-    name: "Social Media Tools",
-    shortName: "Social",
+    name: "Creator & Community Tools",
+    shortName: "Creators",
     description:
-      "Free tools for creators: caption and character counters, hashtag helpers, text formatters and calculators for Instagram, YouTube, X, LinkedIn and TikTok.",
+      "Free tools for creators and community managers: YouTube earnings estimates, Discord timestamps and text formatting, and more. Independent, not affiliated with any platform.",
     intro:
-      "Write posts that fit, format text that stands out and check your numbers before you publish. Built for creators, marketers and community managers.",
+      "Estimate, format and plan before you publish. Independent tools for creators and community managers – not affiliated with any of the platforms mentioned.",
     icon: "share-2",
     color: "orange",
   },
@@ -112,12 +112,12 @@ export const categories = [
   },
   {
     slug: "utilities",
-    name: "Security & Utility Tools",
+    name: "Utilities & Device Tests",
     shortName: "Utilities",
     description:
-      "Free utility tools: strong password generator, QR code generator, random pickers, timers and other handy everyday helpers that run in your browser.",
+      "Free browser utilities: strong password generator, keyboard tester, click speed test and other device checks. Nothing to install, nothing uploaded.",
     intro:
-      "Small, reliable utilities for everyday tasks. Nothing is stored or sent to a server – generate, copy, done.",
+      "Test your keyboard, mouse and screen, measure your click speed and generate strong passwords – all in the browser, with nothing stored or sent to a server.",
     icon: "shield-check",
     color: "slate",
   },
