@@ -32,6 +32,16 @@ We look at three things: what people search for, where existing tools fall short
 
 Accuracy matters to us. If you find an error in a tool or a guide, or you have an idea for a new tool, please [get in touch](/contact). We fix confirmed bugs quickly and credit helpful reports where appropriate.
 
+## Open-source credits
+
+{{siteName}} is built on open-source software and data. We are grateful to the people who maintain it:
+
+- [Next.js](https://nextjs.org) and [React](https://react.dev) (MIT License) – the framework the site runs on.
+- [Tailwind CSS](https://tailwindcss.com) (MIT License) – styling.
+- [Lucide](https://lucide.dev) icons (ISC License).
+- [Geist](https://vercel.com/font) typeface by Vercel (SIL Open Font License 1.1).
+- Character advance-width measurements derived from the [Liberation Sans](https://github.com/liberationfonts/liberation-fonts) font (SIL Open Font License 1.1), used by the title/meta description length checker and the SERP snippet preview to estimate pixel widths. Only numeric width data is included; no font files are distributed.
+
 ## Legal
 
 Please see our [Privacy Policy](/privacy-policy), [Terms of Service](/terms) and [Disclaimer](/disclaimer) for the details of how the site operates.
