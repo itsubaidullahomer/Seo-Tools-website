@@ -1,17 +1,22 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useDeferredValue, useMemo, useRef } from "react";
 import { usePersistentState } from "@/hooks/usePersistentState";
-import { Textarea } from "@/components/ui/Textarea";
-import { Button } from "@/components/ui/Button";
-import { CopyButton } from "@/components/ui/CopyButton";
-import { Select } from "@/components/ui/Select";
-import { Input } from "@/components/ui/Input";
-import { Toggle } from "@/components/ui/Toggle";
-import { Stat, StatGrid } from "@/components/ui/Stat";
-import { Alert } from "@/components/ui/Alert";
-import { ResultBox } from "@/components/ui/ResultBox";
-import { ToolPanel, ToolActions, ToolSection } from "@/components/ui/ToolPanel";
+import {
+  Alert,
+  Button,
+  CopyButton,
+  Input,
+  ResultBox,
+  Select,
+  Stat,
+  StatGrid,
+  Textarea,
+  Toggle,
+  ToolActions,
+  ToolPanel,
+  ToolSection,
+} from "@/components/ui";
 import { cn, formatBytes, formatNumber } from "@/lib/utils";
 import {
   analyzeText,
@@ -55,7 +60,9 @@ export default function CharacterCounter() {
   const [countUnits, setCountUnits] = usePersistentState("character-counter:count-units", false, { storage: "local" });
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const stats = useMemo(() => analyzeText(text), [text]);
+  // Counting runs on a deferred copy so typing stays smooth in very long documents.
+  const counted = useDeferredValue(text);
+  const stats = useMemo(() => analyzeText(counted), [counted]);
 
   const preset = getPreset(presetId);
   const isCustom = preset.id === CUSTOM_PRESET_ID;
@@ -66,9 +73,9 @@ export default function CharacterCounter() {
   const baseLimit = isCustom ? customNumber : preset.limit;
 
   // Derived values are cheap for normal text; the React Compiler memoizes them automatically.
-  const sms = rule === "sms" ? smsInfo(text) : null;
-  const xInfo = rule === "x" ? xWeightedLength(text) : null;
-  const used = xInfo ? xInfo.weighted : sms ? sms.units : measure(text, rule, stats);
+  const sms = rule === "sms" ? smsInfo(counted) : null;
+  const xInfo = rule === "x" ? xWeightedLength(counted) : null;
+  const used = xInfo ? xInfo.weighted : sms ? sms.units : measure(counted, rule, stats);
 
   // SMS capacity depends on the encoding the text forces (160 for GSM-7, 70 for UCS-2).
   const limit = sms ? sms.single : baseLimit;
@@ -77,7 +84,7 @@ export default function CharacterCounter() {
   const near = hasLimit && !over && used >= limit * 0.9;
   const pct = hasLimit ? Math.min(100, (used / limit) * 100) : 0;
 
-  const fitted = over ? trimToLimit(text, rule, limit) : "";
+  const fitted = over ? trimToLimit(counted, rule, limit) : "";
 
   const unitsDiffer = stats.graphemes !== stats.codeUnits;
   const avgWordLength = stats.words ? stats.graphemesNoSpaces / stats.words : 0;
@@ -182,8 +189,10 @@ export default function CharacterCounter() {
       {stats.exact && unitsDiffer && (
         <Alert variant="info" title={`${formatNumber(stats.graphemes)} characters, but ${formatNumber(stats.codeUnits)} UTF-16 code units`}>
           Emoji, flags and some accented letters take more than one code unit. Apps that measure fields by code units, and X, which counts
-          every emoji as 2, will report a higher number than the visible character count. Turn on “Count emoji as 2” below to check a limit
-          that way.
+          every emoji as 2, will report a higher number than the visible character count.{" "}
+          {preset.rule === "x" || preset.rule === "sms"
+            ? `The ${shortLabel(preset.label)} preset below already applies that platform's rule.`
+            : "Turn on “Count emoji as 2” below to check a limit that way."}
         </Alert>
       )}
 
@@ -252,7 +261,7 @@ export default function CharacterCounter() {
                   {xInfo.urls} link{xInfo.urls === 1 ? "" : "s"} counted as {X_URL_WEIGHT} characters each, the length of an X t.co URL.
                 </p>
               )}
-              {sms && text && (
+              {sms && counted && (
                 <p>
                   {sms.encoding === "GSM-7"
                     ? `GSM-7 encoding: ${sms.single} characters fit in one message, ${sms.perSegment} per part when split.`

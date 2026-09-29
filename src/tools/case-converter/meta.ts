@@ -36,7 +36,7 @@ export const meta: ToolMeta = {
     {
       question: "Which words stay lowercase in title case?",
       answer:
-        "It depends on the style guide, which is why this converter lets you choose one. AP and APA lowercase articles, conjunctions and prepositions of three letters or fewer (a, an, the, and, but, or, for, at, by, in, of, on, to) and capitalize every word of four or more letters. Chicago and MLA lowercase all prepositions regardless of length, so “through” and “between” stay lowercase. Every style capitalizes the first word, and verbs such as “Is” and “Be” are always capitalized even though they are short.",
+        "It depends on the style guide. AP and APA lowercase articles, conjunctions and prepositions of three letters or fewer (a, an, the, and, but, or, for, at, by, in, of, on, to) and capitalize every word of four or more letters. MLA lowercases all prepositions regardless of length, so “through” stays lowercase; Chicago’s 18th edition lowercases prepositions of up to four letters, such as “with” and “from”. Every style capitalizes the first word, and verbs such as “Is” and “Be” are always capitalized even though they are short.",
     },
     {
       question: "How do I change uppercase to lowercase in Word or Google Docs?",

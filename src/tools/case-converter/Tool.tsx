@@ -52,6 +52,8 @@ const ARTICLES = ["a", "an", "the"];
 const COORD_SHORT = ["and", "but", "or", "nor", "for", "yet", "so"];
 const PREPS_SHORT = ["as", "at", "by", "in", "of", "on", "to", "per", "via", "vs", "v"];
 // "up", "down", "off", "out" and "over" are deliberately absent: in titles they are usually adverbs (Sold Out, Growing Up).
+/** Prepositions of four letters or fewer that Chicago 18 (2024) still lowercases. */
+const PREPS_FOUR = ["amid", "from", "into", "like", "near", "onto", "past", "than", "till", "unto", "upon", "with"];
 const PREPS_LONG = [
   "about", "above", "across", "after", "against", "along", "amid", "among", "around", "before", "behind", "below", "beneath",
   "beside", "between", "beyond", "despite", "during", "except", "from", "inside", "into", "like", "near", "onto", "outside",
@@ -64,23 +66,27 @@ const SMALL_WORDS: Record<TitleStyle, Set<string>> = {
   ap: new Set([...ARTICLES, ...COORD_SHORT, "if", ...PREPS_SHORT]),
   // APA 7: minor words of three letters or fewer – the same threshold as AP.
   apa: new Set([...ARTICLES, ...COORD_SHORT, "if", ...PREPS_SHORT]),
-  // Chicago 17: articles, coordinating conjunctions (and, but, for, or, nor), "as", "to" and prepositions of any length.
-  chicago: new Set([...ARTICLES, "and", "but", "for", "or", "nor", ...PREPS_SHORT, ...PREPS_LONG]),
+  // Chicago 18 (8.159): articles, coordinating conjunctions (and, but, for, or, nor), "as", "to" and prepositions of up to four letters.
+  chicago: new Set([...ARTICLES, "and", "but", "for", "or", "nor", ...PREPS_SHORT, ...PREPS_FOUR]),
   // MLA 9: articles, coordinating conjunctions (incl. so, yet), "to" and prepositions of any length.
   mla: new Set([...ARTICLES, ...COORD_SHORT, ...PREPS_SHORT, ...PREPS_LONG]),
   all: new Set(),
 };
 
+// Prose follows the reader's locale (Turkish dotted İ, etc.); identifiers must not depend on it.
 const upper = (s: string) => s.toLocaleUpperCase();
 const lower = (s: string) => s.toLocaleLowerCase();
+const codeUpper = (s: string) => s.toUpperCase();
+const codeLower = (s: string) => s.toLowerCase();
 
 /** Upper-case the first code point, lower-case the rest. */
-function capitalizeFirst(word: string): string {
+function capitalizeFirst(word: string, up = upper, down = lower): string {
   const cp = word.codePointAt(0);
   if (cp === undefined) return word;
   const first = String.fromCodePoint(cp);
-  return upper(first) + lower(word.slice(first.length));
+  return up(first) + down(word.slice(first.length));
 }
+const codeCapitalize = (w: string) => capitalizeFirst(w, codeUpper, codeLower);
 
 /** True when a line is written entirely in capitals (at least two letters). */
 function isShouting(line: string): boolean {
@@ -205,17 +211,17 @@ export function splitIdentifierWords(line: string): string[] {
 function joinIdentifier(words: string[], mode: ModeId): string {
   switch (mode) {
     case "camel":
-      return words.map((w, i) => (i === 0 ? lower(w) : capitalizeFirst(w))).join("");
+      return words.map((w, i) => (i === 0 ? codeLower(w) : codeCapitalize(w))).join("");
     case "pascal":
-      return words.map(capitalizeFirst).join("");
+      return words.map(codeCapitalize).join("");
     case "snake":
-      return words.map(lower).join("_");
+      return words.map(codeLower).join("_");
     case "kebab":
-      return words.map(lower).join("-");
+      return words.map(codeLower).join("-");
     case "constant":
-      return words.map(upper).join("_");
+      return words.map(codeUpper).join("_");
     case "dot":
-      return words.map(lower).join(".");
+      return words.map(codeLower).join(".");
     default:
       return words.join(" ");
   }
@@ -295,7 +301,7 @@ const CODE_MODES: ModeDef[] = [
 const TITLE_STYLE_OPTIONS: { value: TitleStyle; label: string }[] = [
   { value: "ap", label: "AP Stylebook (news, web)" },
   { value: "apa", label: "APA 7 (academic)" },
-  { value: "chicago", label: "Chicago 17 (books)" },
+  { value: "chicago", label: "Chicago 18 (books)" },
   { value: "mla", label: "MLA 9 (humanities)" },
   { value: "all", label: "Capitalize every word" },
 ];

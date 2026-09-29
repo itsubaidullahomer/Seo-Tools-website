@@ -24,7 +24,7 @@ export const meta: ToolMeta = {
   featured: true,
   datePublished: "2026-09-29",
   dateModified: "2026-09-29",
-  related: ["character-counter", "case-converter", "remove-line-breaks", "reading-time-calculator"],
+  related: ["character-counter", "case-converter", "remove-line-breaks"],
   faq: [
     {
       question: "How does the word counter count words?",

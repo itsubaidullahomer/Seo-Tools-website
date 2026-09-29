@@ -56,7 +56,7 @@ export const meta: ToolMeta = {
     {
       question: "Why is my character count different from Microsoft Word?",
       answer:
-        "Two reasons. Word does not count paragraph marks, so every line break you press Enter for adds one character here and none in Word. Word also measures text in UTF-16 code units, so an emoji or rare symbol adds 2 to its total, while this tool counts visible characters and shows the code-unit figure separately. For plain text with no emoji and a single paragraph, the numbers match exactly.",
+        "Two reasons. Word does not count paragraph marks, so every line break you press Enter for adds one character here and none in Word. Word stores text in UTF-16, and depending on the version an emoji or rare symbol can add 2 to its total, while this tool counts visible characters and shows the code-unit figure separately. For plain text with no emoji and a single paragraph, the numbers match exactly.",
     },
     {
       question: "How many characters is 500 words?",

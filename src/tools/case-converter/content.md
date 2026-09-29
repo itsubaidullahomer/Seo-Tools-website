@@ -26,28 +26,30 @@ Everything runs in your browser. Nothing is uploaded, line breaks and blank line
 
 Style guides agree on the big things – capitalize the first word, nouns, verbs, adjectives, adverbs and pronouns – and disagree on the small ones. In every style the converter also capitalizes the first word after a colon, dash, question mark or period, so subtitles start correctly.
 
-| Word type | AP Stylebook | APA 7 | Chicago 17 | MLA 9 |
+| Word type | AP Stylebook | APA 7 | Chicago 18 | MLA 9 |
 | --- | --- | --- | --- | --- |
 | Articles (a, an, the) | lowercase | lowercase | lowercase | lowercase |
 | Coordinating conjunctions | lowercase when under 4 letters (and, but, or, nor, for, yet, so) | lowercase when 3 letters or fewer | lowercase and, but, for, or, nor; capitalize Yet, So | lowercase and, but, for, nor, or, so, yet |
 | Short prepositions (at, by, in, of, on, to, per, via) | lowercase | lowercase | lowercase | lowercase |
-| Long prepositions (through, between, without) | Capitalize (4+ letters) | Capitalize (4+ letters) | lowercase | lowercase |
+| Four-letter prepositions (with, from, into, upon) | Capitalize | Capitalize | lowercase | lowercase |
+| Longer prepositions (about, through, between) | Capitalize | Capitalize | Capitalize (5+ letters) | lowercase |
 | "as" and "if" | lowercase | lowercase | "as" lowercase, "If" capitalized | "as" lowercase, "If" capitalized |
 | Short verbs and pronouns (Is, Be, Are, It) | Capitalize | Capitalize | Capitalize | Capitalize |
 | First and last word | Capitalize | Capitalize | Capitalize | Capitalize |
 | Hyphenated compounds | Self-Esteem | Self-Esteem | Self-Esteem | Self-Esteem |
 
-AP and APA share the same short-word threshold, so they produce identical results here. A worked example shows the Chicago difference. Input: `a beginner's guide to working with the API through node.js`
+AP and APA share the same short-word threshold, so they produce identical results here. Chicago's 18th edition (2024) changed its rule: prepositions of five or more letters are now capitalized, where the 17th edition lowercased every preposition. Input: `a beginner's guide to working with the API through node.js`
 
 - AP or APA: **A Beginner's Guide to Working With the API Through Node.js**
-- Chicago or MLA: **A Beginner's Guide to Working with the API through Node.js**
+- Chicago 18: **A Beginner's Guide to Working with the API Through Node.js**
+- MLA: **A Beginner's Guide to Working with the API through Node.js**
 - Capitalize every word: **A Beginner's Guide To Working With The API Through Node.js**
 
 "API" survives because it is written in capitals, "Node.js" is treated as one word, and "a" is capitalized only because it comes first.
 
 ## Case conventions in code
 
-Languages rarely enforce naming rules, but their communities and linters do. Use the code cases to rename a list of fields when moving data between systems – for example turning `first_name` from a PostgreSQL column into `firstName` for a JavaScript API response.
+Use the code cases to rename a list of fields when moving data between systems – for example turning `first_name` from a PostgreSQL column into `firstName` for a JavaScript API response.
 
 | Context | Variables and functions | Classes and types | Constants | Notes |
 | --- | --- | --- | --- | --- |
@@ -79,7 +81,7 @@ The code converter splits text into words at spaces, hyphens, underscores, dots 
 
 ## Changing case in Word, Google Docs and Excel
 
-- **Microsoft Word:** select the text and press Shift+F3 to cycle between lowercase, UPPERCASE and Capitalize Each Word (Sentence case joins the cycle when the selection ends with a period). Home → Change Case (the Aa button) lists all five options including tOGGLE cASE. On a Mac laptop you may need fn+Shift+F3.
+- **Microsoft Word:** select the text and press Shift+F3 to cycle between lowercase, UPPERCASE and Capitalize Each Word. Home → Change Case (the Aa button) lists all five options including tOGGLE cASE. On a Mac laptop you may need fn+Shift+F3.
 - **Google Docs:** Format → Text → Capitalization offers lowercase, UPPERCASE and Title Case. There is no sentence case option and no default shortcut, and Title Case capitalizes every word.
 - **Excel and Google Sheets:** use =UPPER(A1), =LOWER(A1) and =PROPER(A1). There is no sentence case function; the usual workaround is =UPPER(LEFT(A1,1))&LOWER(MID(A1,2,LEN(A1))).
 - **VS Code:** the Command Palette has Transform to Uppercase, Lowercase, Title Case, Snake Case, Camel Case and Kebab Case, none with a default shortcut.

@@ -36,13 +36,14 @@ export const PRESETS: Preset[] = [
   { id: "x-bio", label: "X (Twitter) bio – 160", limit: 160, rule: "graphemes", group: "Social media" },
   { id: "instagram-caption", label: "Instagram caption – 2,200", limit: 2200, rule: "graphemes", group: "Social media", note: "Includes hashtags and spaces. The feed shows about 125 characters before “more”." },
   { id: "instagram-bio", label: "Instagram bio – 150", limit: 150, rule: "graphemes", group: "Social media" },
-  { id: "threads-post", label: "Threads post – 500", limit: 500, rule: "graphemes", group: "Social media" },
+  { id: "threads-post", label: "Threads post – 500", limit: 500, rule: "graphemes", group: "Social media", note: "Longer text can go in a text attachment of up to 10,000 characters." },
   { id: "bluesky-post", label: "Bluesky post – 300", limit: 300, rule: "graphemes", group: "Social media", note: "Bluesky counts grapheme clusters, so every emoji is 1." },
   { id: "facebook-post", label: "Facebook post – 63,206", limit: 63206, rule: "graphemes", group: "Social media", note: "The feed collapses posts after roughly 480 characters." },
   { id: "linkedin-post", label: "LinkedIn post – 3,000", limit: 3000, rule: "graphemes", group: "Social media", note: "The feed truncates after about 210 characters with “…more”." },
   { id: "linkedin-headline", label: "LinkedIn headline – 220", limit: 220, rule: "graphemes", group: "Social media" },
   { id: "linkedin-about", label: "LinkedIn About section – 2,600", limit: 2600, rule: "graphemes", group: "Social media" },
-  { id: "tiktok-caption", label: "TikTok caption – 4,000", limit: 4000, rule: "graphemes", group: "Social media" },
+  { id: "tiktok-caption", label: "TikTok caption (app) – 4,000", limit: 4000, rule: "graphemes", group: "Social media", note: "Captions typed in the TikTok app. Scheduling tools post through TikTok's API, which stops at 2,200." },
+  { id: "tiktok-caption-api", label: "TikTok caption (scheduler) – 2,200", limit: 2200, rule: "graphemes", group: "Social media", note: "The limit of TikTok's Content Posting API, which scheduling tools use to publish." },
   { id: "tiktok-bio", label: "TikTok bio – 80", limit: 80, rule: "graphemes", group: "Social media" },
   { id: "youtube-title", label: "YouTube title – 100", limit: 100, rule: "graphemes", group: "Social media", note: "Search results and suggestions cut titles at about 60–70 characters." },
   { id: "youtube-description", label: "YouTube description – 5,000", limit: 5000, rule: "graphemes", group: "Social media" },
@@ -383,59 +384,63 @@ function tokenWeight(g: string, rule: LimitRule, smsEncoding: "GSM-7" | "UCS-2")
   }
 }
 
+interface Token {
+  text: string;
+  weight: number;
+}
+
+/** Lazily yield the tokens a limit is measured in: one per grapheme, and for X one per URL. */
+function* limitTokens(text: string, rule: LimitRule): Generator<Token> {
+  const smsEncoding = rule === "sms" ? smsInfo(text).encoding : "GSM-7";
+  const plain = function* (s: string): Generator<Token> {
+    for (const g of graphemesOf(s)) yield { text: g, weight: tokenWeight(g, rule, smsEncoding) };
+  };
+  if (rule !== "x") {
+    yield* plain(text);
+    return;
+  }
+  let last = 0;
+  for (const m of text.matchAll(URL_RE)) {
+    const idx = m.index ?? 0;
+    yield* plain(text.slice(last, idx));
+    yield { text: m[0], weight: X_URL_WEIGHT };
+    last = idx + m[0].length;
+  }
+  yield* plain(text.slice(last));
+}
+
 /**
  * Return the longest prefix of `text` that fits within `limit` under `rule`,
  * preferring to cut at a word boundary unless that would throw away a large
  * part of the budget (a single very long token such as a URL). Trailing
- * whitespace is removed.
+ * whitespace is removed. Tokens are read lazily and the scan stops as soon as
+ * the budget is spent, so it stays fast on very long input.
  */
 export function trimToLimit(text: string, rule: LimitRule, limit: number): string {
   if (limit <= 0 || !text) return "";
-  const smsEncoding = rule === "sms" ? smsInfo(text).encoding : "GSM-7";
-
-  // Tokens: for X a URL is a single 23-weight token; otherwise one grapheme each.
-  const tokens: { text: string; weight: number }[] = [];
-  const pushPlain = (s: string) => {
-    for (const g of graphemesOf(s)) tokens.push({ text: g, weight: tokenWeight(g, rule, smsEncoding) });
-  };
-  if (rule === "x") {
-    let last = 0;
-    for (const m of text.matchAll(URL_RE)) {
-      const idx = m.index ?? 0;
-      pushPlain(text.slice(last, idx));
-      tokens.push({ text: m[0], weight: X_URL_WEIGHT });
-      last = idx + m[0].length;
-      if (tokens.length > limit * 2) break;
-    }
-    if (tokens.length <= limit * 2) pushPlain(text.slice(last));
-  } else {
-    // Only the beginning of the text can possibly fit.
-    pushPlain(text.slice(0, Math.min(text.length, limit * 4 + 16)));
-  }
-
   let used = 0;
-  let cut = 0;
-  let lastBoundary = -1;
+  let pos = 0; // code-unit offset just after the last token that fits
+  let boundaryPos = -1; // offset of the last whitespace seen
   let usedAtBoundary = 0;
-  for (let i = 0; i < tokens.length; i++) {
-    const t = tokens[i];
-    if (/^\s+$/.test(t.text)) {
-      lastBoundary = i;
+  let overflowed = false;
+  let nextIsBoundary = false;
+  for (const token of limitTokens(text, rule)) {
+    const isSpace = /^\s+$/.test(token.text);
+    if (isSpace && pos > 0) {
+      boundaryPos = pos;
       usedAtBoundary = used;
     }
-    if (used + t.weight > limit) break;
-    used += t.weight;
-    cut = i + 1;
+    if (used + token.weight > limit) {
+      overflowed = true;
+      nextIsBoundary = isSpace;
+      break;
+    }
+    used += token.weight;
+    pos += token.text.length;
   }
-  if (cut >= tokens.length) return text.trimEnd();
+  if (!overflowed) return text.trimEnd();
 
-  const nextIsBoundary = /^\s+$/.test(tokens[cut].text);
   const lostByBackingOff = limit - usedAtBoundary;
-  if (!nextIsBoundary && lastBoundary > 0 && lostByBackingOff <= Math.max(25, limit * 0.4)) cut = lastBoundary;
-
-  return tokens
-    .slice(0, cut)
-    .map((t) => t.text)
-    .join("")
-    .trimEnd();
+  const cut = !nextIsBoundary && boundaryPos > 0 && lostByBackingOff <= Math.max(25, limit * 0.4) ? boundaryPos : pos;
+  return text.slice(0, cut).trimEnd();
 }
