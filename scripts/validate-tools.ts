@@ -103,7 +103,8 @@ async function main() {
   // cross-tool checks
   for (const [slug, meta] of metas) {
     for (const r of (meta.related as string[] | undefined) ?? []) {
-      if (!metas.has(r)) err(slug, `related slug "${r}" does not exist`);
+      // Warning, not error: tools ship incrementally and the page skips missing related slugs.
+      if (!metas.has(r)) warn(slug, `related slug "${r}" does not exist (link skipped until it ships)`);
       if (r === slug) warn(slug, "related includes itself");
     }
   }
