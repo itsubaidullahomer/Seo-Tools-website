@@ -20,7 +20,7 @@ Everything runs in your browser. Nothing is uploaded, line breaks and blank line
 
 **Title case** capitalizes the principal words. It remains standard for book, film and song titles, for headlines in US newspapers such as The New York Times, and for headings in APA papers and Chicago-style manuscripts.
 
-**UPPER CASE** suits acronyms, short warning labels and defined terms in contracts; long passages in capitals read slowly because every word has the same rectangular outline. **lower case** is required for email addresses, most URLs and hashtags. **Capitalized Case** is what Word calls "Capitalize Each Word": handy for name lists, but not correct title case because it also capitalizes "of" and "the".
+**UPPER CASE** suits acronyms, short warning labels and defined terms in contracts; long passages in capitals are slower to read than mixed case and come across as shouting. **lower case** is the safe choice for URL slugs, file names and email addresses: the domain part of an address ignores case, but many web servers treat `/About` and `/about` as different pages. **Capitalized Case** is what Word calls "Capitalize Each Word": handy for name lists, but not correct title case because it also capitalizes "of" and "the".
 
 ## Title case rules by style guide
 
@@ -34,11 +34,12 @@ Style guides agree on the big things – capitalize the first word, nouns, verbs
 | Four-letter prepositions (with, from, into, upon) | Capitalize | Capitalize | lowercase | lowercase |
 | Longer prepositions (about, through, between) | Capitalize | Capitalize | Capitalize (5+ letters) | lowercase |
 | "as" and "if" | lowercase | lowercase | "as" lowercase, "If" capitalized | "as" lowercase, "If" capitalized |
+| "up" and "off" | Capitalize | lowercase | Capitalize | Capitalize |
 | Short verbs and pronouns (Is, Be, Are, It) | Capitalize | Capitalize | Capitalize | Capitalize |
 | First and last word | Capitalize | Capitalize | Capitalize | Capitalize |
 | Hyphenated compounds | Self-Esteem | Self-Esteem | Self-Esteem | Self-Esteem |
 
-AP and APA share the same short-word threshold, so they produce identical results here. Chicago's 18th edition (2024) changed its rule: prepositions of five or more letters are now capitalized, where the 17th edition lowercased every preposition. Input: `a beginner's guide to working with the API through node.js`
+AP and APA share the same three-letter threshold. The one difference in this converter is that APA's own list of short prepositions includes "up" and "off", so APA gives "Turn off the Lights" where AP gives "Turn Off the Lights". Chicago's 18th edition (2024) changed its rule: prepositions of five or more letters are now capitalized, where the 17th edition lowercased every preposition. Input: `a beginner's guide to working with the API through node.js`
 
 - AP or APA: **A Beginner's Guide to Working With the API Through Node.js**
 - Chicago 18: **A Beginner's Guide to Working with the API Through Node.js**
@@ -65,19 +66,23 @@ Use the code cases to rename a list of fields when moving data between systems �
 | Shell and environment variables | UPPER_SNAKE_CASE | – | – | DATABASE_URL, NODE_ENV |
 | Configuration and i18n keys | dot.case | – | – | spring.datasource.url, nav.home.title |
 
-The code converter splits text into words at spaces, hyphens, underscores, dots and other punctuation, and at the "humps" of existing camelCase, so `getHTTPResponse code` becomes get, HTTP, Response and code. Acronyms are then normalized like any other word: `getHttpResponseCode`, `get_http_response_code`, `GET_HTTP_RESPONSE_CODE`. Apostrophes are dropped (`don't stop` becomes `dontStop`), digits stay attached to the preceding word (`html5 parser` becomes `html5Parser`), and each line is converted separately, so blank lines and list order are preserved.
+The code converter splits text into words at spaces, hyphens, underscores, dots and other punctuation, and at the "humps" of existing camelCase, so `getHTTPResponse code` becomes get, HTTP, Response and code. Acronyms are then normalized like any other word: `getHttpResponseCode`, `get_http_response_code`, `GET_HTTP_RESPONSE_CODE`. A plural acronym stays one word, so `userIDs` becomes `user_ids` and `URLs` becomes `urls`, not `ur_ls`. Apostrophes are dropped (`don't stop` becomes `dontStop`), digits stay attached to the preceding word (`html5 parser` becomes `html5Parser`), and each line is converted separately, so blank lines and list order are preserved.
 
 ## How the converter handles tricky text
 
-**Sentence endings.** A new sentence begins after a period, exclamation mark or question mark – even when a closing quote or bracket follows – at the start of every line, and after a numbered list marker such as "1.".
+**Sentence endings.** A new sentence begins after a period, exclamation mark or question mark – even when a closing quote or bracket follows – at the start of every line, and after a list marker such as "1.", "2)" or "a.". The marker itself keeps its case.
 
 **Abbreviations.** No new sentence starts after an ellipsis (… or ...), a single initial (J. K. Rowling), an abbreviation with internal periods (e.g., i.e., U.S., a.m., Ph.D.) or a common title such as Dr., Mr., Mrs., Ms., Prof., St., Inc., Ltd. or vs. Decimals such as 3.5 are never sentence ends. "etc." is treated as a sentence end because in most text it is one.
 
-**Acronyms and shouting.** With the switch on, words in all capitals (NASA, HTML5) and words with an internal capital (iPhone, JavaScript, McDonald's) keep their spelling. A whole line in capitals is treated as shouting and converted anyway, which is what you want when a form has forced an address into capitals.
+**Acronyms and shouting.** With the switch on, words in all capitals (NASA, HTML5) and words with an internal capital (iPhone, JavaScript, McDonald's) keep their spelling. A line of two or more words written entirely in capitals, or a whole text in capitals, is treated as shouting and converted anyway. That is what you want when a form has forced an address into capitals. A line holding a single acronym, such as "NASA" on its own, is kept.
 
-**Apostrophes, hyphens and particles.** "don't" is one word, so Title Case gives "Don't", not "Don'T". Hyphenated compounds are split, so "state-of-the-art" becomes "State-of-the-Art" and "mother-in-law" becomes "Mother-in-Law". "Up", "down", "off", "out" and "over" are capitalized in every style because in titles they are usually adverbs (Sold Out, Turn Down the Lights), and a short word followed by a comma or ending the title is capitalized too (What Are You Waiting For?).
+**Abbreviations in titles.** A period after an abbreviation does not start a subtitle, so the result is "Batman vs. the Joker" and "Mr. and Mrs. Smith", not "Vs. The Joker" or "Mr. And Mrs.". A colon, dash, question mark or sentence-ending period does start one: "Dr. Smith Goes to Washington. The Sequel".
 
-**Proper nouns.** Sentence case cannot tell "Paris" from "party", so a mid-sentence name in ordinary capitalized form loses its capital, exactly as in Word's Sentence case. Skim the result for names before publishing.
+**Words that only look like prepositions.** "Past", "near", "like" and "in" are prepositions in some titles and nouns, adjectives or verbs in others. After "the", "a", "my" or another determiner the converter treats the word as a noun or adjective ("The Past Is Never Dead", "The In Crowd"). After a subject such as "we", "they" or "some", "like" is treated as a verb ("Some Like It Hot"). Elsewhere it stays lowercase where the style asks for it ("Cities like Paris" in Chicago and MLA).
+
+**Apostrophes, hyphens and particles.** "don't" is one word, so Title Case gives "Don't", not "Don'T". Hyphenated compounds are split, so "state-of-the-art" becomes "State-of-the-Art" and "mother-in-law" becomes "Mother-in-Law". "Up", "down", "off", "out" and "over" are capitalized because in titles they are usually adverbs (Sold Out, Turn Down the Lights). The exception is APA, which lists "up" and "off" as short prepositions and lowercases them. A short word is also capitalized when it is followed by a comma or ends the title (What Are You Waiting For?).
+
+**Proper nouns.** Sentence case cannot tell "Paris" from "party", so a mid-sentence name in ordinary capitalized form loses its capital. Skim the result for names before publishing.
 
 ## Changing case in Word, Google Docs and Excel
 
@@ -92,7 +97,7 @@ Those commands are fine for a single word. The reasons to paste text here instea
 
 - **Capitalize Each Word is not title case.** "The Art Of The Deal" gives itself away with "Of" and "The". Use Title Case with a style selected.
 - **Short verbs are capitalized.** "Is", "Be", "Are" and the pronoun "It" are often wrongly lowercased because they are short; every style guide capitalizes them.
-- **Pick one style and stay with it.** Google displays title tags as written and does not rank sentence case above title case or vice versa, so consistency across a site matters more than the choice.
+- **Pick one style and stay with it.** Search engines match queries without regard to case, so capitalization does not change which searches a page can appear for. Consistency across a site matters more than which style you choose.
 - **Use kebab-case for web file names.** macOS and Windows file systems are case-insensitive by default while Linux servers are not, so `Hero.png` and `hero.png` are one file locally and two files in production.
 - **Check ß and dotted i.** Uppercasing follows Unicode rules: "straße" becomes "STRASSE", and the result for "i" depends on your browser's language setting, which matters for Turkish text.
 - **Count as you go.** For exact limits such as meta description length, use the [character counter](/tools/character-counter) or [word counter](/tools/word-counter).
@@ -101,4 +106,4 @@ Those commands are fine for a single word. The reasons to paste text here instea
 
 All conversions run as JavaScript in your browser; the text is never sent to a server, so the tool is safe for unpublished drafts and client work. Your draft lives in the tab's session storage and disappears when the tab closes; only the title case style and the acronym switch are remembered in local storage.
 
-Known limitations: sentence case cannot recognize ordinary proper nouns; title case treats "up", "off", "out", "over" and "down" as adverbs even in the rare prepositional use ("Over the Hill"); "etc." is decided by a fixed rule rather than by meaning; and the code cases keep accented letters, so replace them first if a target system requires plain ASCII. Texts of several megabytes convert quickly, but the editor may respond slowly while you type. If your text has hard line breaks in the wrong places, run it through the [line break remover](/tools/remove-line-breaks) before converting.
+Known limitations: sentence case cannot recognize ordinary proper nouns; outside APA, title case treats "up", "off", "out", "over" and "down" as adverbs even in the rarer prepositional use ("Over the Hill"), and the noun-or-preposition guess for words like "past" relies on the word before it; "etc." is decided by a fixed rule rather than by meaning; and the code cases keep accented letters, so replace them first if a target system requires plain ASCII. A megabyte of text converts in well under a second on a typical laptop, but the editor may respond slowly while you type in it. If your text has hard line breaks in the wrong places, run it through the [line break remover](/tools/remove-line-breaks) before converting.

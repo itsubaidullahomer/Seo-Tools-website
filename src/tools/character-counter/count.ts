@@ -292,9 +292,14 @@ export interface XCount {
   urls: number;
 }
 
-/** Weighted length of a post the way X counts it toward the 280 limit. */
-export function xWeightedLength(text: string): XCount {
-  if (!text) return { weighted: 0, urls: 0 };
+/**
+ * Weighted length of a post the way X counts it toward the 280 limit. Like
+ * twitter-text, the text is normalized to NFC first, so an "é" typed as "e"
+ * plus a combining accent counts 1, not 2.
+ */
+export function xWeightedLength(input: string): XCount {
+  if (!input) return { weighted: 0, urls: 0 };
+  const text = input.normalize("NFC");
   const urls = text.match(URL_RE)?.length ?? 0;
   let weighted = urls * X_URL_WEIGHT;
   for (const part of text.split(URL_RE)) {

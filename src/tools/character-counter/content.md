@@ -23,9 +23,9 @@ The *Count emoji as 2 characters* switch measures the limit in UTF-16 code units
 
 **Grapheme clusters** are what a person sees as one character. `é` is one, whether it is stored as a single code point or as `e` plus a combining accent. `👍🏽` is one. `🇺🇸` is one, although it is built from two regional-indicator symbols. The family emoji `👨‍👩‍👧‍👦` is one visible character made of seven code points joined by invisible zero-width joiners. This tool splits text into grapheme clusters with the browser's `Intl.Segmenter` (with a fallback for older browsers) and reports that number as *Characters*.
 
-**UTF-16 code units** are what JavaScript's `length`, Java's `String.length()` and many database columns count. The first 65,536 code points fit in one 16-bit unit, so letters, digits, punctuation, accented Latin, Cyrillic, Greek, Arabic and CJK characters are 1 unit each. Almost every emoji sits above that range and needs two units, a *surrogate pair*. That is where "an emoji counts as 2" comes from.
+**UTF-16 code units** are what JavaScript's `length`, Java's `String.length()` and many database columns count. The first 65,536 code points fit in one 16-bit unit, so letters, digits, punctuation, accented Latin, Cyrillic, Greek, Arabic and CJK characters are 1 unit each. Most emoji sit above that range and need two units, a *surrogate pair*; a few older ones such as `☕` and `❤` fit in one. That is where "an emoji counts as 2" comes from.
 
-**UTF-8 bytes** are what a file, an HTTP request or a database row actually stores. ASCII takes 1 byte, most accented letters and Cyrillic take 2, CJK characters and most symbols take 3, emoji take 4. If a field has a *byte* limit, this is the number that matters.
+**UTF-8 bytes** are what a file, an HTTP request or a database row actually stores. ASCII takes 1 byte, most accented letters and Cyrillic take 2, CJK characters and most symbols take 3, and most emoji take 4. If a field has a *byte* limit, this is the number that matters.
 
 ### Worked example
 
@@ -50,7 +50,7 @@ X weighted length               21
 | --- | --- | --- |
 | X (Twitter) post | 280 (25,000 with Premium) | Spaces count 1; every emoji and CJK character counts 2; any URL counts 23 |
 | X bio | 160 | Characters with spaces |
-| Instagram caption | 2,200 | Spaces, line breaks and hashtags (max 30); feed shows ~125 before "more" |
+| Instagram caption | 2,200 | Spaces, line breaks and hashtags; feed shows ~125 before "more" |
 | Instagram bio | 150 | Characters with spaces |
 | Threads post | 500 | Characters with spaces; a text attachment adds up to 10,000 more |
 | Bluesky post | 300 | Grapheme clusters, so each emoji is 1 |
@@ -72,13 +72,13 @@ Platforms change limits quietly; check the official help page before a campaign 
 
 ## What counts on X, in an SMS and on Google
 
-**X (Twitter)** uses a weighted count defined by its open-source `twitter-text` library. Code points 0 to 4,351 – Latin, Greek, Cyrillic, Hebrew, Arabic and common punctuation – weigh 1; everything else weighs 2, which covers Chinese, Japanese, Korean and all emoji. An emoji is always 2 regardless of how many code points it contains, so a family emoji costs the same as a plain smiley. Every link is replaced by a t.co URL and charged 23 characters, whether the original was 15 characters or 150. The X preset applies all three rules and tells you how many links it found.
+**X (Twitter)** uses a weighted count defined by its open-source `twitter-text` library. Code points 0 to 4,351 – Latin, Greek, Cyrillic, Hebrew, Arabic, Devanagari, Thai and ASCII punctuation – weigh 1, and so do a few typographic ranges such as curly quotes, dashes and the special spaces. Everything else weighs 2, which covers Chinese, Japanese, Korean and all emoji. X normalizes the text to Unicode NFC first, so an `é` pasted as `e` plus a combining accent still costs 1. An emoji is always 2 regardless of how many code points it contains, so a family emoji costs the same as a plain smiley. Every link is replaced by a t.co URL and charged 23 characters, whether the original was 15 characters or 150. The X preset applies all three rules and tells you how many links it found.
 
 A concrete case: a post reading "Our new guide to writing better meta descriptions is live. Read it here:" followed by an 83-character URL and a rocket emoji shows 158 visible characters, but X counts 99 – the URL becomes 23, the emoji becomes 2, the rest is unchanged. You have far more room than the raw count suggests.
 
 **SMS** is the opposite trap. A text message holds 160 characters only if every character is in the GSM-7 alphabet: basic Latin letters, digits, common punctuation and a few accented letters such as é, ü and ñ. A single curly apostrophe, em dash or emoji forces the whole message into UCS-2 encoding, where the limit drops to 70. Longer messages are split into parts of 153 (GSM-7) or 67 (UCS-2) characters, and most carriers bill each part. The SMS preset detects the encoding your text forces and reports how many parts it will send as.
 
-**Instagram, LinkedIn, TikTok and Facebook** count spaces, line breaks and hashtags: `#contentmarketing` costs 17 characters of a caption. TikTok has two limits: the app accepts 4,000 characters, but captions sent through its Content Posting API, which scheduling tools use, stop at 2,200. The tool has a preset for each.
+**Instagram, LinkedIn, TikTok and Facebook** count spaces, line breaks and hashtags: `#contentmarketing` costs 17 characters of a caption. Instagram also caps the *number* of hashtags per post separately from the character limit, and it has tightened that cap from the long-standing 30, so check the current figure in the app rather than relying on an old guide. TikTok has two limits: the app accepts 4,000 characters, but captions sent through its Content Posting API, which scheduling tools use, stop at 2,200. The tool has a preset for each.
 
 **Google** does not count characters at all. Titles and descriptions are truncated by pixel width, so a title full of W and M is cut sooner than one full of i and l. The 60 and 160 figures are safe averages, not guarantees.
 
@@ -92,7 +92,7 @@ A concrete case: a post reading "Our new guide to writing better meta descriptio
 
 **Students and applicants** facing a hard cap – a UCAS personal statement at 4,000 characters, a scholarship box at 1,500 – set a custom limit and write straight into the tool.
 
-**Translators** who quote per 1,000 characters use the *Without spaces* figure, the basis many agencies bill on.
+**Translators** who quote per 1,000 characters use the *Without spaces* figure when the agreement says so; some agencies bill that way, others count spaces, so check the contract.
 
 ## How to trim text to a limit without losing meaning
 
@@ -105,7 +105,7 @@ Work through these in order and check the bar after each pass.
 5. **Drop the weakest emoji.** On X each costs 2; in an SMS one emoji cuts capacity from 160 to 70.
 6. **Trim from the end last.** Start from the *Trimmed to fit* box, then rewrite the final sentence so it ends cleanly.
 
-## Character counter vs Microsoft Word and Google Docs
+## Character counter vs Microsoft Word
 
 Two differences explain most mismatches.
 

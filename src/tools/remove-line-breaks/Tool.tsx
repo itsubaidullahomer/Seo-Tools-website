@@ -6,6 +6,7 @@ import { usePersistentState } from "@/hooks/usePersistentState";
 import {
   Alert,
   Button,
+  CopyButton,
   Input,
   ResultBox,
   Select,
@@ -246,16 +247,18 @@ const SEPARATOR_PRESETS: { label: string; value: string }[] = [
   { label: "<br>", value: "<br>" },
 ];
 
-const ENDING_LABEL: Record<LineEndingKind, string> = {
-  none: "None",
-  LF: "LF (Unix/Mac)",
-  CRLF: "CRLF (Windows)",
-  CR: "CR (old Mac)",
-  other: "Other",
-  mixed: "Mixed",
+const ENDING_LABEL: Record<LineEndingKind, { value: string; hint?: string }> = {
+  none: { value: "None" },
+  LF: { value: "LF", hint: "macOS, Linux, or a paste" },
+  CRLF: { value: "CRLF", hint: "Windows – handled automatically" },
+  CR: { value: "CR", hint: "Classic Mac OS" },
+  other: { value: "Other", hint: "Vertical tab, form feed or Unicode separator" },
+  mixed: { value: "Mixed", hint: "Several kinds – all handled" },
 };
 
 const LARGE_INPUT = 1_000_000;
+/** Laying out millions of characters in a textarea freezes the tab for seconds, so huge results show a preview. */
+const PREVIEW_LIMIT = 200_000;
 const MAX_FILE_BYTES = 20 * 1024 * 1024;
 
 const SAMPLE = `Thanks for sending the quarterly figures. I had a look this
@@ -307,6 +310,8 @@ export default function RemoveLineBreaks() {
     [deferredText, optionsKey],
   );
   const stats = useMemo(() => summarize(deferredText, output), [deferredText, output]);
+  const truncated = output.length > PREVIEW_LIMIT;
+  const preview = truncated ? output.slice(0, PREVIEW_LIMIT) : output;
 
   const hasText = text.length > 0;
   const isParagraphs = options.mode === "paragraphs";
@@ -458,21 +463,30 @@ export default function RemoveLineBreaks() {
         <div className="flex min-w-0 flex-col gap-2">
           <ResultBox
             label="Result"
-            value={output}
+            value={preview}
             rows={12}
             placeholder="Your text without line breaks appears here as you type."
+            copy={false}
             actions={
-              <Button
-                size="sm"
-                variant="secondary"
-                leftIcon={<Download className="h-4 w-4" aria-hidden />}
-                disabled={!output}
-                onClick={() => downloadText(output, "text-without-line-breaks.txt")}
-              >
-                Download
-              </Button>
+              <>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  leftIcon={<Download className="h-4 w-4" aria-hidden />}
+                  disabled={!output}
+                  onClick={() => downloadText(output, "text-without-line-breaks.txt")}
+                >
+                  Download
+                </Button>
+                <CopyButton text={output} size="sm" variant="secondary" disabled={!output} />
+              </>
             }
           />
+          {truncated && (
+            <p className="text-xs text-muted">
+              Showing the first {formatNumber(PREVIEW_LIMIT)} of {formatNumber(output.length)} characters to keep the page responsive. Copy and Download include the full result.
+            </p>
+          )}
           <ToolActions>
             <Button variant="ghost" size="sm" leftIcon={<ArrowUp className="h-4 w-4" aria-hidden />} disabled={!output || output === text} onClick={() => setText(output)}>
               Use result as input
@@ -524,14 +538,8 @@ export default function RemoveLineBreaks() {
         />
         <Stat
           label="Input line endings"
-          value={ENDING_LABEL[stats.endings]}
-          hint={
-            stats.endings === "other"
-              ? "Vertical tab, form feed or Unicode separator"
-              : stats.endings === "CRLF" || stats.endings === "mixed"
-                ? "Handled automatically"
-                : undefined
-          }
+          value={ENDING_LABEL[stats.endings].value}
+          hint={ENDING_LABEL[stats.endings].hint}
         />
       </StatGrid>
 

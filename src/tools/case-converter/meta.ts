@@ -51,12 +51,12 @@ export const meta: ToolMeta = {
     {
       question: "Does the converter keep acronyms like NASA or brand names like iPhone?",
       answer:
-        "Yes, when the “Keep acronyms and mixed-case words” switch is on (the default). Any word written entirely in capitals, such as NASA or HTML5, and any word with a capital letter inside it, such as iPhone or JavaScript, is left unchanged by Sentence case, Title Case and Capitalized Case. A line that is written entirely in capitals is treated as shouting and converted normally, so ALL-CAPS text still becomes readable. Turn the switch off to force every word through the rules.",
+        "Yes, when the “Keep acronyms and mixed-case words” switch is on (the default). Any word written entirely in capitals, such as NASA or HTML5, and any word with a capital letter inside it, such as iPhone or JavaScript, is left unchanged by Sentence case, Title Case and Capitalized Case. A line of two or more words written entirely in capitals is treated as shouting and converted normally, so ALL-CAPS text still becomes readable. Turn the switch off to force every word through the rules.",
     },
     {
       question: "How does sentence case know where a sentence begins?",
       answer:
-        "A new sentence starts after a period, question mark or exclamation mark, at the beginning of every line, and after a numbered list marker such as “1.”. The converter does not start a new sentence after an ellipsis, after a single initial (J. K. Rowling), after abbreviations with internal periods (e.g., i.e., U.S., a.m.) or after common titles such as Dr., Mr., Prof., St., Inc. and vs. The pronoun “I” and its contractions (I’m, I’ll, I’ve, I’d) are always capitalized.",
+        "A new sentence starts after a period, question mark or exclamation mark, at the beginning of every line, and after a list marker such as “1.” or “a)”. The converter does not start a new sentence after an ellipsis, after a single initial (J. K. Rowling), after abbreviations with internal periods (e.g., i.e., U.S., a.m.) or after common titles such as Dr., Mr., Prof., St., Inc. and vs. The pronoun “I” and its contractions (I’m, I’ll, I’ve, I’d) are always capitalized.",
     },
     {
       question: "Is my text uploaded or stored anywhere?",

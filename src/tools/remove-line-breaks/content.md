@@ -56,7 +56,7 @@ A **hard return** is what you get when you press Enter: it ends the paragraph. A
 | Vertical tab | `\v` | 11 | Word's manual line break (Shift+Enter) |
 | Paragraph mark | ¶ | shown as `^p` in Word | Word's hard return, saved as CRLF in .txt |
 
-The tool treats all of these as line breaks. The "Input line endings" tile shows which one your text uses – handy when a script or Windows program misbehaves with a file.
+The tool treats all of these as line breaks. The "Input line endings" tile shows which one your text uses – handy when a script or Windows program misbehaves with a file. One catch: browsers convert every break to LF when you paste with Ctrl+V or type into a text box, so the tile reports the original endings only for files opened with **Open .txt** and text brought in with the **Paste** button.
 
 ## Removing line breaks in Word, Google Docs, Excel and VS Code
 
@@ -101,4 +101,4 @@ If your text has no blank lines at all, there is no reliable way to tell where o
 
 ## Privacy and limitations
 
-Everything happens in your browser with JavaScript. Pasted text and opened files are never uploaded, and the draft is stored only in this tab's session storage so a refresh does not lose it; **Clear** or closing the tab removes it. Files up to 20 MB are accepted, and inputs of several million characters work, though very large texts take a moment to refresh after each change. The tool works on plain text only: bold, italics and links from Word or a web page are lost when pasted, tables arrive as tab-separated cells, and scanned PDFs need to be run through OCR before their text can be copied at all.
+Everything happens in your browser with JavaScript. Pasted text and opened files are never uploaded, and the draft is stored only in this tab's session storage so a refresh does not lose it; **Clear** or closing the tab removes it. Files up to 20 MB are accepted, including UTF-16 files saved by Windows Notepad as "Unicode". Inputs of several million characters work, though they take a moment to refresh after each change; for results over 200,000 characters the box shows a preview, while **Copy** and **Download** always include the full text. The tool works on plain text only: bold, italics and links from Word or a web page are lost when pasted, tables arrive as tab-separated cells, and scanned PDFs need to be run through OCR before their text can be copied at all.

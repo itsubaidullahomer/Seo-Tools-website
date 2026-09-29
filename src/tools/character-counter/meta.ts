@@ -36,7 +36,7 @@ export const meta: ToolMeta = {
     {
       question: "Why does an emoji count as 2 characters on some platforms?",
       answer:
-        "Emoji live outside the first 65,536 Unicode code points, so in UTF-16, the encoding used by JavaScript, Java and many databases, one emoji occupies two 16-bit code units. Software that measures a field in code units therefore reports 2. X goes further and counts every emoji as 2, even a flag or family emoji built from several code points. This tool shows characters and code units side by side so you can see exactly where the difference comes from.",
+        "Most emoji live outside the first 65,536 Unicode code points, so in UTF-16, the encoding used by JavaScript, Java and many databases, one emoji occupies two 16-bit code units. Software that measures a field in code units therefore reports 2. X goes further and counts every emoji as 2, even a flag or family emoji built from several code points. This tool shows characters and code units side by side so you can see exactly where the difference comes from.",
     },
     {
       question: "How many characters can an X (Twitter) post have?",
@@ -46,7 +46,7 @@ export const meta: ToolMeta = {
     {
       question: "What is the Instagram caption character limit?",
       answer:
-        "An Instagram caption can hold 2,200 characters including spaces, line breaks and hashtags, with a maximum of 30 hashtags per post. The feed shows only about the first 125 characters before the “more” link, so put the hook and any call to action at the very start. Bios are limited to 150 characters and usernames to 30. Comments use the same 2,200-character limit as captions.",
+        "An Instagram caption can hold 2,200 characters including spaces, line breaks and hashtags, and every hashtag counts toward that total. Instagram caps the number of hashtags per post separately and has cut that cap from the old 30, so check the app. The feed shows only about the first 125 characters before the “more” link, so put the hook and any call to action at the very start. Bios are limited to 150 characters and usernames to 30. Comments use the same 2,200-character limit as captions.",
     },
     {
       question: "How long should a meta description be?",

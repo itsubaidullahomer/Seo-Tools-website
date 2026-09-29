@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useRef } from "react";
+import { useDeferredValue, useMemo, useRef, useState } from "react";
 import { usePersistentState } from "@/hooks/usePersistentState";
 import {
   Alert,
@@ -26,6 +26,7 @@ import {
   trimToLimit,
   xWeightedLength,
   CUSTOM_PRESET_ID,
+  HUGE_TEXT_UNITS,
   NO_LIMIT_PRESET_ID,
   PRESETS,
   X_URL_WEIGHT,
@@ -55,36 +56,41 @@ function unitLabel(rule: LimitRule): string {
 export default function CharacterCounter() {
   // The draft lives in this tab's session storage; the limit settings are remembered across visits.
   const [text, setText] = usePersistentState("character-counter:draft", "");
-  const [presetId, setPresetId] = usePersistentState("character-counter:preset", "x-post", { storage: "local" });
+  const [presetId, setPresetId] = usePersistentState("character-counter:preset", NO_LIMIT_PRESET_ID, { storage: "local" });
   const [customLimit, setCustomLimit] = usePersistentState("character-counter:custom-limit", "", { storage: "local" });
   const [countUnits, setCountUnits] = usePersistentState("character-counter:count-units", false, { storage: "local" });
+  const [pasteBlocked, setPasteBlocked] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Counting runs on a deferred copy so typing stays smooth in very long documents.
   const counted = useDeferredValue(text);
   const stats = useMemo(() => analyzeText(counted), [counted]);
 
-  const preset = getPreset(presetId);
+  const preset = useMemo(() => getPreset(presetId), [presetId]);
   const isCustom = preset.id === CUSTOM_PRESET_ID;
   const isNone = preset.id === NO_LIMIT_PRESET_ID;
   const rule: LimitRule = preset.rule === "graphemes" && countUnits ? "units" : preset.rule;
 
-  const customNumber = Math.floor(Number(customLimit));
-  const baseLimit = isCustom ? customNumber : preset.limit;
+  const customNumber = Number(customLimit);
+  const customValid = customLimit.trim() !== "" && Number.isInteger(customNumber) && customNumber > 0;
+  const baseLimit = isCustom ? (customValid ? customNumber : 0) : preset.limit;
 
-  // Derived values are cheap for normal text; the React Compiler memoizes them automatically.
-  const sms = rule === "sms" ? smsInfo(counted) : null;
-  const xInfo = rule === "x" ? xWeightedLength(counted) : null;
-  const used = xInfo ? xInfo.weighted : sms ? sms.units : measure(counted, rule, stats);
-
-  // SMS capacity depends on the encoding the text forces (160 for GSM-7, 70 for UCS-2).
-  const limit = sms ? sms.single : baseLimit;
-  const hasLimit = !isNone && Number.isFinite(limit) && limit > 0;
-  const over = hasLimit && used > limit;
+  // Measuring against the limit (and trimming to fit) walks the whole text for the X
+  // and SMS rules, so it only reruns when the counted text or the limit settings change.
+  const measured = useMemo(() => {
+    const sms = rule === "sms" ? smsInfo(counted) : null;
+    const xInfo = rule === "x" ? xWeightedLength(counted) : null;
+    const used = xInfo ? xInfo.weighted : sms ? sms.units : measure(counted, rule, stats);
+    // SMS capacity depends on the encoding the text forces (160 for GSM-7, 70 for UCS-2).
+    const limit = sms ? sms.single : baseLimit;
+    const hasLimit = !isNone && Number.isFinite(limit) && limit > 0;
+    const over = hasLimit && used > limit;
+    const fitted = over ? trimToLimit(counted, rule, limit) : "";
+    return { sms, xInfo, used, limit, hasLimit, over, fitted };
+  }, [counted, stats, rule, baseLimit, isNone]);
+  const { sms, xInfo, used, limit, hasLimit, over, fitted } = measured;
   const near = hasLimit && !over && used >= limit * 0.9;
   const pct = hasLimit ? Math.min(100, (used / limit) * 100) : 0;
-
-  const fitted = over ? trimToLimit(counted, rule, limit) : "";
 
   const unitsDiffer = stats.graphemes !== stats.codeUnits;
   const avgWordLength = stats.words ? stats.graphemesNoSpaces / stats.words : 0;
@@ -116,7 +122,10 @@ export default function CharacterCounter() {
             : `${formatNumber(stats.graphemes)} characters`
         }
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          setPasteBlocked(false);
+        }}
         placeholder="Type or paste your text here. Characters, words, sentences and bytes are counted as you type…"
         rows={8}
         error={over ? `${formatNumber(used - limit)} ${unitLabel(rule)} over ${limitName}.` : undefined}
@@ -129,8 +138,10 @@ export default function CharacterCounter() {
             try {
               const clip = await navigator.clipboard.readText();
               setText(clip);
+              setPasteBlocked(false);
             } catch {
-              /* clipboard permission denied – user can paste manually */
+              // Clipboard read was refused or is unsupported; tell the user how to paste manually.
+              setPasteBlocked(true);
             }
             textareaRef.current?.focus();
           }}
@@ -150,6 +161,12 @@ export default function CharacterCounter() {
         <CopyButton text={text} label="Copy text" variant="outline" disabled={!text} />
         <CopyButton text={summary} label="Copy stats" variant="outline" disabled={!text} />
       </ToolActions>
+
+      {pasteBlocked && (
+        <Alert variant="warning" title="Your browser blocked clipboard access">
+          Click in the text box and press Ctrl+V (⌘V on a Mac), or long-press and choose Paste on a phone.
+        </Alert>
+      )}
 
       <StatGrid>
         <Stat
@@ -181,7 +198,7 @@ export default function CharacterCounter() {
 
       {!stats.exact && (
         <Alert variant="warning" title="Very long text">
-          Above {formatNumber(1_000_000)} characters, emoji and accented letters are counted as code points instead of visible characters
+          Above {formatNumber(HUGE_TEXT_UNITS)} characters, emoji and accented letters are counted as code points instead of visible characters
           to keep the page responsive, so the total can be slightly higher than what you see.
         </Alert>
       )}
@@ -226,7 +243,7 @@ export default function CharacterCounter() {
               setCustomLimit(e.target.value);
               setPresetId(CUSTOM_PRESET_ID);
             }}
-            error={isCustom && customLimit !== "" && !(customNumber > 0) ? "Enter a whole number above 0." : undefined}
+            error={isCustom && customLimit.trim() !== "" && !customValid ? "Enter a whole number above 0." : undefined}
           />
         </div>
 
@@ -295,6 +312,18 @@ export default function CharacterCounter() {
             value={fitted}
             rows={4}
             placeholder=""
+            actions={
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => {
+                  setText(fitted);
+                  textareaRef.current?.focus();
+                }}
+              >
+                Use this text
+              </Button>
+            }
           />
         )}
       </ToolSection>

@@ -40,8 +40,12 @@ const PRONOUN_I_RE = /^i(?:['’](?:m|ll|ve|d))?$/u;
 const ELLIPSIS_RE = /\.{2,}|…/;
 /** Punctuation that, when it directly follows a short word in a title, shows the word is not a dangling preposition. */
 const CLAUSE_END_RE = /^[,;:!?)\]}"”»]/;
-/** Separator text that starts a subtitle (colon, dash, end punctuation). */
-const SUBTITLE_RE = /[:.!?—–]|\s-\s/;
+/** Separator text that starts a subtitle (colon, dash, question or exclamation mark). A period counts only when it ends a sentence. */
+const SUBTITLE_RE = /[:!?—–]|\s-\s/;
+/** Words after which a "preposition" is really a noun or adjective (The Past, A Near Miss, The In Crowd). */
+const DETERMINERS = new Set("a an the my your his her its our their this that these those".split(" "));
+/** Subjects after which "like" is a verb (Some Like It Hot, Why We Like Cats). */
+const SUBJECTS = new Set("i you we they he she it who some people".split(" "));
 
 /** Words after which a period does not end a sentence. */
 const ABBREVIATIONS = new Set(
@@ -51,7 +55,7 @@ const ABBREVIATIONS = new Set(
 const ARTICLES = ["a", "an", "the"];
 const COORD_SHORT = ["and", "but", "or", "nor", "for", "yet", "so"];
 const PREPS_SHORT = ["as", "at", "by", "in", "of", "on", "to", "per", "via", "vs", "v"];
-// "up", "down", "off", "out" and "over" are deliberately absent: in titles they are usually adverbs (Sold Out, Growing Up).
+// "up", "down", "off", "out" and "over" are absent (except "up"/"off" in APA): in titles they are usually adverbs (Sold Out, Growing Up).
 /** Prepositions of four letters or fewer that Chicago 18 (2024) still lowercases. */
 const PREPS_FOUR = ["amid", "from", "into", "like", "near", "onto", "past", "than", "till", "unto", "upon", "with"];
 const PREPS_LONG = [
@@ -64,8 +68,8 @@ const PREPS_LONG = [
 const SMALL_WORDS: Record<TitleStyle, Set<string>> = {
   // AP: articles, conjunctions and prepositions of fewer than four letters.
   ap: new Set([...ARTICLES, ...COORD_SHORT, "if", ...PREPS_SHORT]),
-  // APA 7: minor words of three letters or fewer – the same threshold as AP.
-  apa: new Set([...ARTICLES, ...COORD_SHORT, "if", ...PREPS_SHORT]),
+  // APA 7: minor words of three letters or fewer; APA's own list of short prepositions includes "up" and "off".
+  apa: new Set([...ARTICLES, ...COORD_SHORT, "if", ...PREPS_SHORT, "up", "off"]),
   // Chicago 18 (8.159): articles, coordinating conjunctions (and, but, for, or, nor), "as", "to" and prepositions of up to four letters.
   chicago: new Set([...ARTICLES, "and", "but", "for", "or", "nor", ...PREPS_SHORT, ...PREPS_FOUR]),
   // MLA 9: articles, coordinating conjunctions (incl. so, yet), "to" and prepositions of any length.
@@ -88,10 +92,10 @@ function capitalizeFirst(word: string, up = upper, down = lower): string {
 }
 const codeCapitalize = (w: string) => capitalizeFirst(w, codeUpper, codeLower);
 
-/** True when a line is written entirely in capitals (at least two letters). */
-function isShouting(line: string): boolean {
-  const letters = line.match(/\p{L}/gu);
-  return !!letters && letters.length >= 2 && line === upper(line) && line !== lower(line);
+/** True when text of at least two words is written entirely in capitals ("NASA" alone is an acronym, not shouting). */
+function isShouting(text: string): boolean {
+  const words = text.match(/\p{L}{2,}/gu);
+  return !!words && words.length >= 2 && text === upper(text) && text !== lower(text);
 }
 
 /** Acronym (NASA, HTML5, U.S) or mixed-case word (iPhone, JavaScript, McDonald's). */
@@ -106,6 +110,8 @@ function isAcronymOrMixed(word: string): boolean {
 interface WordContext {
   index: number;
   count: number;
+  /** The previous word on the line, or "" for the first word. */
+  prev: string;
   /** Separator text immediately before the word. */
   before: string;
   /** Separator text between this word and the next (or end of line). */
@@ -125,7 +131,7 @@ function mapWords(line: string, fn: (word: string, ctx: WordContext) => string):
     const next = matches[i + 1];
     const before = line.slice(pos, start);
     const after = line.slice(start + word.length, next ? (next.index ?? line.length) : line.length);
-    out += before + fn(word, { index: i, count: matches.length, before, after });
+    out += before + fn(word, { index: i, count: matches.length, prev: i > 0 ? matches[i - 1][0] : "", before, after });
     pos = start + word.length;
   }
   return out + line.slice(pos);
@@ -142,10 +148,15 @@ function endsSentence(word: string, after: string): boolean {
   return !ABBREVIATIONS.has(w);
 }
 
-function sentenceCaseLine(line: string, keep: boolean): string {
-  const shouting = isShouting(line);
+/** "1." "2)" "a." "b)" at the start of a line. */
+const LIST_MARKER_RE = /^(?:\p{N}+|\p{L})$/u;
+
+function sentenceCaseLine(line: string, keep: boolean, textShouting: boolean): string {
+  const shouting = textShouting || isShouting(line);
   let atStart = true;
-  return mapWords(line, (word, { after }) => {
+  return mapWords(line, (word, { index, before, after }) => {
+    // A list marker keeps its own case and the item after it starts a sentence.
+    if (index === 0 && !before.trim() && LIST_MARKER_RE.test(word) && /^[.)]\s/.test(after)) return word;
     const preserved = keep && !shouting && isAcronymOrMixed(word);
     let result: string;
     if (preserved) result = word;
@@ -157,21 +168,24 @@ function sentenceCaseLine(line: string, keep: boolean): string {
   });
 }
 
-function titleCaseLine(line: string, style: TitleStyle, keep: boolean): string {
-  const shouting = isShouting(line);
+function titleCaseLine(line: string, style: TitleStyle, keep: boolean, textShouting: boolean): string {
+  const shouting = textShouting || isShouting(line);
   const small = SMALL_WORDS[style];
-  return mapWords(line, (word, { index, count, before, after }) => {
+  return mapWords(line, (word, { index, count, prev, before, after }) => {
     if (keep && !shouting && isAcronymOrMixed(word)) return word;
-    const isFirst = index === 0 || SUBTITLE_RE.test(before);
+    // "Batman vs. the Joker" and "Mr. and Mrs. Smith": a period after an abbreviation does not start a subtitle.
+    const isFirst = index === 0 || SUBTITLE_RE.test(before) || (before.includes(".") && endsSentence(prev, before));
     const isLast = index === count - 1;
     const w = lower(word);
-    if (!isFirst && !isLast && small.has(w) && !CLAUSE_END_RE.test(after)) return w;
+    const p = lower(prev);
+    const nounOrVerb = (DETERMINERS.has(p) && !ARTICLES.includes(w)) || (w === "like" && SUBJECTS.has(p));
+    if (!isFirst && !isLast && small.has(w) && !nounOrVerb && !CLAUSE_END_RE.test(after)) return w;
     return capitalizeFirst(word);
   });
 }
 
-function capitalizedCaseLine(line: string, keep: boolean): string {
-  const shouting = isShouting(line);
+function capitalizedCaseLine(line: string, keep: boolean, textShouting: boolean): string {
+  const shouting = textShouting || isShouting(line);
   return mapWords(line, (word) => (keep && !shouting && isAcronymOrMixed(word) ? word : capitalizeFirst(word)));
 }
 
@@ -203,7 +217,8 @@ export function splitIdentifierWords(line: string): string[] {
   return line
     .replace(/['’]/g, "")
     .replace(/([\p{Ll}\p{N}])(\p{Lu})/gu, "$1 $2") // fooBar -> foo Bar, html5Parser -> html5 Parser
-    .replace(/(\p{Lu}+)(\p{Lu}\p{Ll})/gu, "$1 $2") // HTTPServer -> HTTP Server
+    // HTTPServer -> HTTP Server, but a plural acronym stays whole: URLs, userIDs -> user IDs
+    .replace(/(\p{Lu}+)(\p{Lu})(\p{Ll}+)/gu, (m, run: string, cap: string, rest: string) => (rest === "s" ? m : `${run} ${cap}${rest}`))
     .split(/[^\p{L}\p{N}]+/u)
     .filter(Boolean);
 }
@@ -230,17 +245,19 @@ function joinIdentifier(words: string[], mode: ModeId): string {
 const perLine = (text: string, fn: (line: string) => string) => text.split("\n").map(fn).join("\n");
 
 export function convertCase(text: string, mode: ModeId, { titleStyle, keepAcronyms }: ConvertOptions): string {
+  // Text that is entirely in capitals (e.g. a form that forced an address into capitals) is converted even with acronyms kept.
+  const textShouting = (mode === "sentence" || mode === "title" || mode === "capitalized") && keepAcronyms && isShouting(text);
   switch (mode) {
     case "lower":
       return lower(text);
     case "upper":
       return upper(text);
     case "sentence":
-      return perLine(text, (l) => sentenceCaseLine(l, keepAcronyms));
+      return perLine(text, (l) => sentenceCaseLine(l, keepAcronyms, textShouting));
     case "title":
-      return perLine(text, (l) => titleCaseLine(l, titleStyle, keepAcronyms));
+      return perLine(text, (l) => titleCaseLine(l, titleStyle, keepAcronyms, textShouting));
     case "capitalized":
-      return perLine(text, (l) => capitalizedCaseLine(l, keepAcronyms));
+      return perLine(text, (l) => capitalizedCaseLine(l, keepAcronyms, textShouting));
     case "alternating":
       return alternatingCase(text);
     case "inverse":
@@ -311,6 +328,17 @@ const MODE_LABEL = Object.fromEntries([...WRITING_MODES, ...CODE_MODES].map((m) 
 const LARGE_TEXT = 100_000;
 const HISTORY_LIMIT = 50;
 
+/** True when an edit replaces most of the previous text rather than changing part of it. */
+function isReplacement(prev: string, next: string): boolean {
+  if (prev === "") return true;
+  const max = Math.min(prev.length, next.length);
+  let start = 0;
+  while (start < max && prev[start] === next[start]) start++;
+  let end = 0;
+  while (end < max - start && prev[prev.length - 1 - end] === next[next.length - 1 - end]) end++;
+  return start + end < prev.length / 2;
+}
+
 function isTitleStyle(v: string): v is TitleStyle {
   return TITLE_STYLE_OPTIONS.some((o) => o.value === v);
 }
@@ -360,10 +388,26 @@ export default function CaseConverter() {
   };
 
   const handleChange = (value: string) => {
-    // A fresh paste into an empty box starts a new session for Undo / Restore original.
-    if (text === "") setHistory([]);
+    // Typing into an empty box, or pasting over most of the old text, starts a new session for Undo / Restore original.
+    if (isReplacement(text, value)) setHistory([]);
     setText(value);
     setLastMode(null);
+  };
+
+  const pasteFromClipboard = async () => {
+    try {
+      const clip = await navigator.clipboard.readText();
+      if (clip) {
+        // Replacing existing text is undoable, like a conversion.
+        if (text) setHistory((h) => [...h.slice(-(HISTORY_LIMIT - 1)), text]);
+        else setHistory([]);
+        setText(clip);
+        setLastMode(null);
+      }
+    } catch {
+      /* clipboard permission denied or unsupported – the user can paste with Ctrl/Cmd+V */
+    }
+    textareaRef.current?.focus();
   };
 
   const lastLabel = lastMode ? (lastMode === "title" ? `Title Case (${TITLE_STYLE_LABEL[titleStyle]})` : MODE_LABEL[lastMode]) : null;
@@ -396,44 +440,10 @@ export default function CaseConverter() {
         onChange={(e) => handleChange(e.target.value)}
         placeholder="Paste or type your text here, then click a case below. Line breaks and paragraphs are preserved…"
         rows={8}
+        className="max-sm:h-40"
         hint="Conversions change the text in place; use Undo or Restore original to go back."
       />
 
-      <ToolActions>
-        <CopyButton text={text} disabled={!hasText} />
-        <Button variant="secondary" leftIcon={<Download className="h-4 w-4" aria-hidden />} onClick={() => downloadText(text, fileName)} disabled={!hasText}>
-          Download .txt
-        </Button>
-        <Button variant="secondary" leftIcon={<Undo2 className="h-4 w-4" aria-hidden />} onClick={undo} disabled={history.length === 0} title="Undo the last conversion">
-          Undo
-        </Button>
-        <Button variant="secondary" leftIcon={<History className="h-4 w-4" aria-hidden />} onClick={restoreOriginal} disabled={history.length === 0} title="Restore the text as it was before the first conversion">
-          Restore original
-        </Button>
-        <Button variant="secondary" leftIcon={<Eraser className="h-4 w-4" aria-hidden />} onClick={clear} disabled={!hasText}>
-          Clear
-        </Button>
-        <Button
-          variant="ghost"
-          leftIcon={<ClipboardPaste className="h-4 w-4" aria-hidden />}
-          onClick={async () => {
-            try {
-              const clip = await navigator.clipboard.readText();
-              if (clip) handleChange(clip);
-            } catch {
-              /* clipboard permission denied – the user can paste with Ctrl/Cmd+V */
-            }
-            textareaRef.current?.focus();
-          }}
-        >
-          Paste
-        </Button>
-        {lastLabel && (
-          <Badge variant="primary" className="ml-auto">
-            Applied: {lastLabel}
-          </Badge>
-        )}
-      </ToolActions>
 
       {stats.characters > LARGE_TEXT && (
         <Alert variant="info" title={`Large text (${formatNumber(stats.characters)} characters)`}>
@@ -458,11 +468,35 @@ export default function CaseConverter() {
             checked={keepAcronyms}
             onChange={setKeepAcronyms}
             label="Keep acronyms and mixed-case words"
-            description="Leave NASA, HTML5 and iPhone unchanged in Sentence, Title and Capitalized case. Lines written entirely in capitals are still converted."
+            description="Leave NASA, HTML5 and iPhone unchanged in Sentence, Title and Capitalized case. A line or text written entirely in capitals is still converted."
             className="sm:pt-6"
           />
         </div>
       </ToolSection>
+
+      <ToolActions>
+        <CopyButton size="sm" text={text} disabled={!hasText} />
+        <Button size="sm" variant="secondary" leftIcon={<Download className="h-4 w-4" aria-hidden />} onClick={() => downloadText(text, fileName)} disabled={!hasText}>
+          Download .txt
+        </Button>
+        <Button size="sm" variant="secondary" leftIcon={<Undo2 className="h-4 w-4" aria-hidden />} onClick={undo} disabled={history.length === 0} title="Undo the last conversion">
+          Undo
+        </Button>
+        <Button size="sm" variant="secondary" leftIcon={<History className="h-4 w-4" aria-hidden />} onClick={restoreOriginal} disabled={history.length === 0} title="Restore the text as it was before the first conversion">
+          Restore original
+        </Button>
+        <Button size="sm" variant="secondary" leftIcon={<Eraser className="h-4 w-4" aria-hidden />} onClick={clear} disabled={!hasText}>
+          Clear
+        </Button>
+        <Button size="sm" variant="ghost" leftIcon={<ClipboardPaste className="h-4 w-4" aria-hidden />} onClick={pasteFromClipboard}>
+          Paste
+        </Button>
+        {lastLabel && (
+          <Badge variant="primary" className="ml-auto">
+            Applied: {lastLabel}
+          </Badge>
+        )}
+      </ToolActions>
 
       <ToolSection title="Code cases" description="Each line becomes one identifier. Spaces, hyphens, underscores, punctuation and camelCase humps are word boundaries.">
         {renderModeButtons(CODE_MODES)}
