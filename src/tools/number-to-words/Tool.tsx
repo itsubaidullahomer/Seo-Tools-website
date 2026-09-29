@@ -170,7 +170,7 @@ export default function NumberToWords() {
             placeholder="1250.50"
             prefix={showCurrency ? cur.symbol : undefined}
             error={single?.kind === "error" ? single.message : undefined}
-            hint="Commas, spaces and a leading currency symbol are fine. Scientific notation such as 1e30 works too."
+            hint="Thousands separators (1,234,567 or 12,34,567) and a currency symbol are fine. Scientific notation such as 1e30 works too."
           />
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="label-mono mr-1">Try</span>
@@ -208,6 +208,18 @@ export default function NumberToWords() {
                   </li>
                 ))}
                 {list.errors.length > 3 && <li>…and {list.errors.length - 3} more.</li>}
+              </ul>
+            </Alert>
+          )}
+          {list.notes.length > 0 && (
+            <Alert variant="info" title="Check these lines">
+              <ul className="list-disc pl-4">
+                {list.notes.slice(0, 3).map((n) => (
+                  <li key={`${n.line}-${n.message}`}>
+                    Line {n.line}: {n.message}
+                  </li>
+                ))}
+                {list.notes.length > 3 && <li>…and {list.notes.length - 3} more.</li>}
               </ul>
             </Alert>
           )}
@@ -315,39 +327,39 @@ export default function NumberToWords() {
         </div>
       </details>
 
-          {single?.kind === "ok" && single.parts.length > 0 && (
-            <ToolSection title="How this number is read" description="The whole number is split into periods. Each period is read on its own, then the pieces are joined.">
-              <div className="overflow-x-auto rounded-lg border border-border">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-surface-2">
-                    <tr>
-                      <th scope="col" className="label-mono px-3 py-2 font-normal">
-                        Period
-                      </th>
-                      <th scope="col" className="label-mono px-3 py-2 font-normal">
-                        Digits
-                      </th>
-                      <th scope="col" className="label-mono px-3 py-2 font-normal">
-                        Read as
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {single.parts.map((p, i) => (
-                      <tr key={`${p.label}-${i}`} className="border-t border-border">
-                        <td className="px-3 py-2 text-fg-secondary">{p.label}</td>
-                        <td className="px-3 py-2 font-mono tabular-nums break-all">{p.digits}</td>
-                        <td className="px-3 py-2">
-                          {p.and ? <span className="text-muted">and </span> : null}
-                          {p.words}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </ToolSection>
-          )}
+      {single?.kind === "ok" && single.parts.length > 0 && (
+        <ToolSection title="How this number is read" description="The whole number is split into periods. Each period is read on its own, then the pieces are joined.">
+          <div className="overflow-x-auto rounded-lg border border-border">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-surface-2">
+                <tr>
+                  <th scope="col" className="label-mono px-3 py-2 font-normal">
+                    Period
+                  </th>
+                  <th scope="col" className="label-mono px-3 py-2 font-normal">
+                    Digits
+                  </th>
+                  <th scope="col" className="label-mono px-3 py-2 font-normal">
+                    Read as
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {single.parts.map((p, i) => (
+                  <tr key={`${p.label}-${i}`} className="border-t border-border">
+                    <td className="px-3 py-2 text-fg-secondary">{p.label}</td>
+                    <td className="px-3 py-2 font-mono tabular-nums break-all">{p.digits}</td>
+                    <td className="px-3 py-2">
+                      {p.and ? <span className="text-muted">and </span> : null}
+                      {p.words}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </ToolSection>
+      )}
 
       <p className="text-xs text-muted">
         Numbers are converted in your browser as exact digit strings, so long values are not rounded. Always check the words against the figures before using them in a legal, tax or banking document.

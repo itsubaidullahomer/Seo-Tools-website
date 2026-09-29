@@ -7,7 +7,7 @@ Four modes cover the common needs. **Words** is plain spelling-out. **Currency**
 ## How to use the converter
 
 1. **Pick a mode** with the tabs: Words, Currency, Check style or Ordinal. A line under the tabs describes the selected mode.
-2. **Type or paste a number** into the Number box. Commas, spaces and a leading $, £, € or ₹ are ignored. A minus sign or accounting brackets, as in (1,234.56), make it negative, and scientific notation such as 1e30 is understood. The words update on every keystroke, and the Try buttons load edge cases such as 0.05 and 1e30.
+2. **Type or paste a number** into the Number box. A $, £, € or ₹ at the start or end is ignored, and commas or spaces are accepted as thousands separators when they group the digits in threes (1,234,567) or the Indian way (12,34,567). A minus sign or accounting brackets, as in (1,234.56), make it negative, and scientific notation such as 1e30 is understood. The words update on every keystroke, and the Try buttons load edge cases such as 0.05 and 1e30.
 3. **Choose a currency** in Currency and Check style modes. Picking Indian rupee also switches the numbering system to Indian, so 12,34,567 is read in lakh and crore.
 4. **Adjust the style.** Numbering system, Text case, British "and" and Hyphenate 21 to 99 change the wording. Check style ignores British "and" because a check reserves "and" for the cents.
 5. **Open More options** for the short or long scale, "minus" or "negative", and the decimal mark of your input (choose Comma for numbers such as 1.234,56).
@@ -38,7 +38,7 @@ Joined together: **four million two hundred seven thousand fifteen**. With Briti
 
 The words line of a check is a safeguard, because figures are easier to alter than words. The usual convention in the United States and Canada is whole dollars in words, then "and", then the cents as a two-digit fraction over 100. These examples come from Check style mode:
 
-| Amount | Words line |
+| Amount | Check style output |
 | --- | --- |
 | $8.05 | Eight and 05/100 |
 | $100.00 | One hundred and 00/100 |
@@ -52,7 +52,7 @@ Three habits prevent most errors:
 - **Always write two digits over 100:** 05/100 for five cents, 00/100 for a whole amount, never 5/100.
 - **Fill the rest of the line.** Start at the left edge and draw a line through leftover space so nothing can be added.
 
-If the words and figures disagree, the words normally win. In the United States that rule appears in section 3-114 of the Uniform Commercial Code as the states enacted it, and in the United Kingdom section 9 of the Bills of Exchange Act 1882 says the sum denoted by the words is payable. Check both before you sign; this is general information, not legal advice. This tool converts numbers to text; it does not print or issue cheques (the British spelling of check).
+If the words and figures disagree, the words normally win. In the United States most states follow section 3-114 of the revised Uniform Commercial Code Article 3, which says words prevail over numbers (states that kept the older text put a similar rule in section 3-118, where figures win if the words are ambiguous). In the United Kingdom section 9 of the Bills of Exchange Act 1882 says the sum denoted by the words is the amount payable. Check both before you sign; this is general information, not legal advice. This tool converts numbers to text; it does not print or issue cheques (the British spelling of check).
 
 ## Lakh and crore: the Indian numbering system
 
@@ -104,7 +104,7 @@ Ordinal mode changes the last word of the number: one becomes first, two second,
 
 ## When to spell out numbers in writing
 
-Follow the style guide your publisher or school uses. Associated Press style spells out one through nine and uses numerals for 10 and above. The Chicago Manual of Style spells out zero through one hundred, plus round multiples such as "two hundred" and "three thousand", and uses numerals for the rest. Both advise spelling out a number that begins a sentence. Words mode with the lowercase option gives text you can paste into a sentence.
+Follow the style guide your publisher or school uses. Associated Press style spells out one through nine and uses numerals for 10 and above. The Chicago Manual of Style spells out zero through one hundred, plus round multiples such as "two hundred" and "three thousand", and uses numerals for the rest. Both advise spelling out a number that begins a sentence. Words mode with the lowercase option gives text you can paste into a sentence. Names such as Henry VIII or Super Bowl LX use Roman numerals instead; the [Roman numeral converter](/tools/roman-numeral-converter) handles those.
 
 ## Who uses it
 
@@ -117,6 +117,7 @@ Follow the style guide your publisher or school uses. Associated Press style spe
 
 - **Years are not cardinals.** The year 1984 is spoken "nineteen eighty-four", but this tool reads the number 1,984 as "one thousand nine hundred eighty-four". Write years by hand.
 - **Check the decimal mark.** In the US, 1.234 is a little over one; in much of Europe it means one thousand two hundred thirty-four. The tool reads the period as the decimal point unless you change Decimal mark under More options. It reports an error when a number mixes both marks in the other order, such as 1.234,56, and adds a note when a comma is followed by only one or two digits, as in 1,25.
+- **Separators must sit where thousands separators belong.** Something like 1,2,3 or 1,23,4567 is refused instead of being guessed at, so a stray comma cannot quietly turn a list into one big number. To convert several numbers, use list mode and put one per line.
 - **Do not put "and" inside dollar amounts on a check**, and do not skip the cents fraction.
 
 ## Privacy and limitations

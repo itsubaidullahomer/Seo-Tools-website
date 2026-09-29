@@ -99,10 +99,34 @@ export type ParseOutcome =
 
 const isZeroDigits = (s: string) => /^0*$/.test(s);
 
+/** Remove one currency symbol from the start or end of the text ("$5", "5 €"). */
+const stripSymbol = (x: string) =>
+  x
+    .replace(/^[$£€₹¥]\s*/, "")
+    .replace(/\s*[$£€₹¥]$/, "")
+    .trim();
+
+const isDigits = (g: string) => /^\d*$/.test(g);
+
+/**
+ * True when the digit groups (already split on the separator) follow a real
+ * grouping pattern: 1,234,567 (first group 1-3 digits, the rest exactly 3) or the
+ * Indian 12,34,567 (first group 1-2 digits, middle groups exactly 2, last exactly 3).
+ */
+function isRegularGrouping(groups: string[]): boolean {
+  if (groups.length < 2 || !groups.every((g) => /^\d+$/.test(g))) return false;
+  const first = groups[0].length;
+  const last = groups[groups.length - 1].length;
+  const international = first <= 3 && groups.slice(1).every((g) => g.length === 3);
+  const indian = first <= 2 && last === 3 && groups.slice(1, -1).every((g) => g.length === 2);
+  return international || indian;
+}
+
 /**
  * Parse user text into sign, whole digits and fraction digits without ever using
- * Number. Accepts thousands separators (commas, spaces, underscores, apostrophes),
- * a leading currency symbol, accounting parentheses and scientific notation.
+ * Number. Accepts thousands separators (commas, spaces, underscores, apostrophes)
+ * that group the digits in threes or the Indian way, a currency symbol at either
+ * end, accounting parentheses and scientific notation.
  */
 export function parseNumber(raw: string, decimalMark: DecimalMark = "."): ParseOutcome {
   // NFKC turns full-width digits and signs (１２３) into ASCII before parsing.
@@ -111,27 +135,29 @@ export function parseNumber(raw: string, decimalMark: DecimalMark = "."): ParseO
   if (s.length > MAX_INPUT_LENGTH) return { kind: "invalid", message: `That input is ${s.length} characters long. Numbers up to ${MAX_INPUT_LENGTH} characters are accepted.` };
 
   const original = s;
-  s = s.replace(/[$£€₹¥]/g, "").trim();
   let negative = false;
+  s = stripSymbol(s);
   if (s === "(") return { kind: "empty" };
   const parens = /^\((.*)\)$/.exec(s);
   if (parens) {
     negative = true;
-    s = parens[1].trim();
+    s = stripSymbol(parens[1].trim());
   }
-  const sign = /^([+\-−])\s*/.exec(s);
+  const sign = /^([+\-−‒–])\s*/.exec(s);
   if (sign) {
     if (sign[1] !== "+") negative = true;
-    s = s.slice(sign[0].length);
+    s = stripSymbol(s.slice(sign[0].length));
   }
-  s = s.replace(/[\s_'’]/g, "");
   // Only a sign, symbol or bracket so far: the person is still typing.
   if (!s) return { kind: "empty" };
 
   const notes: string[] = [];
   const groupChar = decimalMark === "." ? "," : ".";
-  const lastDot = s.lastIndexOf(".");
-  const lastComma = s.lastIndexOf(",");
+  const groupName = groupChar === "," ? "comma" : "period";
+  const markName = decimalMark === "." ? "point" : "comma";
+  const compact = s.replace(/[\s_'’]/g, "");
+  const lastDot = compact.lastIndexOf(".");
+  const lastComma = compact.lastIndexOf(",");
   if (lastDot >= 0 && lastComma >= 0) {
     const lastIsGroup = decimalMark === "." ? lastComma > lastDot : lastDot > lastComma;
     if (lastIsGroup) {
@@ -140,24 +166,49 @@ export function parseNumber(raw: string, decimalMark: DecimalMark = "."): ParseO
         message: `"${original}" looks like ${decimalMark === "." ? "European" : "US/UK"} formatting. Change "Decimal mark" under More options to ${decimalMark === "." ? "comma" : "period"}.`,
       };
     }
-  } else {
-    const count = s.split(groupChar).length - 1;
-    const tail = new RegExp(`\\${groupChar}\\d{1,2}(?:[eE][+-]?\\d+)?$`);
-    if (count === 1 && !s.includes(decimalMark) && tail.test(s)) {
-      notes.push(
-        `"${original}" was read with "${groupChar}" as a thousands separator. If you meant a decimal ${groupChar === "," ? "comma" : "point"}, change "Decimal mark" under More options.`,
-      );
+  }
+
+  // Check that separators in the whole-number part sit where thousands separators belong,
+  // so "1,2,3" or "1,23,4567" is refused instead of being silently read as one number.
+  const intEnd = s.search(decimalMark === "." ? /[.eE]/ : /[,eE]/);
+  const intText = intEnd >= 0 ? s.slice(0, intEnd) : s;
+  const afterInt = intEnd >= 0 ? s.slice(intEnd) : "";
+  const sepPattern = new RegExp(`[${groupChar === "." ? "\\." : ","}\\s_'’]`);
+  // A trailing separator ("1,234,") just means the person is still typing.
+  const cleanInt = afterInt === "" ? intText.replace(new RegExp(`${sepPattern.source}+$`), "") : intText;
+  if (sepPattern.test(cleanInt)) {
+    const groups = cleanInt.split(sepPattern);
+    if (groups.every(isDigits) && !isRegularGrouping(groups)) {
+      const singleGroupChar = groups.length === 2 && cleanInt.includes(groupChar) && !/[\s_'’]/.test(cleanInt);
+      if (singleGroupChar && groups[1].length <= 2 && !afterInt.startsWith(decimalMark)) {
+        notes.push(
+          `"${original}" was read with "${groupChar}" as a thousands separator. If you meant a decimal ${groupChar === "," ? "comma" : "point"}, change "Decimal mark" under More options.`,
+        );
+      } else {
+        return {
+          kind: "invalid",
+          message: `"${original}" has separators in unusual places. Group digits in threes (1,234,567) or the Indian way (12,34,567), use a ${groupName} only as a thousands separator, or remove them.`,
+        };
+      }
     }
   }
 
-  s = s.split(groupChar).join("");
+  s = compact.split(groupChar).join("");
   const pattern = new RegExp(`^(\\d*)(?:\\${decimalMark}(\\d*))?(?:[eE]([+-]?\\d+))?$`);
   const m = pattern.exec(s);
   if (!m) {
     const marks = s.split(decimalMark).length - 1;
-    if (marks > 1) return { kind: "invalid", message: `A number can have only one decimal ${decimalMark === "." ? "point" : "comma"}.` };
+    if (marks > 1) {
+      const european = isRegularGrouping(s.split(/[eE]/)[0].split(decimalMark));
+      return {
+        kind: "invalid",
+        message: european
+          ? `"${original}" looks like it uses "${decimalMark}" as a thousands separator. Change "Decimal mark" under More options to ${decimalMark === "." ? "comma" : "period"}.`
+          : `A number can have only one decimal ${markName}.`,
+      };
+    }
     const bad = /[^0-9eE+\-.,]/u.exec(s);
-    if (bad) return { kind: "invalid", message: `"${bad[0]}" is not a digit. Use 0-9, one decimal point and, if needed, a minus sign.` };
+    if (bad) return { kind: "invalid", message: `"${bad[0]}" is not a digit. Use 0-9, one decimal ${markName} and, if needed, a minus sign.` };
     return { kind: "invalid", message: `"${original}" does not look like a number.` };
   }
 
@@ -520,6 +571,8 @@ export interface ListResult {
   converted: number;
   failed: number;
   errors: { line: number; message: string }[];
+  /** Lines converted with a caution, such as an ambiguous "1,25". */
+  notes: { line: number; message: string }[];
   truncated: boolean;
 }
 
@@ -529,6 +582,7 @@ export function convertList(input: string, o: ConvertOptions, showNumber: boolea
   const truncated = lines.length > MAX_LIST_LINES;
   const used = truncated ? lines.slice(0, MAX_LIST_LINES) : lines;
   const errors: { line: number; message: string }[] = [];
+  const notes: { line: number; message: string }[] = [];
   let converted = 0;
   const out = used.map((line, i) => {
     const r = convert(line, o);
@@ -538,7 +592,11 @@ export function convertList(input: string, o: ConvertOptions, showNumber: boolea
       return showNumber ? `${line.trim()} = (could not convert)` : "(could not convert)";
     }
     converted++;
+    for (const message of r.notes) {
+      // The same option note (for example "British and is ignored") would repeat on every line.
+      if (!notes.some((n) => n.message === message)) notes.push({ line: i + 1, message });
+    }
     return showNumber ? `${line.trim()} = ${r.text}` : r.text;
   });
-  return { text: out.join("\n"), converted, failed: errors.length, errors, truncated };
+  return { text: out.join("\n"), converted, failed: errors.length, errors, notes, truncated };
 }
