@@ -31,7 +31,8 @@ mkdirSync(join(process.cwd(), "screenshots", "tools"), { recursive: true });
 const executablePath = process.env.PW_CHROMIUM ?? "/opt/pw-browsers/chromium";
 const browser = await chromium.launch(existsSync(executablePath) ? { executablePath } : {});
 
-const IGNORED = [/Download the React DevTools/, /favicon/, /hydrat/i && /warning/i];
+// Dev-only noise: React DevTools hint, favicon, and Turbopack chunk-preload 404s for lazily imported libraries.
+const IGNORED = [/Download the React DevTools/, /favicon/, /Failed to load resource.*404/];
 
 let failures = 0;
 for (const slug of slugs) {

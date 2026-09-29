@@ -49,6 +49,12 @@ export interface ToolMeta {
    * "Your files never leave your browser" privacy badge.
    */
   processesFiles?: boolean;
+  /**
+   * Set for tools where people click or type rapidly (keyboard/mouse tests, click
+   * speed tests, games). Suppresses the ad slots near the tool so there are no
+   * accidental ad clicks (AdSense policy); only the bottom-of-page slot remains.
+   */
+  highInteraction?: boolean;
 }
 
 /** Lightweight shape sent to client components (search, cards). */
