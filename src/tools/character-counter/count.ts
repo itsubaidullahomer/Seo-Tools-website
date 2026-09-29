@@ -57,10 +57,8 @@ export const PRESETS: Preset[] = [
   { id: "email-subject", label: "Email subject line – 60", limit: 60, rule: "graphemes", group: "SEO & ads", note: "Most inboxes show 40–60 characters; mobile clients show fewer." },
   { id: "sms", label: "SMS text message – 160", limit: 160, rule: "sms", group: "Messaging", note: "160 characters with the GSM-7 alphabet, 70 if the message contains any other character (most emoji, curly quotes, many accented letters)." },
   { id: "excel-cell", label: "Excel cell – 32,767", limit: 32767, rule: "graphemes", group: "Other" },
-  { id: "custom", label: "Custom limit…", limit: 0, rule: "graphemes", group: "Other" },
+  { id: CUSTOM_PRESET_ID, label: "Custom limit…", limit: 0, rule: "graphemes", group: "Other" },
 ];
-
-export const CUSTOM_PRESET_ID = "custom";
 
 export function getPreset(id: string): Preset {
   return PRESETS.find((p) => p.id === id) ?? PRESETS[PRESETS.length - 1];
