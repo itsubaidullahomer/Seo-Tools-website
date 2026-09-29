@@ -149,11 +149,9 @@ export function* graphemesOf(text: string): Generator<string> {
   yield* splitGraphemesFallback(text);
 }
 
-/** Count code points (Unicode scalar values). */
+/** Count code points: every surrogate pair is one code point made of two code units. */
 export function countCodePoints(text: string): number {
-  let n = 0;
-  for (const _ of text) n++;
-  return n;
+  return text.length - (text.match(/[\ud800-\udbff][\udc00-\udfff]/g)?.length ?? 0);
 }
 
 /**
@@ -165,7 +163,8 @@ export function countGraphemes(text: string): { count: number; exact: boolean } 
   if (!COMPLEX_RE.test(text)) return { count: text.length, exact: true };
   if (text.length > HUGE_TEXT_UNITS) return { count: countCodePoints(text), exact: false };
   let n = 0;
-  for (const _ of graphemesOf(text)) n++;
+  const it = graphemesOf(text);
+  while (!it.next().done) n++;
   return { count: n, exact: true };
 }
 

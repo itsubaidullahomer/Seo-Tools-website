@@ -65,9 +65,10 @@ export default function CharacterCounter() {
   const customNumber = Math.floor(Number(customLimit));
   const baseLimit = isCustom ? customNumber : preset.limit;
 
-  const sms = useMemo(() => (rule === "sms" ? smsInfo(text) : null), [rule, text]);
-  const xInfo = useMemo(() => (rule === "x" ? xWeightedLength(text) : null), [rule, text]);
-  const used = useMemo(() => measure(text, rule, stats), [text, rule, stats]);
+  // Derived values are cheap for normal text; the React Compiler memoizes them automatically.
+  const sms = rule === "sms" ? smsInfo(text) : null;
+  const xInfo = rule === "x" ? xWeightedLength(text) : null;
+  const used = xInfo ? xInfo.weighted : sms ? sms.units : measure(text, rule, stats);
 
   // SMS capacity depends on the encoding the text forces (160 for GSM-7, 70 for UCS-2).
   const limit = sms ? sms.single : baseLimit;
@@ -76,7 +77,7 @@ export default function CharacterCounter() {
   const near = hasLimit && !over && used >= limit * 0.9;
   const pct = hasLimit ? Math.min(100, (used / limit) * 100) : 0;
 
-  const fitted = useMemo(() => (over ? trimToLimit(text, rule, limit) : ""), [over, text, rule, limit]);
+  const fitted = over ? trimToLimit(text, rule, limit) : "";
 
   const unitsDiffer = stats.graphemes !== stats.codeUnits;
   const avgWordLength = stats.words ? stats.graphemesNoSpaces / stats.words : 0;
