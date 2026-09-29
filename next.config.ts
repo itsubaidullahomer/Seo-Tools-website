@@ -1,7 +1,27 @@
 import type { NextConfig } from "next";
 
+const securityHeaders = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(self), microphone=(self), geolocation=()" },
+];
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  poweredByHeader: false,
+  async headers() {
+    return [
+      { source: "/(.*)", headers: securityHeaders },
+      // ads.txt must be fetchable by Google's crawler and should not be cached for long.
+      { source: "/ads.txt", headers: [{ key: "Cache-Control", value: "public, max-age=3600" }] },
+    ];
+  },
+  async redirects() {
+    // Add permanent redirects here whenever a tool slug or category is renamed,
+    // e.g. { source: "/tools/old-slug", destination: "/tools/new-slug", permanent: true }
+    return [];
+  },
 };
 
 export default nextConfig;
