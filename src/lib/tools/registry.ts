@@ -3,6 +3,7 @@ import "server-only";
 import { categories, type CategorySlug, getCategory } from "./categories";
 import { toolMetas } from "./registry.generated";
 import { toSummary, type ToolMeta, type ToolSummary } from "./types";
+import type { IconName } from "@/lib/icons";
 
 /**
  * Read-only access to the tool catalogue. Server components only – client
@@ -60,6 +61,29 @@ export function getRelatedTools(tool: ToolMeta, limit = 6): ToolMeta[] {
 
 export function getToolSummaries(): ToolSummary[] {
   return getAllTools().map(toSummary);
+}
+
+/** Categories with their tools (name/slug/icon only) for navigation trees. */
+export function getNavTree(): NavCategory[] {
+  return categories
+    .map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      shortName: c.shortName,
+      icon: c.icon,
+      color: c.color,
+      tools: getToolsByCategory(c.slug).map((t) => ({ slug: t.slug, name: t.name, icon: t.icon })),
+    }))
+    .filter((c) => c.tools.length > 0);
+}
+
+export interface NavCategory {
+  slug: string;
+  name: string;
+  shortName: string;
+  icon: IconName;
+  color: string;
+  tools: { slug: string; name: string; icon?: IconName }[];
 }
 
 export function getCategoriesWithCounts() {

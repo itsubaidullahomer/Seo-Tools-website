@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /** Outer card every tool renders into. Keeps spacing consistent across 500 tools. */
 export function ToolPanel({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("flex flex-col gap-5 rounded-2xl border border-border bg-surface p-4 shadow-card sm:p-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-5 rounded-xl border border-border-strong bg-surface p-4 shadow-card sm:p-5", className)} {...props}>
       {children}
     </div>
   );
@@ -31,11 +31,11 @@ export function ToolGrid({ className, children, cols = 2, ...props }: HTMLAttrib
 /** Small labelled section inside a panel. */
 export function ToolSection({ title, description, children, className }: { title?: ReactNode; description?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={cn("flex flex-col gap-3", className)}>
+    <section className={cn("flex flex-col gap-3 border-t border-border pt-5", className)}>
       {(title || description) && (
         <div>
           {title && <h3 className="text-sm font-semibold text-fg">{title}</h3>}
-          {description && <p className="text-xs text-muted">{description}</p>}
+          {description && <p className="mt-0.5 text-xs text-muted">{description}</p>}
         </div>
       )}
       {children}

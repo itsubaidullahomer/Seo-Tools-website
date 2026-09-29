@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useId, useRef, useState, type DragEvent, type ReactNode } from "react";
+import { useCallback, useId, useState, type DragEvent, type ReactNode } from "react";
 import { Upload } from "lucide-react";
 import { cn, formatBytes } from "@/lib/utils";
 
@@ -24,7 +24,6 @@ export interface FileDropzoneProps {
  */
 export function FileDropzone({ onFiles, accept, multiple, maxSize, title, description, disabled, className }: FileDropzoneProps) {
   const id = useId();
-  const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,25 +60,24 @@ export function FileDropzone({ onFiles, accept, multiple, maxSize, title, descri
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors",
-          dragging ? "border-primary bg-primary-soft" : "border-border-strong bg-surface-2 hover:border-primary/60 hover:bg-surface-3/60",
+          "bg-grid flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors",
+          dragging ? "border-primary bg-primary-soft" : "border-border-strong bg-surface-2 hover:border-primary/60",
           disabled && "cursor-not-allowed opacity-60",
         )}
       >
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-surface text-primary shadow-sm">
+        <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border-strong bg-surface text-primary">
           <Upload className="h-5 w-5" aria-hidden />
         </span>
         <span className="text-sm font-medium text-fg">{title ?? (multiple ? "Drop files here or click to browse" : "Drop a file here or click to browse")}</span>
-        <span className="text-xs text-muted">
+        <span className="font-mono text-[11px] text-muted">
           {description ?? (
             <>
-              {accept ? `Accepted: ${accept.replace(/,/g, ", ")}` : "Any file type"}
-              {maxSize ? ` · up to ${formatBytes(maxSize, 0)}` : ""} · processed on your device
+              {accept ? accept.replace(/,/g, " · ") : "any file"}
+              {maxSize ? ` · max ${formatBytes(maxSize, 0)}` : ""} · stays on your device
             </>
           )}
         </span>
         <input
-          ref={inputRef}
           id={id}
           type="file"
           accept={accept}
@@ -93,7 +91,7 @@ export function FileDropzone({ onFiles, accept, multiple, maxSize, title, descri
         />
       </label>
       {error && (
-        <p className="text-xs text-danger" role="alert">
+        <p className="text-xs font-medium text-danger" role="alert">
           {error}
         </p>
       )}

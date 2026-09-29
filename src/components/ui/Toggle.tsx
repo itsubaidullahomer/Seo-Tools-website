@@ -16,7 +16,7 @@ export interface ToggleProps {
 export function Toggle({ checked, onChange, label, description, disabled, className }: ToggleProps) {
   const id = useId();
   return (
-    <label htmlFor={id} className={cn("flex cursor-pointer items-start gap-3 select-none", disabled && "opacity-60 cursor-not-allowed", className)}>
+    <label htmlFor={id} className={cn("flex cursor-pointer items-start gap-3 select-none", disabled && "cursor-not-allowed opacity-60", className)}>
       <button
         id={id}
         type="button"
@@ -25,19 +25,14 @@ export function Toggle({ checked, onChange, label, description, disabled, classN
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className={cn(
-          "relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-full border border-transparent transition-colors",
-          checked ? "bg-primary" : "bg-surface-3",
+          "relative mt-0.5 inline-flex h-5 w-9 shrink-0 items-center rounded-full border transition-colors",
+          checked ? "border-primary bg-primary" : "border-border-strong bg-surface-3",
         )}
       >
-        <span
-          className={cn(
-            "inline-block h-5 w-5 rounded-full bg-white shadow transition-transform",
-            checked ? "translate-x-5" : "translate-x-0.5",
-          )}
-        />
+        <span className={cn("inline-block h-3.5 w-3.5 rounded-full bg-white shadow-sm transition-transform", checked ? "translate-x-[18px]" : "translate-x-[3px]")} />
       </button>
       <span className="flex flex-col">
-        <span className="text-sm font-medium text-fg">{label}</span>
+        <span className="text-[13px] font-medium text-fg">{label}</span>
         {description && <span className="text-xs text-muted">{description}</span>}
       </span>
     </label>
@@ -55,14 +50,14 @@ export interface CheckboxProps {
 export function Checkbox({ checked, onChange, label, disabled, className }: CheckboxProps) {
   const id = useId();
   return (
-    <label htmlFor={id} className={cn("inline-flex cursor-pointer items-center gap-2 text-sm text-fg select-none", disabled && "opacity-60", className)}>
+    <label htmlFor={id} className={cn("inline-flex cursor-pointer items-center gap-2 text-[13px] text-fg select-none", disabled && "opacity-60", className)}>
       <input
         id={id}
         type="checkbox"
         checked={checked}
         disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-border-strong text-primary accent-[var(--primary)] focus:ring-ring"
+        className="h-4 w-4 rounded border-border-strong accent-[var(--primary)]"
       />
       {label}
     </label>

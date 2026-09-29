@@ -22,7 +22,7 @@ export const meta: ToolMeta = {
   ],
   aliases: ["json lint", "jsonlint", "pretty json", "json checker", "json beautify", "json escape", "json unescape"],
   icon: "braces",
-  featured: false,
+  featured: true,
   datePublished: "2026-09-29",
   dateModified: "2026-09-29",
   related: ["remove-line-breaks", "case-converter", "character-counter", "password-generator"],

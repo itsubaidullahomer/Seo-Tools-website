@@ -54,7 +54,12 @@ export function usePersistentState<T>(
     try {
       getStore()?.setItem(key, serialize(value));
     } catch {
-      /* quota exceeded or unavailable */
+      // Quota exceeded: drop the stale value so an older draft isn't restored later.
+      try {
+        getStore()?.removeItem(key);
+      } catch {
+        /* unavailable */
+      }
     }
   }, [key, value, restored, serialize, getStore]);
 

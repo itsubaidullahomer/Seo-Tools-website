@@ -20,7 +20,7 @@ export interface TabsProps<T extends string> {
 /** Segmented control for switching modes (e.g. Encode / Decode). */
 export function Tabs<T extends string>({ value, onChange, options, label = "Mode", size = "md", className }: TabsProps<T>) {
   return (
-    <div role="tablist" aria-label={label} className={cn("inline-flex max-w-full overflow-x-auto rounded-lg border border-border bg-surface-2 p-1", className)}>
+    <div role="tablist" aria-label={label} className={cn("scroll-thin inline-flex max-w-full overflow-x-auto rounded-lg border border-border-strong bg-surface-2 p-0.5", className)}>
       {options.map((o) => {
         const active = o.value === value;
         return (
@@ -32,8 +32,8 @@ export function Tabs<T extends string>({ value, onChange, options, label = "Mode
             onClick={() => onChange(o.value)}
             className={cn(
               "rounded-md font-medium whitespace-nowrap transition-colors",
-              size === "sm" ? "px-3 py-1 text-xs" : "px-4 py-1.5 text-sm",
-              active ? "bg-surface text-fg shadow-sm" : "text-muted hover:text-fg",
+              size === "sm" ? "px-2.5 py-1 text-xs" : "px-3.5 py-1.5 text-[13px]",
+              active ? "bg-ink text-ink-fg shadow-sm" : "text-muted hover:bg-surface hover:text-fg",
             )}
           >
             {o.label}

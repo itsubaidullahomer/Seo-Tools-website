@@ -10,18 +10,19 @@ export interface StatProps {
   className?: string;
 }
 
-/** Compact metric tile (e.g. Words / Characters / Sentences). */
+/** Compact instrument-style metric tile (e.g. Words / Characters / Sentences). */
 export function Stat({ label, value, hint, emphasis, className }: StatProps) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-0.5 rounded-xl border border-border px-4 py-3",
-        emphasis ? "bg-primary-soft border-primary/30" : "bg-surface-2",
+        "relative flex flex-col gap-1 overflow-hidden rounded-lg border px-3.5 py-3",
+        emphasis ? "border-primary/40 bg-primary-soft" : "border-border bg-surface-2",
         className,
       )}
     >
-      <span className="text-xs font-medium uppercase tracking-wide text-muted">{label}</span>
-      <span className={cn("text-2xl font-semibold tabular-nums tracking-tight", emphasis ? "text-primary" : "text-fg")}>{value}</span>
+      {emphasis && <span className="absolute inset-y-0 left-0 w-[3px] bg-accent-bright" aria-hidden />}
+      <span className="label-mono">{label}</span>
+      <span className={cn("font-mono text-2xl font-semibold tabular-nums tracking-tight", emphasis ? "text-primary" : "text-fg")}>{value}</span>
       {hint && <span className="text-xs text-muted">{hint}</span>}
     </div>
   );
@@ -29,5 +30,5 @@ export function Stat({ label, value, hint, emphasis, className }: StatProps) {
 
 /** Responsive grid for Stat tiles. */
 export function StatGrid({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4", className)}>{children}</div>;
+  return <div className={cn("grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4", className)}>{children}</div>;
 }

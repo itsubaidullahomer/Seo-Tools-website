@@ -22,7 +22,7 @@ export const meta: ToolMeta = {
   ],
   aliases: ["password maker", "pw generator", "diceware generator", "random passphrase"],
   icon: "key-round",
-  featured: false,
+  featured: true,
   datePublished: "2026-09-29",
   dateModified: "2026-09-29",
   related: ["character-counter", "case-converter", "word-counter"],

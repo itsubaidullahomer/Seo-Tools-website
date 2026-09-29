@@ -25,13 +25,13 @@ export function Field({ label, hint, error, labelAddon, className, children }: F
       {(label || labelAddon) && (
         <div className="flex items-center justify-between gap-2">
           {label ? (
-            <label htmlFor={id} className="text-sm font-medium text-fg">
+            <label htmlFor={id} className="text-[13px] font-medium text-fg">
               {label}
             </label>
           ) : (
             <span />
           )}
-          {labelAddon && <span className="text-xs text-muted tabular-nums">{labelAddon}</span>}
+          {labelAddon && <span className="font-mono text-[11px] tabular-nums text-muted">{labelAddon}</span>}
         </div>
       )}
       {children({ id, describedBy })}
@@ -41,7 +41,7 @@ export function Field({ label, hint, error, labelAddon, className, children }: F
         </p>
       )}
       {error && (
-        <p id={errorId} className="text-xs text-danger" role="alert">
+        <p id={errorId} className="text-xs font-medium text-danger" role="alert">
           {error}
         </p>
       )}
@@ -50,6 +50,6 @@ export function Field({ label, hint, error, labelAddon, className, children }: F
 }
 
 export const controlClass =
-  "w-full rounded-lg border border-border bg-surface text-fg placeholder:text-muted/70 shadow-sm transition-colors " +
-  "hover:border-border-strong focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/50 " +
-  "disabled:opacity-60 disabled:cursor-not-allowed aria-[invalid=true]:border-danger";
+  "w-full rounded-lg border border-border-strong bg-surface text-fg placeholder:text-muted/70 transition-[border-color,box-shadow] " +
+  "hover:border-fg/30 focus:border-primary focus:outline-none focus:ring-[3px] focus:ring-primary/15 " +
+  "disabled:opacity-60 disabled:cursor-not-allowed aria-[invalid=true]:border-danger aria-[invalid=true]:ring-danger/15";
