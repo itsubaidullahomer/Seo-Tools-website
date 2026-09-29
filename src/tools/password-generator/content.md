@@ -39,9 +39,13 @@ average time = 2^(bits − 1) ÷ 10,000,000,000 guesses per second
 
 The labels are: **Weak** under 48 bits, **Fair** 48–63, **Strong** 64–79 and **Very strong** 80 or more. At the assumed speed, 48 bits falls in about 4 hours, 64 bits takes about 29 years and 80 bits about 1.9 million years.
 
+### Why 10 billion guesses per second?
+
+The real speed depends on how the site stored your password. In hashcat's published benchmark for a single RTX 4090 graphics card, it tests about 164 billion MD5 guesses per second, 22 billion SHA-256 guesses, and only about 184,000 bcrypt guesses at a low cost setting (most sites use a higher, slower one). Ten billion per second sits between those extremes, so treat the estimate as a reference point, not a promise. If you want a safety margin, multiply the speed by 100: the default 16-character password still needs an average of 250 billion years, while 8 random characters from all four types fall in about 36 minutes instead of 2 days.
+
 ### Reference table
 
-Average time to guess at 10 billion guesses per second:
+Average time to guess at 10 billion guesses per second, using the simple formula above. The tool's exact count also removes passwords that miss a selected type, so it shows slightly less: 8 characters from all four types read 50.8 bits (about 1 day), not 51.9.
 
 | Password | Bits | Average time to guess |
 | --- | --- | --- |
@@ -64,9 +68,9 @@ Length does far more than adding character types: 16 lowercase letters beat 12 c
 
 The xkcd comic "Password Strength" (number 936) made the point memorably: `Tr0ub4dor&3` looks complex but follows a common pattern (dictionary word, predictable substitutions, digit and symbol at the end) and carries about 28 bits. Four truly random words, as in "correct horse battery staple", carry about 44 bits and are far easier to remember.
 
-The same logic applies here. Each word from this tool's 1,500-word list adds log2(1,500) ≈ 10.55 bits, the same as about 1.6 random characters from the full 90-character set. Diceware lists such as the EFF's 7,776-word list give 12.9 bits per word; this list trades about 2.3 bits per word for shorter, easier words, so add one extra word. Six words (63 bits) or seven (74 bits) make a phrase you can learn in a few days. The generator must choose the words; a phrase you invent, like a song lyric, has a fraction of that entropy.
+The same logic applies here. Each word from this tool's 1,500-word list adds log2(1,500) ≈ 10.55 bits, the same as about 1.6 random characters from the full 90-character set. Diceware lists such as the EFF's 7,776-word list give 12.9 bits per word; this list trades about 2.4 bits per word for shorter, easier words, so add one extra word. Six words (63 bits) or seven (74 bits) make a phrase you can learn in a few days. The generator must choose the words; a phrase you invent, like a song lyric, has a fraction of that entropy.
 
-NIST's digital identity guidelines (SP 800-63B, revision 4, finalized in 2025) now point the same way. They ask for at least 15 characters when a password is the only login factor (8 when it is paired with another factor), tell services to accept at least 64 characters including spaces, and tell them not to impose composition rules such as "one uppercase, one symbol". They also say not to force periodic password changes, and to check new passwords against lists of known-compromised ones. In short: length and randomness over complexity.
+NIST's digital identity guidelines (SP 800-63B, revision 4, finalized in 2025) now point the same way. They ask for at least 15 characters when a password is the only login factor (8 when it is paired with another factor), recommend that services accept at least 64 characters including spaces, and forbid composition rules such as "one uppercase, one symbol". They also forbid forced periodic password changes and require new passwords to be checked against lists of known-compromised ones. In short: length and randomness over complexity.
 
 ## How the randomness works
 
@@ -103,4 +107,4 @@ Add two-factor authentication wherever it is offered, starting with email, banki
 
 Everything happens in your browser. No password is sent over the network, logged, or written to storage; refreshing the page produces new ones. Only your settings (mode, length, toggles) are remembered in this browser's local storage.
 
-The time-to-guess figure is an educational estimate for a well-resourced offline attack on fast hashes. Real attacks are often slower (sites that use bcrypt or Argon2) and sometimes faster (if a password was already leaked, entropy is irrelevant). The strength meter rates the generator's output, so it cannot score a password you typed yourself. A generated password is only as safe as where you keep it: use a password manager, not a text file or a sticky note.
+The time-to-guess figure is an educational estimate at a fixed 10 billion guesses per second. Real attacks are far slower against sites that use bcrypt or Argon2, faster with many graphics cards against MD5 or NTLM, and instant if the password has already leaked, because entropy no longer matters once an attacker has the password itself. The strength meter rates the generator's output, so it cannot score a password you typed yourself. A generated password is only as safe as where you keep it: use a password manager, not a text file or a sticky note.

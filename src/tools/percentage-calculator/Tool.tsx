@@ -71,6 +71,26 @@ const EMPTY: Fields = {
   revMode: "subtract",
 };
 
+const TEXT_KEYS = ["ofP", "ofY", "whatX", "whatY", "chFrom", "chTo", "diffA", "diffB", "addValue", "addP", "revFinal", "revP"] as const;
+
+/**
+ * Stored state comes from session storage and may be missing, from an older
+ * version of the page or edited by hand. Rebuild it field by field so a bad
+ * value can never crash the calculator.
+ */
+function normalizeFields(stored: unknown): Fields {
+  const src = stored && typeof stored === "object" ? (stored as Record<string, unknown>) : {};
+  const out: Fields = { ...EMPTY };
+  for (const key of TEXT_KEYS) {
+    const v = src[key];
+    if (typeof v === "string") out[key] = v;
+    else if (typeof v === "number" && Number.isFinite(v)) out[key] = String(v);
+  }
+  if (src.addMode === "add" || src.addMode === "subtract") out.addMode = src.addMode;
+  if (src.revMode === "add" || src.revMode === "subtract") out.revMode = src.revMode;
+  return out;
+}
+
 /** A computed card result, or a reason it could not be computed. */
 type Outcome =
   | { status: "empty" }
@@ -203,7 +223,10 @@ function calcApply(vRaw: string, pRaw: string, mode: AddMode): Outcome {
         ? `Adding ${formatNum(p)}% to ${formatNum(v)} adds ${formatNum(amount)}, giving ${res}.`
         : `Taking ${formatNum(p)}% off ${formatNum(v)} removes ${formatNum(amount)}, leaving ${res}.`,
     copy: `${formatNum(v)} ${op} ${formatNum(p)}% = ${res}`,
-    note: precisionNote(n),
+    note:
+      (mode === "add" ? 1 + p / 100 : 1 - p / 100) < 0
+        ? "This is a decrease of more than 100%, so the result is on the other side of zero. A price cannot fall by more than 100%."
+        : precisionNote(n),
   };
 }
 
@@ -223,7 +246,10 @@ function calcReverse(fRaw: string, pRaw: string, mode: AddMode): Outcome {
     formula: `${paren(final)} ÷ (1 ${op} ${paren(p)} ÷ 100) = ${paren(final)} ÷ ${formatNum(factor)} = ${res}`,
     explanation: `The original value was ${res}. A ${formatNum(p)}% ${word} changes it by ${signed(amount)}, which gives ${formatNum(final)}.`,
     copy: `Original value before a ${formatNum(p)}% ${word} to ${formatNum(final)} = ${res}`,
-    note: precisionNote(n),
+    note:
+      factor < 0
+        ? "This is a decrease of more than 100%, so the original value has the opposite sign to the final value. Check the percentage if you expected a positive original."
+        : precisionNote(n),
   };
 }
 
@@ -263,7 +289,7 @@ function NumberField({
   suffix?: string;
   placeholder?: string;
 }) {
-  const invalid = parseNumber(value).kind === "invalid";
+  const parsed = parseNumber(value);
   return (
     <Input
       label={label}
@@ -275,7 +301,7 @@ function NumberField({
       placeholder={placeholder}
       suffix={suffix}
       onChange={(e) => onChange(e.target.value)}
-      error={invalid ? "Enter a number, e.g. 25 or -3.5" : undefined}
+      error={parsed.kind === "invalid" ? parsed.hint : undefined}
       containerClassName="min-w-0"
     />
   );
@@ -320,8 +346,9 @@ function ResultArea({ outcome }: { outcome: Outcome }) {
 }
 
 export default function PercentageCalculator() {
-  const [f, setF] = usePersistentState<Fields>("percentage-calculator:v1", EXAMPLES);
-  const set = <K extends keyof Fields>(key: K) => (value: Fields[K]) => setF((prev) => ({ ...prev, [key]: value }));
+  const [stored, setF] = usePersistentState<Fields>("percentage-calculator:v1", EXAMPLES);
+  const f = useMemo(() => normalizeFields(stored), [stored]);
+  const set = <K extends keyof Fields>(key: K) => (value: Fields[K]) => setF((prev) => ({ ...normalizeFields(prev), [key]: value }));
 
   const results = useMemo(
     () => ({
@@ -376,7 +403,12 @@ export default function PercentageCalculator() {
               size="icon"
               aria-label="Swap old and new values"
               title="Swap"
-              onClick={() => setF((prev) => ({ ...prev, chFrom: prev.chTo, chTo: prev.chFrom }))}
+              onClick={() =>
+                setF((prev) => {
+                  const cur = normalizeFields(prev);
+                  return { ...cur, chFrom: cur.chTo, chTo: cur.chFrom };
+                })
+              }
               className="mb-0.5"
             >
               <ArrowLeftRight className="h-4 w-4" aria-hidden />

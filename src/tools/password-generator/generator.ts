@@ -254,14 +254,6 @@ export function strengthLabel(bits: number): StrengthLevel {
 
 const YEAR = 365.25 * 24 * 3600;
 
-/**
- * Average time to guess: half of the 2^bits possibilities at `rate` guesses per
- * second. Works in log space so 800-bit values do not overflow.
- */
-export function averageGuessSeconds(bits: number, rate = GUESSES_PER_SECOND): number {
-  return 2 ** (bits - 1) / rate;
-}
-
 function plural(n: number, unit: string): string {
   return `${n} ${unit}${n === 1 ? "" : "s"}`;
 }
@@ -269,33 +261,46 @@ function plural(n: number, unit: string): string {
 export function formatGuessTime(bits: number, rate = GUESSES_PER_SECOND): string {
   const log10Seconds = (bits - 1) * Math.log10(2) - Math.log10(rate);
   if (log10Seconds < 0) return "less than a second";
-  const s = 10 ** log10Seconds;
-  if (s < 60) return plural(Math.round(s), "second");
-  if (s < 3600) return plural(Math.round(s / 60), "minute");
-  if (s < 86400) return plural(Math.round(s / 3600), "hour");
-  if (s < YEAR) return plural(Math.round(s / 86400), "day");
+  // Pick the unit after rounding, so 59.6 s reads "1 minute", never "60 seconds".
+  if (log10Seconds < 12) {
+    const s = 10 ** log10Seconds;
+    const steps: [number, number, string][] = [
+      [1, 60, "second"],
+      [60, 60, "minute"],
+      [3600, 24, "hour"],
+      [86400, 365, "day"],
+      [YEAR, 1000, "year"],
+    ];
+    for (const [unit, limit, name] of steps) {
+      const r = Math.round(s / unit);
+      if (r < limit) return plural(r, name);
+    }
+  }
   const log10Years = log10Seconds - Math.log10(YEAR);
-  if (log10Years < 3) return plural(Math.round(10 ** log10Years), "year");
+  const nice = (v: number) => (v >= 100 ? Math.round(v) : Number(v.toPrecision(2)));
   const scales: [number, string][] = [
     [12, "trillion"],
     [9, "billion"],
     [6, "million"],
     [3, "thousand"],
   ];
-  if (log10Years >= 15) return `about 10^${Math.floor(log10Years)} years`;
   for (const [exp, word] of scales) {
-    if (log10Years >= exp) {
-      const v = 10 ** (log10Years - exp);
-      return `${v >= 100 ? Math.round(v) : Number(v.toPrecision(2))} ${word} years`;
-    }
+    const v = nice(10 ** (log10Years - exp));
+    if (exp === 12 && v >= 1000) return `about 10^${Math.max(15, Math.floor(log10Years))} years`;
+    if (v >= 1) return `${v} ${word} years`;
   }
   return plural(Math.round(10 ** log10Years), "year");
 }
 
-/** "≈ 10^31" style description of 2^bits. */
+/** "1.6 × 10^31" style description of 2^bits. */
 export function formatCombinations(bits: number): string {
   const e = bits * Math.log10(2);
   if (e < 6) return Math.round(2 ** bits).toLocaleString("en-US");
-  const mant = 10 ** (e - Math.floor(e));
-  return `${mant.toFixed(1)} × 10^${Math.floor(e)}`;
+  let exp = Math.floor(e);
+  let mant = Number((10 ** (e - exp)).toFixed(1));
+  if (mant >= 10) {
+    mant = 1;
+    exp++;
+  }
+  return `${mant.toFixed(1)} × 10^${exp}`;
 }

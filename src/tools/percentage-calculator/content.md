@@ -2,12 +2,12 @@
 
 This percentage calculator puts the six percentage questions people actually ask on one page, each in its own card: what is X% of Y, X is what percent of Y, the percentage change from one value to another, the percentage difference between two values, adding or subtracting a percentage, and working backwards to an original value. Every card updates as you type and shows three things: the answer, the formula with your own numbers substituted, and a one-line sentence you can paste into a report or message.
 
-Most percentage mistakes come from using the right numbers in the wrong formula: dividing by the new value instead of the old one, or adding 15% back onto a sale price to "undo" a discount. Showing the working lets you check the method as well as the answer. The calculator accepts decimals, negative numbers and thousands separators such as `12,500`, and it tells you plainly when a calculation has no answer, for example a percentage change that starts from zero.
+Many percentage mistakes come from using the right numbers in the wrong formula: dividing by the new value instead of the old one, or adding 15% back onto a sale price to "undo" a discount. Showing the working lets you check the method as well as the answer. The calculator accepts decimals, negative numbers, currency symbols and thousands separators such as `12,500` or `1,25,000`, and it tells you plainly when a calculation has no answer, for example a percentage change that starts from zero.
 
 ## How to use the calculator
 
 1. **Pick the card that matches your question.** The heading of each card is the question it answers, with an everyday example underneath.
-2. **Type your two numbers.** Commas, spaces, a leading `+` and a trailing `%` are all accepted. If a field holds something that is not a number, it turns red and the card waits for a fix.
+2. **Type your two numbers.** Commas, spaces, a currency sign such as `$` or `€`, a leading `+` and a trailing `%` are all accepted. Use a dot for the decimal point: a value written with a decimal comma, such as `12,5`, is flagged rather than guessed as 125. If a field holds something that is not a number, it turns red and says why.
 3. **Read the result.** The large number is the answer, rounded to at most four decimal places. The monospace line below it is the formula with your values, and the sentence underneath explains the result in words.
 4. **Choose a direction where needed.** In *Add or subtract a percentage*, switch between **Add %** (tax, tips, raises) and **Subtract %** (discounts). In *Reverse percentage*, say whether the final value came **after a decrease** or **after an increase**.
 5. **Swap values** in the percentage change card with the ⇄ button to see the change in the other direction.
@@ -68,7 +68,7 @@ A coat on sale for 68 after 15% off was originally 68 ÷ 0.85 = **80**. A receip
 
 When a rate moves from 4% to 5%, it has risen by **1 percentage point** but by **25 percent** (1 ÷ 4 × 100). Both statements are true and they mean very different things. A headline saying "unemployment rose 1%" could mean 5% → 6% (a 20% relative jump) or 5% → 5.05%.
 
-The rule is simple. When you **subtract** one percentage from another, the answer is in percentage points. When you **divide** the gap by the starting rate, the answer is in percent. Marketers see this constantly: lifting a conversion rate from 2% to 3% is "+1 point" in a dashboard but a 50% improvement in sales from the same traffic.
+The rule is simple. When you **subtract** one percentage from another, the answer is in percentage points. When you **divide** the gap by the starting rate, the answer is in percent. Marketers see this constantly: lifting a conversion rate from 2% to 3% is "+1 point" in a dashboard but 50% more conversions from the same traffic.
 
 ## Percentage change vs percentage difference: which to use
 
@@ -108,7 +108,7 @@ A portfolio that drops 50% and then gains 50% ends at 75% of where it started, n
 - **Swap the numbers.** X% of Y equals Y% of X, so 8% of 25 is the same as 25% of 8, which is 2.
 - **Use fractions for round percentages.** 25% is a quarter, 12.5% is an eighth and 33⅓% is a third.
 - **Stack discounts by multiplying.** 20% off and then another 10% off is 0.80 × 0.90 = 0.72, a 28% total discount, not 30%.
-- **Sense-check the size.** A percentage of a number is smaller than the number when the percentage is under 100%. If your answer is bigger, the decimal is in the wrong place.
+- **Sense-check the size.** A percentage of a positive number is smaller than the number when the percentage is under 100%. If your answer is bigger, the decimal is in the wrong place.
 
 ## Tips and common mistakes
 
@@ -116,6 +116,7 @@ A portfolio that drops 50% and then gains 50% ends at 75% of where it started, n
 - **Averaging percentages.** Scores of 90% on a 10-question quiz and 60% on a 50-question test do not average to 75%. Add the marks (9 + 30 = 39 of 60) to get the true 65%.
 - **Changes from zero.** Growth from 0 has no percentage. The calculator says so instead of printing "Infinity"; report the absolute change instead.
 - **Rounding too early.** Keep full precision until the final step, then round. Here results are rounded only for display, to four decimal places.
+- **Confusing markup with margin.** Buying at 60 and selling at 80 is a 33.3333% markup (20 ÷ 60, the cost is the base) but a 25% margin (20 ÷ 80, the selling price is the base). Use the *X is what percent of Y* card with the right base for each.
 - **Tax-inclusive prices.** To remove VAT or sales tax from a total, use the reverse card with "after an increase", not the subtract card.
 
 ## Privacy and limitations

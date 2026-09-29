@@ -3,24 +3,43 @@
  * No React, no DOM – easy to unit-test.
  */
 
-export type Parsed = { kind: "empty" } | { kind: "invalid" } | { kind: "ok"; value: number };
+export type Parsed = { kind: "empty" } | { kind: "invalid"; hint: string } | { kind: "ok"; value: number };
 
 const NUMBER_RE = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i;
+/** Western (12,500,000) or Indian (1,25,00,000) digit grouping, optional decimals. */
+const GROUPED_RE = /^[+-]?(?:\d{1,3}(?:,\d{3})+|\d{1,2}(?:,\d{2})*,\d{3})(?:\.\d*)?(?:e[+-]?\d+)?$/i;
+/** What a field holds half-way through typing a number: "-", "+", ".", "-.". */
+const IN_PROGRESS_RE = /^[+-]?\.?$/;
+const LEADING_CURRENCY_RE = /^([+-]?)[$€£¥₹]/;
+const TRAILING_CURRENCY_RE = /[$€£¥₹]$/;
+
+export const INVALID_HINT = "Enter a number, e.g. 25, -3.5 or 1,250.75";
+export const DECIMAL_COMMA_HINT = "Use a dot for decimals, e.g. 12.5 (commas only group thousands)";
+export const TOO_LARGE_HINT = "This number is too large to calculate with";
 
 /**
  * Parse what a person types into a number field. Accepts thousands separators
- * ("1,250.50"), spaces, a leading "+", a trailing "%" and the unicode minus sign.
+ * ("1,250.50" or Indian "1,25,000"), spaces, a currency symbol at either end, a leading "+",
+ * a trailing "%" and the unicode minus sign. A decimal comma such as "12,5" is
+ * rejected with a hint instead of being silently read as 125.
  */
 export function parseNumber(raw: string): Parsed {
   const cleaned = raw
     .trim()
     .replace(/[−–]/g, "-")
-    .replace(/[,\s_]/g, "")
-    .replace(/%$/, "");
-  if (cleaned === "") return { kind: "empty" };
-  if (!NUMBER_RE.test(cleaned)) return { kind: "invalid" };
-  const value = Number(cleaned);
-  if (!Number.isFinite(value)) return { kind: "invalid" };
+    .replace(/[\s_]/g, "")
+    .replace(/%$/, "")
+    .replace(LEADING_CURRENCY_RE, "$1")
+    .replace(TRAILING_CURRENCY_RE, "");
+  if (IN_PROGRESS_RE.test(cleaned)) return { kind: "empty" };
+  let plain = cleaned;
+  if (cleaned.includes(",")) {
+    if (!GROUPED_RE.test(cleaned)) return { kind: "invalid", hint: DECIMAL_COMMA_HINT };
+    plain = cleaned.replace(/,/g, "");
+  }
+  if (!NUMBER_RE.test(plain)) return { kind: "invalid", hint: INVALID_HINT };
+  const value = Number(plain);
+  if (!Number.isFinite(value)) return { kind: "invalid", hint: TOO_LARGE_HINT };
   return { kind: "ok", value };
 }
 
