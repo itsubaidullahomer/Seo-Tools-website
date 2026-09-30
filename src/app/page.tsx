@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Cpu, EyeOff, Gauge, BookOpen } from "lucide-react";
 import { Container } from "@/components/layout/Container";
@@ -10,6 +11,8 @@ import { siteConfig } from "@/config/site";
 import { faqSchema } from "@/lib/seo/jsonld";
 import { getCategoriesWithCounts, getFeaturedTools, getNavTree, getNewestTools, getToolCount } from "@/lib/tools/registry";
 import { toSummary } from "@/lib/tools/types";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const homeFaq = [
   {

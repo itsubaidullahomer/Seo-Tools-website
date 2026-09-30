@@ -11,7 +11,8 @@
     "gen": "tsx scripts/generate-registry.ts",
     "validate": "tsx scripts/validate-tools.ts",
     "new-tool": "tsx scripts/new-tool.ts",
-    "check": "npm run gen && npm run validate && npm run typecheck && npm run lint"
+    "check": "npm run gen && npm run validate && npm run typecheck && npm run lint",
+    "seo-audit": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.3.7",

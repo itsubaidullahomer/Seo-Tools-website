@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/(.*)", headers: securityHeaders },
+      // The temporary *.vercel.app addresses must never compete with the real domain in search
+      // (duplicate content). Only the custom domain is indexable.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "(?<host>.*\\.vercel\\.app)" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
       // ads.txt must be fetchable by Google's crawler and should not be cached for long.
       { source: "/ads.txt", headers: [{ key: "Cache-Control", value: "public, max-age=3600" }] },
     ];
