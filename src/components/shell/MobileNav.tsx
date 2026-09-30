@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import type { NavCategory } from "@/lib/tools/registry";
 import { Sidebar } from "./Sidebar";
 
-/** Slide-in drawer with the full tool tree for screens below `lg`. */
+/**
+ * Slide-in drawer with the full tool tree for screens below `lg`.
+ *
+ * The drawer is portalled to <body>: the sticky header uses `backdrop-blur`, and any
+ * `backdrop-filter` makes it the containing block for `position: fixed` children, which
+ * collapsed the drawer to 0px height inside the 56px header.
+ */
 export function MobileNav({ tree, links }: { tree: NavCategory[]; links: { href: string; label: string }[] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -41,8 +48,9 @@ export function MobileNav({ tree, links }: { tree: NavCategory[]; links: { href:
       >
         {open ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
       </button>
-      {open && (
-        <div className="fixed inset-x-0 bottom-0 top-14 z-50 flex" id="mobile-drawer">
+      {open &&
+        createPortal(
+        <div className="fixed inset-x-0 bottom-0 top-14 z-50 flex lg:hidden" id="mobile-drawer">
           <div className="scroll-thin h-full w-[min(20rem,85vw)] overflow-y-auto border-r border-border bg-bg shadow-card-lg">
             <nav aria-label="Site" className="flex flex-wrap gap-1.5 border-b border-border px-4 py-3">
               {links.map((l) => (
@@ -54,7 +62,8 @@ export function MobileNav({ tree, links }: { tree: NavCategory[]; links: { href:
             <Sidebar tree={tree} onNavigate={() => setOpen(false)} />
           </div>
           <button type="button" aria-label="Close menu" className="flex-1 bg-[rgb(18_18_17/0.4)]" onClick={() => setOpen(false)} />
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
