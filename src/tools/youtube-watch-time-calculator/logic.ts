@@ -148,8 +148,8 @@ export const MAX_COUNT = 1e13;
  * Parse a count such as "25000", "25,000", "1.2k" or "3m". Commas must be
  * thousands separators, so "1,5" is rejected instead of silently read as 15.
  */
-export function parseCount(raw: string, opts: { max?: number; min?: number; suffix?: boolean; percent?: boolean; noun?: string } = {}): Parsed {
-  const { max = MAX_COUNT, min = 0, suffix = true, percent = false, noun = "number" } = opts;
+export function parseCount(raw: string, opts: { max?: number; min?: number; suffix?: boolean; percent?: boolean; noun?: string; integer?: boolean } = {}): Parsed {
+  const { max = MAX_COUNT, min = 0, suffix = true, percent = false, noun = "number", integer = false } = opts;
   let s = raw.trim();
   if (!s) return { kind: "empty" };
   if (percent) s = s.replace(/\s*%$/, "");
@@ -162,7 +162,9 @@ export function parseCount(raw: string, opts: { max?: number; min?: number; suff
   }
   if (m[3] && !suffix) return { kind: "invalid", hint: `Enter a plain ${noun} such as ${example}.` };
   const digits = `${(m[1] ?? "0").replace(/,/g, "")}${m[2] ?? ""}`;
-  const value = parseFloat(digits) * (m[3] ? SUFFIX[m[3].toLowerCase()] : 1);
+  const parsedValue = parseFloat(digits) * (m[3] ? SUFFIX[m[3].toLowerCase()] : 1);
+  // View counts are whole numbers, so 0.5 views is read as 1 and the formula line matches the math.
+  const value = integer ? Math.round(parsedValue) : parsedValue;
   if (!Number.isFinite(value)) return { kind: "invalid", hint: `Enter a ${noun} such as ${example}.` };
   if (value < min) return { kind: "invalid", hint: `Enter a ${noun} of ${fmtInt(min)} or more.` };
   if (value > max) return { kind: "invalid", hint: `That is too large. The limit is ${fmtInt(max)}.` };

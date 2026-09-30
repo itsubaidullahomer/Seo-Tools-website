@@ -28,14 +28,14 @@ export const TEXT_SWATCHES: Swatch[] = [
 
 /** Background colors 40-47 of the same classic palette. */
 const CLASSIC_BACKGROUNDS: Swatch[] = [
-  { code: 40, name: "Dark blue", hex: "#002b36" },
+  { code: 40, name: "Firefly dark blue", hex: "#002b36" },
   { code: 41, name: "Orange", hex: "#cb4b16" },
   { code: 42, name: "Marble blue", hex: "#586e75" },
   { code: 43, name: "Greyish turquoise", hex: "#657b83" },
   { code: 44, name: "Gray", hex: "#839496" },
   { code: 45, name: "Indigo", hex: "#6c71c4" },
   { code: 46, name: "Light gray", hex: "#93a1a1" },
-  { code: 47, name: "Cream white", hex: "#fdf6e3" },
+  { code: 47, name: "White (cream)", hex: "#fdf6e3" },
 ];
 
 /** Approximation of the reported change: background N uses the same hue as text N-10. */
@@ -47,7 +47,7 @@ export const PALETTES: Record<PaletteId, { label: string; text: Swatch[]; backgr
 };
 
 export const THEMES: Record<ThemeId, { label: string; background: string; foreground: string }> = {
-  dark: { label: "Dark", background: "#1e1f22", foreground: "#dbdee1" },
+  dark: { label: "Dark", background: "#2b2d31", foreground: "#dbdee1" },
   light: { label: "Light", background: "#f2f3f5", foreground: "#2e3338" },
 };
 

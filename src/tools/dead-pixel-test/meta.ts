@@ -45,7 +45,7 @@ export const meta: ToolMeta = {
     {
       question: "How many dead pixels are acceptable under warranty?",
       answer:
-        "It depends on the maker. ISO 9241-307 groups panels into Classes I to IV, and manufacturers commonly quote Class II, which allows about 2 always-lit, 2 always-dark and 5 stuck-subpixel defects per million pixels. On a Full HD screen that scales to roughly 4, 4 and 10. Some makers promise zero and others set their own limits, so read the pixel policy before you claim. The calculator on this page compares your count.",
+        "It depends on the maker. The older ISO 13406-2 standard and its successor ISO 9241-307 group panels into classes, and makers commonly quote Class II, which is usually given as 2 always-lit, 2 always-dark and 5 stuck-subpixel defects per million pixels. On a Full HD screen that scales to roughly 4, 4 and 10. Some makers promise zero, some split the subpixel limit or count clusters, so read the pixel policy before you claim. The calculator on this page compares your count.",
     },
     {
       question: "What is backlight bleed, and how is it different from IPS glow?",

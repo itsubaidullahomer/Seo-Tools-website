@@ -88,3 +88,82 @@ Every guide is published under your name, so read each one at least once and cha
 - [ ] GIF's 256-colors-per-frame limit, added in the review from general knowledge and not source-checked. It is a long-standing, well-known GIF property.
 - [ ] All measurements come from synthetic images, one Chromium build and one sharp build. Ubaidullah should re-run the scratchpad scripts (webp-vs-png-vs-jpg-*.mjs) if he wants to reproduce them, and be comfortable with the 'By Ubaidullah' byline over text that Claude drafted.
 - [ ] Safari 'partial' support reasons (macOS version dependence) are not explained in the guide and were not verified.
+
+# Tool pages
+
+The same applies to the tool articles: these are claims the reviewers could not confirm at the original source. Each page already words them cautiously.
+
+## src/tools/case-converter/content.md
+
+- [ ] Could not re-verify the Chicago 18 rule (lowercase prepositions of four letters or fewer; five or more capitalized), the APA minor-word list, or the VS Code 'Transform to Camel/Kebab Case' commands against primary sources: the WebSearch budget for the session is used up and chicagomanualofstyle.org, apastyle.apa.org and code.visualstudio.com are blocked by the egress proxy. The builder reported checking these earlier, and they match my own knowledge, so I kept them. A human spot-check before launch is advisable.
+
+## src/tools/character-counter/content.md
+
+- [ ] Could not confirm Instagram's current per-post hashtag cap online: the WebSearch budget was used up and the news and reference sites were blocked. The text now avoids a specific number and tells readers to check the app. Someone with web access should confirm the figure (believed to be 5 since late 2025) and can state it outright if they want.
+- [ ] The other platform limits (Threads 10,000-character text attachments, TikTok 4,000 in the app and 2,200 through the API, X Premium 25,000, the ~480 Facebook and ~210 LinkedIn truncation points) come from the builder's research and the repo's research notes. They could not be re-checked online in this run.
+
+## src/tools/chmod-calculator/content.md
+
+- [ ] Claims from prior knowledge (Laravel storage and bootstrap/cache writability, WordPress 755/644 with wp-config 440/400/640/600, SSH StrictModes and the UNPROTECTED PRIVATE KEY FILE message) were not re-verified with a web search this pass. The builder also could not fetch primary sources. All are hedged on the page and match my knowledge.
+
+## src/tools/dead-pixel-test/content.md
+
+- [ ] I could not fetch the ISO text or maker policy pages because the proxy blocked them. The class table is still presented as commonly cited figures. The exact ISO 9241-307 Type 3 lit/dark split and its cluster rules are only hedged, not quoted.
+
+## src/tools/discord-colored-text-generator/content.md
+
+- [ ] Palette hex values and names are recalled from the widely documented Solarized-based set, not re-verified against a live Discord client. The 'matched backgrounds' preview and the mobile-support claims are unconfirmed. Someone should compare on real desktop and phone clients.
+- [ ] The article is AI-drafted. A human read-through by the site owner is still advisable before AdSense review.
+
+## src/tools/discord-timestamp-generator/content.md
+
+- [ ] Official Discord docs and discord.js.org are blocked by the proxy, so whether s and S are real, supported styles is confirmed only by two search summaries. The tool does not generate them and the article hedges. Someone with access should check docs.discord.com, then consider adding s and S as two extra rows and revising the title, which currently says 'All 7 Formats'.
+
+## src/tools/invisible-character/content.md
+
+- [ ] Two facts, the Excel TRIM behavior and CVE-2021-42574, rest on search snippets from the original builder because the primary pages were blocked. Both are widely documented and consistent with what I know.
+
+## src/tools/json-formatter/content.md
+
+- [ ] No shared-file changes needed. WebSearch was not used: every checkable claim was verified locally instead (V8/Node 22 messages, jq 1.7, Python 3.11, re-measured file sizes). The VS Code shortcuts and JSONC trailing-comma behavior match the VS Code docs the builder cited.
+
+## src/tools/military-time-converter/content.md
+
+- [ ] I did not run WebSearch or WebFetch. I checked the zone letters and offsets, the radio digit words, the DDHHMMZ date-time group and the METAR timestamp format against what I already know, and found no errors. The builder also confirmed them with search.
+
+## src/tools/password-generator/content.md
+
+- [ ] NIST SP 800-63B-4 details could not be re-fetched: pages.nist.gov, csrc.nist.gov and wikipedia are blocked by the egress proxy, and the WebSearch budget is used up. The claims match the published final text as I know it (15 chars single-factor, 8 with MFA, SHOULD accept 64+, SHALL NOT impose composition rules or periodic changes, SHALL use a blocklist, finalized 2025), and the wording now reflects SHALL vs SHOULD.
+
+## src/tools/remove-line-breaks/content.md
+
+- [ ] Google Docs '\n with Match using regular expressions' could not be checked against the official page: support.google.com is blocked by the proxy and the search budget is used up. The table row is now hedged with a fallback.
+
+## src/tools/roman-numeral-converter/content.md
+
+- [ ] Update the NFL championship game table (LXI 'scheduled for February 14, 2027') and bump dateModified before mid-January 2027, and again after LXI is played. The LXI date came from the builder's web search and I did not re-verify it.
+- [ ] Competitor pages (Wikipedia, calculatorsoup, romannumerals.org) could not be compared directly because the proxy blocks them. Feature parity was judged from the toolSpec and general knowledge.
+
+## src/tools/slug-generator/content.md
+
+- [ ] Google's URL documentation could not be fetched (egress blocked), so the Google claims were not re-verified against the page itself.
+
+## src/tools/title-meta-description-length-checker/content.md
+
+- [ ] Google's title-link, snippet and 2021 blog pages could not be fetched directly (developers.google.com is blocked). The 87 percent figure and its date, the truncation sentence and the Mueller quote were checked against web-search excerpts only.
+
+## src/tools/words-to-time/content.md
+
+- [ ] The 175-300 wpm range could not be verified (paper blocked by the egress proxy), so it was removed rather than confirmed.
+- [ ] The 2.5 words per second voice-over planning figure and the 18-minute TED cap are still stated from general knowledge and are hedged in the text. They were not re-verified.
+
+## src/tools/youtube-money-calculator/content.md
+
+- [ ] The niche RPM ranges, regional multipliers, season multipliers and Shorts feed values are planning assumptions, not YouTube data. The page labels them as such, but they should be re-reviewed quarterly.
+- [ ] The 2027 Partner Program row rests on news reports and cross-outlet summaries, because YouTube Help pages were not directly readable. The page already says to confirm on YouTube Help; a human should check it against YouTube Help before launch.
+
+## src/tools/youtube-watch-time-calculator/content.md
+
+- [ ] Threshold figures could not be checked at support.google.com or blog.youtube (proxy-blocked). They rest on multiple agreeing web summaries dated after the Aug 10, 2026 announcement. Someone should open the two YouTube Help pages once and confirm the wording; rules.json, the tier table in content.md and the FAQ must be updated together if it differs.
+- [ ] The claim that applications submitted before Feb 1, 2027 keep the old bar came from one summary. The page only says the higher bar is 'for new applicants from Feb 1' and tells readers to confirm on YouTube Help.
+

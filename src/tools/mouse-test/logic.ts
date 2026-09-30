@@ -337,10 +337,15 @@ export function totalsOf(summaries: ButtonSummary[]): Totals {
 /* Formatting                                                          */
 /* ------------------------------------------------------------------ */
 
-/** 7.83 -> "7.8 ms", 84.2 -> "84 ms", 1234 -> "1,234 ms". */
+/**
+ * 7.83 -> "7.8 ms", 79.9 -> "79.9 ms", 84 -> "84 ms", 1234 -> "1,234 ms".
+ * Below 100 ms one decimal is kept (without a trailing .0), so a gap of 79.9 ms that is
+ * flagged against an 80 ms limit never reads as "80 ms".
+ */
 export function formatMs(ms: number | null | undefined): string {
   if (ms === null || ms === undefined || !Number.isFinite(ms)) return "–";
   if (ms < 10) return `${ms.toFixed(1)} ms`;
+  if (ms < 100) return `${Number(ms.toFixed(1))} ms`;
   return `${Math.round(ms).toLocaleString("en-US")} ms`;
 }
 

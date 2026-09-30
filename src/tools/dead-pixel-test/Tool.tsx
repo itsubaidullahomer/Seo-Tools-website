@@ -292,7 +292,7 @@ export default function DeadPixelTest() {
     if (!classification) return null;
     const best = classification.best;
     if (total === 0) return { variant: "success" as const, title: "No defects entered", text: "With no defects the panel meets every class. Run the test, then enter what you counted." };
-    if (!best) return { variant: "error" as const, title: "Over the Class IV allowance", text: "That many defects is beyond every class in the standard. A maker would normally treat this as a reject." };
+    if (!best) return { variant: "error" as const, title: "Over the Class IV allowance", text: "That many defects is beyond every class in the table. Compare it with the maker\u2019s own pixel policy and ask the seller about a replacement." };
     if (best.id === "I" || best.id === "II") {
       return { variant: "success" as const, title: `Within ${best.name}`, text: `These counts fit ${best.name} for a ${formatMegapixels(panel.pixels)}-pixel panel. Whether a maker accepts a return still depends on its own policy.` };
     }
@@ -392,7 +392,7 @@ export default function DeadPixelTest() {
       {/* ---- defect calculator ---- */}
       <ToolSection
         title="Count what you found and check the class"
-        description="Enter how many defective pixels you counted on each test screen. The table scales the commonly cited ISO 9241-307 class limits, which are quoted per million pixels, to your panel size."
+        description="Enter how many defective pixels you counted on each test screen. The table scales the commonly cited ISO 13406-2 and ISO 9241-307 class limits, which are quoted per million pixels, to your panel size."
       >
         <ToolGrid cols={3}>
           <Select label="Panel resolution" value={calc.preset} onChange={(e) => updateCalc({ preset: e.target.value })} options={resolutionOptions} />

@@ -8,7 +8,7 @@ The requirements come from a dated list, checked on September 29, 2026, and the 
 
 ## How to use the calculator
 
-1. **Pick a tab.** "Views to hours" turns views into watch hours. "Views needed" turns a goal into a view count and a daily pace. "Timeline" projects the date you reach each requirement. "Shorts path" tracks the Shorts views route.
+1. **Pick a tab.** "Hours" turns views into watch hours. "Views needed" turns a goal into a view count and a daily pace. "Timeline" projects the date you reach each requirement. "Shorts" tracks the Shorts views route.
 2. **Set your average view duration.** With "From video length", enter the "Video length" (for example 8:00) and the "Average percentage viewed" (for example 45). With "Type it in", enter the duration as Studio shows it, such as 3:36. A plain number is read as minutes, and forms like 4m 30s also work. The two example buttons load an 8-minute and a 20-minute video.
 3. **Choose the "Watch-hour requirement".** The list shows the ad-revenue bar in force today, the announced higher bar while it is still ahead, fan-funding early access, or a custom number of hours.
 4. **Enter your figure.** Views accepts 25,000, 25000, 25k or 1.2m. On the Views needed tab, set "Finish within (days)". On the Timeline tab, choose "Per day" or "Per month" and add the "Watch hours you have now" and "Monthly growth in views" if you know them.
@@ -43,11 +43,21 @@ views needed = goal hours × 3,600 ÷ average view duration (seconds), rounded u
 | 15:00 | 12,000 | 16,000 | 32,000 |
 | 20:00 | 9,000 | 12,000 | 24,000 |
 
+Going the other way, this table shows the watch hours a given number of views produces. Each cell is views × average view duration ÷ 3,600, rounded to a whole hour.
+
+| Views | 2:00 average | 4:00 average | 8:00 average | 12:00 average |
+| --- | --- | --- | --- | --- |
+| 10,000 | 333 | 667 | 1,333 | 2,000 |
+| 50,000 | 1,667 | 3,333 | 6,667 | 10,000 |
+| 100,000 | 3,333 | 6,667 | 13,333 | 20,000 |
+| 250,000 | 8,333 | 16,667 | 33,333 | 50,000 |
+| 1,000,000 | 33,333 | 66,667 | 133,333 | 200,000 |
+
 ## How the 365-day window changes the timeline
 
 YouTube looks at the last 365 days, not your lifetime total. Hours you earned a year and a day ago no longer count, so the requirement is a rate you must sustain, not a pile you can collect slowly.
 
-That sets a floor. Four thousand hours spread over 365 days is 10.96 watch hours a day, so a channel earning 10 hours a day tops out at 3,650 and never qualifies. At 3:36 the floor is 183 views a day for 4,000 hours and 366 for 8,000. The Timeline tab shows it as "Flat pace to ever get there" and warns you when your pace sits below it.
+That sets a floor. Four thousand hours spread over 365 days is 10.96 watch hours a day, so a channel earning 10 hours a day tops out at 3,650 and never qualifies. At 3:36 the floor is 183 views a day for 4,000 hours and 366 for 8,000. The Timeline tab shows it as "Minimum steady pace" and warns you when your pace sits below it.
 
 If you enter "Watch hours you have now", the "Drop hours after 365 days" switch decides how they are treated. On, it assumes they were earned evenly over the past year and removes them day by day. Off, it adds new hours to a fixed starting pile, which is optimistic. With 2,000 hours banked and 30 new hours a day, switching it on moves the 4,000-hour date from day 67 to day 82.
 
@@ -59,7 +69,7 @@ If you enter "Watch hours you have now", the "Drop hours after 365 days" switch 
 | Ad revenue, announced | 1,000 | 8,000 | 20 million | Announced for new applicants from February 1, 2027 |
 | Fan-funding early access | 500, plus 3 public uploads in 90 days | 3,000 | 3 million | Reported unchanged |
 
-A channel needs the subscribers plus either the watch hours or the Shorts views, not both. YouTube Help could not be opened during the September 29, 2026 check, so these figures rest on several independent published summaries that agree, including reports of YouTube's August 2026 announcement. Existing partners are reported as unaffected. Confirm the wording on [YouTube's Partner Program overview](https://support.google.com/youtube/answer/72851) and the page on [changes to the program](https://support.google.com/youtube/answer/12843009) before you plan around a date.
+A channel needs the subscribers plus either the watch hours or the Shorts views, not both. YouTube Help could not be opened during the September 29, 2026 check, so these figures rest on several independent published summaries that agree, including reports of YouTube's August 2026 announcement. Channels already in the program are reported to be exempt from the higher entry bar, although reports say they must accept updated terms in YouTube Studio by January 31, 2027, and that a separate Shorts view minimum applies from the same date for drawing from the Shorts revenue pool. This calculator models entry requirements only. Confirm the wording on [YouTube's Partner Program overview](https://support.google.com/youtube/answer/72851) and the page on [changes to the program](https://support.google.com/youtube/answer/12843009) before you plan around a date.
 
 The thresholds live in one dated file. When one changes on a known date, the page relabels itself that day: "today's bar" becomes 8,000 hours and the announced option disappears. The Timeline tab also compares your projected date with the change and tells you which side of it you land on.
 
@@ -95,7 +105,7 @@ Average view duration moves the views needed sharply. Going from 3:36 to 4:30 cu
 
 **Channel managers for small businesses.** Use the custom goal to set a quarterly target and the Timeline tab to check whether the current pace can hold it. Once you pass the hours, the [YouTube money calculator](/tools/youtube-money-calculator) estimates what the views might earn.
 
-**Creators weighing Shorts against long-form.** The Shorts path tab shows the views per day a 90-day window demands, which is 111,112 a day for 10 million.
+**Creators weighing Shorts against long-form.** The Shorts tab shows the views per day a 90-day window demands, which is 111,112 a day for 10 million.
 
 ## Tips and common mistakes
 

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import {
   FLASH_COLORS,
+  FLASH_SAFETY_MS,
   GRID_SIZES,
   buildRampPixels,
   columnName,
@@ -456,26 +457,27 @@ export function FlashOverlay({ mode, squareSize, intervalMs, maxSeconds, onClose
     onCloseRef.current = onClose;
   }, [onClose]);
 
-  // Color changes are scheduled one at a time, each at least `intervalMs` after the previous one,
-  // so the rate can never exceed the cap even if a timer fires early or late.
+  // Color changes are scheduled one at a time, each at least `gap` after the previous one, and never early,
+  // so the rate stays under the cap even if a timer fires early or a render is late.
   useEffect(() => {
+    const gap = intervalMs + FLASH_SAFETY_MS;
     const start = performance.now();
     let last = start;
     let index = 0;
     let changeTimer = 0;
     const step = () => {
       const now = performance.now();
-      const wait = intervalMs - (now - last);
-      if (wait > 4) {
-        changeTimer = window.setTimeout(step, wait);
+      const wait = gap - (now - last);
+      if (wait > 0) {
+        changeTimer = window.setTimeout(step, Math.ceil(wait));
         return;
       }
       last = now;
       index = (index + 1) % FLASH_COLORS.length;
       setColorIndex(index);
-      changeTimer = window.setTimeout(step, intervalMs);
+      changeTimer = window.setTimeout(step, gap);
     };
-    changeTimer = window.setTimeout(step, intervalMs);
+    changeTimer = window.setTimeout(step, gap);
     const countdown = window.setInterval(() => {
       setRemaining(Math.max(0, Math.ceil(maxSeconds - (performance.now() - start) / 1000)));
     }, 250);

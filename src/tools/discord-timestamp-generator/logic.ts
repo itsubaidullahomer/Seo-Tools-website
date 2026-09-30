@@ -385,8 +385,9 @@ const FIRST_REAL_ID = BigInt(1) << SHIFT_TIMESTAMP;
 
 /** Decode a Discord snowflake ID with BigInt (IDs exceed the 2^53 limit of ordinary numbers). */
 export function decodeSnowflake(raw: string, nowMs: number): SnowflakeParse {
-  const text = raw.trim();
-  if (!text) return { kind: "empty" };
+  const trimmed = raw.trim();
+  if (!trimmed) return { kind: "empty" };
+  const text = /^\d+$/.test(trimmed) ? trimmed.replace(/^0+(?=\d)/, "") : trimmed;
   if (!/^\d+$/.test(text)) return { kind: "invalid", message: "A snowflake ID is digits only, usually 17 to 19 of them. Turn on Developer Mode in Discord and use Copy ID." };
   if (text.length > 20) return { kind: "invalid", message: "That number is too long for a 64-bit ID (the maximum is 20 digits)." };
   const id = BigInt(text);

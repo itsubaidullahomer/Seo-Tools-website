@@ -252,6 +252,12 @@ export const FLASH_MAX_SECONDS = 60;
 /** Colors the flasher cycles through, in order. */
 export const FLASH_COLORS = ["#ff0000", "#00ff00", "#0000ff", "#ffffff", "#000000"] as const;
 
+/**
+ * Extra spacing added to every gap between color changes. Timers fire a little early or late and a busy
+ * page can commit two changes close together, so the nominal rate keeps a margin below the hard cap.
+ */
+export const FLASH_SAFETY_MS = 34;
+
 export type FlashRate = 1 | 2 | 3;
 
 export const FLASH_RATES: { value: string; label: string }[] = [
@@ -343,10 +349,10 @@ export interface IsoClass {
 }
 
 export const ISO_CLASSES: IsoClass[] = [
-  { id: "I", name: "Class I", type1: 0, type2: 0, type3: 0, note: "No defects allowed. Rare and usually sold as a premium guarantee." },
+  { id: "I", name: "Class I", type1: 0, type2: 0, type3: 0, note: "No defects allowed of any type." },
   { id: "II", name: "Class II", type1: 2, type2: 2, type3: 5, note: "The class most manufacturers quote for ordinary monitors." },
-  { id: "III", name: "Class III", type1: 5, type2: 15, type3: 50, note: "A looser class, seen on some budget panels." },
-  { id: "IV", name: "Class IV", type1: 50, type2: 150, type3: 500, note: "Generally treated as the reject level in manufacturing." },
+  { id: "III", name: "Class III", type1: 5, type2: 15, type3: 50, note: "A looser class than Class II." },
+  { id: "IV", name: "Class IV", type1: 50, type2: 150, type3: 500, note: "The loosest of the four classes." },
 ];
 
 export interface DefectCounts {
@@ -485,8 +491,9 @@ export function buildReport({ width, height, counts, screenNote }: ReportInput):
     "",
     best ? `Strictest class met: ${best.name}` : "Over the Class IV allowance.",
     "",
-    "Notes: Class rates are the commonly cited ISO 9241-307 figures. Manufacturers set their own warranty terms and may",
-    "count clusters of neighboring defects separately. Check the maker's pixel policy before you claim.",
+    "Notes: Class rates are the per-million figures commonly quoted from ISO 13406-2 and its successor ISO 9241-307.",
+    "Manufacturers set their own warranty terms, may split Type 3 into lit and dark subpixels and may count clusters of",
+    "neighboring defects separately. Check the maker's pixel policy before you claim.",
   ];
   return lines.join("\n");
 }

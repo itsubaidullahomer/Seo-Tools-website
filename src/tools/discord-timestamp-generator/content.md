@@ -33,7 +33,7 @@ The moment 1794704400 is 01:00:00 UTC on November 15, 2026. Here is how this too
 | `F` | Long date and time | Saturday, November 14, 2026 8:00 PM | Sunday, 15 November 2026 01:00 |
 | `R` | Relative time | depends on the current time | depends on the current time |
 
-These previews come from the browser's `Intl` formatting, so treat them as close approximations. Discord draws the real text, and its punctuation can differ. A code with no style letter is displayed like `f`. Some other generators list extra letters for short date-and-time styles. This page sticks to the seven in the discord.js `TimestampStyles` list, so test anything newer before relying on it.
+These previews come from the browser's `Intl` formatting, so treat them as close approximations. Discord draws the real text, and its punctuation can differ. A code with no style letter is displayed like `f`. This page generates the seven long-standing styles. Recent discord.js releases are reported to list two more letters, `s` (short date with short time) and `S` (short date with seconds), but how every Discord client draws them is not confirmed here, so they are left out of the copy buttons. If you want to try one, type the letter yourself, as in `<t:1794704400:s>`, and test it in a private channel first.
 
 ## A worked example: announcing an event
 
@@ -99,6 +99,7 @@ The most common bot bug is passing milliseconds. `Date.now()` returns 13 digits,
 ## Tips and common mistakes
 
 - **Seconds, not milliseconds.** A 13-digit number is milliseconds. The Unix time tab converts it and tells you.
+- **Zone abbreviations.** CST and IST each name more than one region, which is why the tool asks for a named zone such as America/New_York or Asia/Kolkata instead of an abbreviation.
 - **Wrong zone.** If the result looks hours off, read the "Selected zone" line under the Unix box. It shows how your input was interpreted.
 - **Code formatting.** Wrapping a code in backticks or a code block makes Discord show it as plain text.
 - **Embeds.** Reports disagree about titles and footers. Descriptions and field values are the usual choice.

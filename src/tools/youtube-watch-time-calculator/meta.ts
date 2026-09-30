@@ -5,7 +5,7 @@ export const meta: ToolMeta = {
   name: "Watch Time Calculator for YouTube Monetization",
   title: "YouTube Watch Time Calculator – 4,000 Hours & Views Needed",
   description:
-    "Free YouTube watch time calculator: turn views and average view duration into watch hours, see the views needed for 4,000 hours and project your qualifying date.",
+    "Free YouTube watch time calculator: turn views and average view duration into watch hours, see the views needed for 4,000 hours and project when you qualify.",
   shortDescription: "Turn views and average view duration into watch hours, find the views needed for monetization and project when you will qualify.",
   category: "social-media",
   keywords: [
@@ -33,7 +33,7 @@ export const meta: ToolMeta = {
     {
       question: "Do YouTube Shorts count toward the 4,000 watch hours?",
       answer:
-        "No. The 4,000-hour route counts public long-form watch time, and hours from Shorts viewed in the Shorts feed do not top it up. Shorts have a separate path based on qualified public Shorts views, 10 million in 90 days for the ad-revenue tier as checked on September 29, 2026. A channel can qualify through either route. The Shorts path tab tracks your progress on that one.",
+        "No. The 4,000-hour route counts public long-form watch time, and hours from Shorts viewed in the Shorts feed do not top it up. Shorts have a separate path based on qualified public Shorts views, 10 million in 90 days for the ad-revenue tier as checked on September 29, 2026. A channel can qualify through either route. The Shorts tab tracks your progress on that one.",
     },
     {
       question: "What are the YouTube Partner Program requirements right now?",

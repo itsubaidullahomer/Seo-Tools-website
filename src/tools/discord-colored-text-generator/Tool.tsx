@@ -199,7 +199,7 @@ export default function DiscordColoredTextGenerator() {
 
   const onTextChange = (ev: ChangeEvent<HTMLTextAreaElement>) => {
     const t = ev.target;
-    const res = applyEdit(doc, t.value);
+    const res = applyEdit(doc, t.value, t.selectionStart === t.selectionEnd ? t.selectionStart : null);
     setStoredDoc(res.doc);
     if (res.caret !== null) {
       caretRef.current = res.caret;

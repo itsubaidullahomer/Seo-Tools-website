@@ -54,10 +54,10 @@ function useToday(): string {
 }
 
 const TAB_OPTIONS: { value: Tab; label: string }[] = [
-  { value: "hours", label: "Views to hours" },
+  { value: "hours", label: "Hours" },
   { value: "views", label: "Views needed" },
   { value: "timeline", label: "Timeline" },
-  { value: "shorts", label: "Shorts path" },
+  { value: "shorts", label: "Shorts" },
 ];
 const AVD_OPTIONS: { value: AvdMode; label: string }[] = [
   { value: "length", label: "From video length" },
@@ -164,7 +164,7 @@ function Empty({ children }: { children: ReactNode }) {
   return <div className="rounded-lg border border-dashed border-border bg-surface-2 px-3 py-4 text-sm text-muted">{children}</div>;
 }
 
-function DataTable({ head, rows, caption, highlight }: { head: string[]; rows: ReactNode[][]; caption: string; highlight?: (i: number) => boolean }) {
+function DataTable({ head, rows, caption, highlight, wrapFirst }: { head: string[]; rows: ReactNode[][]; caption: string; highlight?: (i: number) => boolean; wrapFirst?: boolean }) {
   return (
     <div className="scroll-thin overflow-x-auto rounded-lg border border-border">
       <table className="w-full min-w-[320px] border-collapse text-left text-sm">
@@ -172,7 +172,7 @@ function DataTable({ head, rows, caption, highlight }: { head: string[]; rows: R
         <thead>
           <tr className="border-b border-border bg-surface-2">
             {head.map((h) => (
-              <th key={h} scope="col" className="label-mono px-3 py-2 font-medium">
+              <th key={h} scope="col" className="label-mono px-2.5 py-2 font-medium sm:px-3">
                 {h}
               </th>
             ))}
@@ -182,7 +182,7 @@ function DataTable({ head, rows, caption, highlight }: { head: string[]; rows: R
           {rows.map((r, i) => (
             <tr key={i} className={cn("border-b border-border last:border-0", highlight?.(i) && "bg-primary-soft")}>
               {r.map((c, j) => (
-                <td key={j} className={cn("px-3 py-2 tabular-nums", j === 0 ? "font-medium text-fg" : "text-fg-secondary")}>
+                <td key={j} className={cn("px-2.5 py-2 tabular-nums sm:px-3", !(wrapFirst && j === 0) && "whitespace-nowrap", j === 0 ? "font-medium text-fg" : "text-fg-secondary")}>
                   {c}
                 </td>
               ))}
@@ -267,7 +267,7 @@ export default function YouTubeWatchTimeCalculator() {
 
   /* ----- Tab: views -> hours ----- */
   if (s.tab === "hours") {
-    const viewsP = parseCount(s.views, { noun: "number of views" });
+    const viewsP = parseCount(s.views, { noun: "number of views", integer: true });
     const views = val(viewsP);
     if (avdSeconds !== null && goal && views !== null) {
       const r = evaluateHours(views, avdSeconds, goal.hours);
@@ -400,7 +400,7 @@ export default function YouTubeWatchTimeCalculator() {
               {dNow !== null
                 ? `At this pace you pass ${formatCount(adNow.hours)} hours on ${longDate(addDays(today, dNow))}, after ${longDate(E)}. `
                 : `At this pace ${formatCount(adNow.hours)} hours is not reached within five years. `}
-              Applicants from {longDate(E)} are reported to need {formatCount(adNext.hours)} hours, which this pace reaches {dNext === null ? "not within five years" : `on ${longDate(addDays(today, dNext))}`}.
+              Applicants from {longDate(E)} are reported to need {formatCount(adNext.hours)} hours, {dNext === null ? "which this pace does not reach within five years." : `which this pace reaches on ${longDate(addDays(today, dNext))}.`}
             </Alert>
           );
         }
@@ -431,7 +431,7 @@ export default function YouTubeWatchTimeCalculator() {
             />
             <Stat label="Watch hours per day" value={formatHours(sim.hoursPerDay)} hint={`${formatCount(Math.round(dailyViews))} views × ${formatDuration(avdSeconds)}`} />
             <Stat label="Hours after 12 months" value={formatHours(after12, goal.hours)} hint="in the 365-day window" />
-            <Stat label="Flat pace to ever get there" value={`${big(minViews)}/day`} hint={`${formatCount(goal.hours)} h, no growth`} />
+            <Stat label="Minimum steady pace" value={`${big(minViews)}/day`} hint={`for ${formatCount(goal.hours)} h in 365 days`} />
           </StatGrid>
           {selDays === null && (
             <Alert variant="warning" title="Not reached in five years at this pace">
@@ -443,10 +443,18 @@ export default function YouTubeWatchTimeCalculator() {
             <p className="mb-1.5 text-[13px] font-medium text-fg">When each requirement is reached</p>
             <DataTable
               caption="Projected date for each watch-hour requirement"
-              head={["Requirement", "Hours", "Reached in", "Date"]}
+              head={["Requirement", "Reached in", "Date"]}
+              wrapFirst
               rows={list.map((g) => {
                 const d = daysFor(g);
-                return [rowName(g), formatCount(g.hours), reachText(d), reachDate(d)];
+                return [
+                  <>
+                    {rowName(g)}
+                    <span className="block text-xs font-normal text-muted">{formatCount(g.hours)} hours</span>
+                  </>,
+                  reachText(d),
+                  reachDate(d),
+                ];
               })}
               highlight={(i) => list[i].id === goal.id}
             />
@@ -470,7 +478,7 @@ export default function YouTubeWatchTimeCalculator() {
 
   /* ----- Tab: Shorts path ----- */
   if (s.tab === "shorts") {
-    const shortsP = parseCount(s.shorts, { noun: "number of Shorts views" });
+    const shortsP = parseCount(s.shorts, { noun: "number of Shorts views", integer: true });
     const views = val(shortsP);
     const tiers = goals.filter((g) => g.id !== "custom" && g.shortsViews);
     if (views !== null) {
@@ -488,6 +496,7 @@ export default function YouTubeWatchTimeCalculator() {
           </StatGrid>
           <DataTable
             caption="Shorts views path for each tier"
+            wrapFirst
             head={["Tier", "Views needed", "Reached", "To go", "Per day for 90 days"]}
             rows={rows.map(({ g, r }) => [
               g.id === "early" ? "Early access" : g.id === "ad" ? "Ad revenue (today's bar)" : `Ad revenue (from ${shortDate(g.tier?.effectiveFrom ?? today)})`,
@@ -513,9 +522,9 @@ export default function YouTubeWatchTimeCalculator() {
   const dailyP = parseCount(s.daily, { noun: "number of views" });
   const bankedP = parseCount(s.banked, { noun: "number of hours" });
   const growthP = parseSigned(s.growth, -50, 200, "percentage");
-  const viewsP = parseCount(s.views, { noun: "number of views" });
+  const viewsP = parseCount(s.views, { noun: "number of views", integer: true });
   const spanP = parseCount(s.spanDays, { suffix: false, min: 1, noun: "number of days" });
-  const shortsP = parseCount(s.shorts, { noun: "number of Shorts views" });
+  const shortsP = parseCount(s.shorts, { noun: "number of Shorts views", integer: true });
   const lenP = parseDuration(s.length);
 
   const adTier = goals.find((g) => g.id === "ad")?.tier;
@@ -524,7 +533,7 @@ export default function YouTubeWatchTimeCalculator() {
 
   return (
     <ToolPanel>
-      <Tabs label="Calculator mode" value={s.tab} onChange={set("tab")} options={TAB_OPTIONS} className="self-start" />
+      <Tabs label="Calculator mode" size="sm" value={s.tab} onChange={set("tab")} options={TAB_OPTIONS} className="self-start" />
 
       {usesShared && (
         <ToolGrid>

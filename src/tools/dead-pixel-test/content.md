@@ -2,7 +2,7 @@
 
 This dead pixel test fills your whole screen with one flat color at a time, so a faulty pixel has nowhere to hide. Press "Start screen test" and the page goes full size and steps through black, white, red, green, blue and gray. A dark dot on white, a bright dot on black or an odd-colored dot on red, green or blue is a pixel fault.
 
-Around the colors sit tools most screen test pages leave out: a locator grid that labels the screen like a spreadsheet, a calculator that compares your defect count with the ISO 9241-307 classes, extra screens for gradients and backlight bleed, and a stuck pixel fixer that stays off until you confirm a photosensitivity warning.
+Around the colors sit tools most screen test pages leave out: a locator grid that labels the screen like a spreadsheet, a calculator that compares your defect count with the commonly cited ISO pixel-defect classes, extra screens for gradients and backlight bleed, and a stuck pixel fixer that stays off until you confirm a photosensitivity warning.
 
 ## How to use the dead pixel test
 
@@ -26,6 +26,14 @@ A pixel is typically built from red, green and blue subpixels, and faults are na
 
 The colors tell you which subpixel is at fault. On the red screen only red subpixels should glow, so a green, blue or white dot means another subpixel is stuck on, and a black dot means the red one is dead. Cyan, magenta and yellow each need two subpixels, so they expose a missing red, green or blue. Not every dot is a fault: dust on white looks like a dead pixel until you wipe it away.
 
+| Screen | What it reveals | A fault looks like |
+| --- | --- | --- |
+| Black | Pixels stuck on, backlight bleed | A bright or colored dot, or a glowing edge |
+| White | Dead pixels, dirt, color tint | A dark dot, or a colored dot |
+| Red, green, blue | A stuck or dead subpixel of another color | A dot that is not the screen color |
+| Cyan, magenta, yellow | A missing red, green or blue subpixel | A dot with a different hue |
+| Gray 25%, 50%, 75% | Uneven brightness, clouding, tint | A patch that is lighter, darker or tinted |
+
 ## Backlight bleed and IPS glow
 
 On an LCD, light can leak past the edges of a black screen, and two things cause it. Sit back in a dim room with the black screen up, then move your head slowly. A haze that shifts or fades is IPS glow, a property of the panel type. A bright patch locked to the same edge or corner is backlight bleed, which can come from uneven pressure on the panel. A little of either is common, so judge by whether it bothers you in dark scenes. OLED screens have no backlight, so use the gray screens to look for uneven wear instead.
@@ -40,7 +48,7 @@ The step charts help too. "Near-black steps" shows levels 0 to 15 and "Near-whit
 
 ## Counting defects and the ISO classes
 
-The ISO 9241-307 standard took over from ISO 13406-2 and sorts panels into four classes by faults allowed per million pixels. These are the figures manufacturers commonly quote; the standard's own text is sold by ISO, so read the maker's policy too.
+The older ISO 13406-2 standard sorted panels into four classes by faults allowed per million pixels, and ISO 9241-307 later replaced it. The figures below are the ones manufacturers and retailers most often quote. ISO sells the standards' full text, and some maker policies differ from this table, for example by splitting Type 3 into always-lit and always-dark subpixels, so treat it as a guide and read the maker's own policy.
 
 | Class | Type 1 (always lit) | Type 2 (always dark) | Type 3 (stuck subpixel) |
 | --- | --- | --- | --- |
@@ -51,7 +59,11 @@ The ISO 9241-307 standard took over from ISO 13406-2 and sorts panels into four 
 
 The calculator scales those rates to your panel. A 1920 × 1080 screen has 2,073,600 pixels, or 2.0736 million. Class II allows 2 × 2.0736 = 4.1472 Type 1 defects, so four pass and five do not; Type 3 allows 5 × 2.0736 = 10.368. Limits are not rounded, so the table shows 4.1 and 10.4. At 2560 × 1440 the Class II limits are 7.4, 7.4 and 18.4, and at 3840 × 2160 they are 16.6, 16.6 and 41.5.
 
-Choose your size under "Panel resolution" or "Custom size", enter your counts, and each class shows "within" or "over". "Copy report" or "Download report" saves the result. The standard also limits clusters of neighboring defects, which this tool does not check, and return policies vary: some makers promise zero defects, some follow Class II.
+Choose your size under "Panel resolution" or "Custom size", enter your counts, and each class shows "within" or "over". "Copy report" or "Download report" saves the result. Maker policies often also limit clusters of neighboring defects, which this tool does not check, and they vary: some promise zero defects, some follow Class II, some set their own numbers.
+
+## What to do if you find a defect
+
+Write down the color screen where the dot shows, its grid cell and how many you found, then photograph the screen with the test color up. Next, check the return window, because a retailer's return is often quicker than a manufacturer's warranty claim. Find the maker's pixel policy on its support site and compare your counts with it, using the calculator above as a rough guide. Then contact the seller or maker with your notes and photos. If a policy sets a zero-defect or low limit, say so and ask for a replacement. Try the fixer only after you have documented the fault, in case the dot moves or changes.
 
 ## Testing a new monitor, laptop or phone
 

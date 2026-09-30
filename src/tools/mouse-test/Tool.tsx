@@ -9,6 +9,7 @@ import { MouseDiagram, type PartState } from "./MouseDiagram";
 import { PollingPanel } from "./PollingPanel";
 import {
   BUTTON_IDS,
+  BUTTON_INFO,
   DEFAULT_SETTINGS,
   FLIP_MS,
   MAX_THRESHOLD_MS,
@@ -169,7 +170,7 @@ export default function MouseTest() {
           if (pointerKindRef.current !== "mouse") return; // ignore the mouse events browsers emulate after a tap
           heldRef.current.add(e.button);
           dispatch({ type: "down", button: e.button, ts: e.timeStamp });
-          setAnnouncement(`Button ${e.button} pressed.`);
+          setAnnouncement(e.button in BUTTON_INFO ? `${BUTTON_INFO[e.button as ButtonId].name} button pressed.` : `Extra button ${e.button} pressed.`);
         }}
         onMouseUp={(e) => e.preventDefault()}
         onAuxClick={(e) => e.preventDefault()}

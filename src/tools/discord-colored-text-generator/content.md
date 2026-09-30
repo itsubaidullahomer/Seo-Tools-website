@@ -2,7 +2,7 @@
 
 Discord has no color picker for chat messages, but its code blocks can draw ANSI escape sequences, the same codes a terminal uses. This Discord colored text generator lets you type a message, select any words, choose a text color, a background color, bold or underline, and then copies the result as an `ansi` code block with the invisible escape characters already in place. Paste it into a channel and the colors show for readers whose client supports them.
 
-The page handles the fiddly parts. You never type the escape character, because no keyboard has a key for it. Every colored section is closed with a reset, sections never run across a line break, and the final message is counted against Discord's length limit. A dark and light preview helps you spot hard-to-read combinations before anyone else sees them.
+The page handles the fiddly parts. You never type the escape character, because a chat box gives you no way to enter it. Every colored section is closed with a reset, sections never run across a line break, and the final message is counted against Discord's length limit. A dark and light preview helps you spot hard-to-read combinations before anyone else sees them.
 
 This is an independent tool, not affiliated with, endorsed by or sponsored by Discord Inc. The platform behavior described below was last checked against published guides on September 30, 2026.
 
@@ -33,7 +33,7 @@ Here `1` is bold, `32` is green text, `m` closes the opening sequence, and `ESC[
 
 ### Worked example: counting the characters
 
-The message above has 44 characters: 8 for the opening fence and its line break, 21 for the text, 7 for `ESC[1;32m`, 4 for `ESC[0m`, and 4 for the final line break and closing fence. A single-code color such as `ESC[31m` costs 5 characters, so each colored section costs at least 9 once its reset is counted. The built-in server rules example is 150 characters of text and 211 as a message, with five colored sections.
+The message above has 44 characters: 8 for the opening fence and its line break, 21 for the text, 7 for `ESC[1;32m`, 4 for `ESC[0m`, and 4 for the final line break and closing fence. A single-code color such as `ESC[31m` costs 5 characters, so each colored section costs at least 9 once its reset is counted. The built-in server rules example is 150 characters of text and 271 as a message, with five colored sections.
 
 ### Why sections stop at line breaks
 
@@ -41,20 +41,35 @@ Rather than rely on a client carrying a style across a line break, the tool give
 
 ## Color code reference
 
-Discord publishes no specification for this feature, so these names come from community guides and the widely documented palette (checked September 30, 2026). Several guides report that the background codes changed in August 2026 and now reuse the eight text hues, with shades that depend on the reader's theme. That could not be confirmed against Discord's own documentation, so the palette menu offers both views.
+We found no official specification for this feature, so these names come from community guides and the widely documented palette (checked September 30, 2026). Several guides report that the background codes changed in August 2026 and now reuse the eight text hues, with shades that depend on the reader's theme. That could not be confirmed against Discord's own documentation, so the palette menu offers both views.
 
 | Text code | Text color | Background code | Classic background | Reported newer background |
 | --- | --- | --- | --- | --- |
-| 30 | Gray | 40 | Dark blue | Same hue as 30 |
+| 30 | Gray | 40 | Firefly dark blue | Same hue as 30 |
 | 31 | Red | 41 | Orange | Same hue as 31 |
 | 32 | Green | 42 | Marble blue | Same hue as 32 |
 | 33 | Yellow | 43 | Greyish turquoise | Same hue as 33 |
 | 34 | Blue | 44 | Gray | Same hue as 34 |
 | 35 | Pink | 45 | Indigo | Same hue as 35 |
 | 36 | Cyan | 46 | Light gray | Same hue as 36 |
-| 37 | White | 47 | Cream white | Same hue as 37 |
+| 37 | White | 47 | White (cream) | Same hue as 37 |
 
 The numbers never change, so the same message is valid either way. Only how it looks can differ. The preview colors are stand-ins: use them to judge contrast and layout, not exact shades.
+
+### Combinations worth copying
+
+Codes can be joined with semicolons inside one sequence, and every colored section should end with `ESC[0m`. These patterns use the classic palette names from the table above.
+
+| Sequence | What it asks for | Good for |
+| --- | --- | --- |
+| `ESC[1;31m` | Bold red text | Warnings and penalties |
+| `ESC[1;4;33m` | Bold, underlined yellow text | Post titles |
+| `ESC[36m` | Cyan text | Numbering and labels |
+| `ESC[37;41m` | White text on an orange background | Status badges such as OFFLINE |
+| `ESC[4;34m` | Underlined blue text | Link-like words (they are not clickable) |
+| `ESC[0m` | Reset to the default look | Ending every section |
+
+Colors inside a code block are decoration only: nothing in an `ansi` block is clickable, and mentions or emoji shortcodes typed inside a code block are not converted.
 
 ## Where colored text shows up
 

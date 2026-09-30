@@ -188,17 +188,28 @@ export function selectionInfo(spans: readonly Span[], length: number, start: num
 }
 
 /**
- * Find the single edit between two strings (common prefix and suffix). Edits never
- * split a surrogate pair, so an emoji is replaced as a whole.
+ * Find the single edit between two strings. Without a caret this is the common prefix
+ * and suffix, which cannot tell which of two equal neighbors was deleted ("aab" to "ab").
+ * With the caret the textarea reports after the edit, the edit is taken to end at the
+ * caret, which resolves that ambiguity; if the text after the caret does not match, it
+ * falls back to the prefix and suffix rule. Edits never split a surrogate pair.
  */
-export function diffEdit(oldText: string, newText: string): { start: number; removed: number; inserted: string } {
-  const max = Math.min(oldText.length, newText.length);
+export function diffEdit(oldText: string, newText: string, caret?: number | null): { start: number; removed: number; inserted: string } {
   let p = 0;
-  while (p < max && oldText.charCodeAt(p) === newText.charCodeAt(p)) p++;
   let s = 0;
-  while (s < max - p && oldText.charCodeAt(oldText.length - 1 - s) === newText.charCodeAt(newText.length - 1 - s)) s++;
-  if (p > 0 && isHigh(oldText.charCodeAt(p - 1))) p--;
-  if (s > 0 && isLow(oldText.charCodeAt(oldText.length - s))) s--;
+  const max = Math.min(oldText.length, newText.length);
+  const hinted = typeof caret === "number" && caret >= 0 && caret <= newText.length;
+  const oldEnd = hinted ? oldText.length - (newText.length - caret) : -1;
+  if (hinted && oldEnd >= 0 && oldText.slice(oldEnd) === newText.slice(caret)) {
+    const limit = Math.min(caret, oldEnd);
+    while (p < limit && oldText.charCodeAt(p) === newText.charCodeAt(p)) p++;
+    s = oldText.length - oldEnd;
+  } else {
+    while (p < max && oldText.charCodeAt(p) === newText.charCodeAt(p)) p++;
+    while (s < max - p && oldText.charCodeAt(oldText.length - 1 - s) === newText.charCodeAt(newText.length - 1 - s)) s++;
+  }
+  if (p > 0 && isHigh(oldText.charCodeAt(p - 1)) && p < oldText.length && isLow(oldText.charCodeAt(p))) p--;
+  if (s > 0 && isLow(oldText.charCodeAt(oldText.length - s)) && oldText.length - s > 0 && isHigh(oldText.charCodeAt(oldText.length - s - 1))) s--;
   return { start: p, removed: oldText.length - p - s, inserted: newText.slice(p, newText.length - s) };
 }
 
@@ -315,9 +326,9 @@ export interface EditResult {
 }
 
 /** Fold a new textarea value into the document, moving the spans with the edit. */
-export function applyEdit(doc: Doc, rawValue: string): EditResult {
+export function applyEdit(doc: Doc, rawValue: string, caret?: number | null): EditResult {
   const next = rawValue.replace(/\r\n?/g, "\n");
-  const { start, removed, inserted } = diffEdit(doc.text, next);
+  const { start, removed, inserted } = diffEdit(doc.text, next, next === rawValue ? caret : null);
   let plain = inserted;
   let insertedStyles: Uint16Array | null = null;
   let removedControls = 0;

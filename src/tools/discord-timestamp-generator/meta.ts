@@ -34,7 +34,7 @@ export const meta: ToolMeta = {
     {
       question: "What do the letters t, T, d, D, f, F and R mean?",
       answer:
-        "They are the seven display styles. Lowercase t is a short time and capital T adds seconds. Lowercase d is a short date and capital D spells out the month. Lowercase f is a date with a short time, and capital F adds the weekday. R is relative time, such as “in 3 hours” or “2 days ago”. A code with no letter is shown like f.",
+        "They are the seven display styles. Lowercase t is a short time and capital T adds seconds. Lowercase d is a short date and capital D spells out the month. Lowercase f is a date with a short time, and capital F adds the weekday. R is relative time, such as “in 3 hours” or “2 days ago”. A code with no letter is shown like f. Recent discord.js versions also list s and S, which this tool does not generate.",
     },
     {
       question: "Do Discord timestamps show the right time for people in other time zones?",
