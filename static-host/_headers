@@ -1,0 +1,18 @@
+# Response headers for static hosts (Cloudflare Pages / Netlify).
+# Used only by `npm run build:static`; Vercel reads next.config.ts instead.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=()
+
+# Hashed build files never change, so browsers may cache them for a year.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Keep the temporary *.pages.dev address out of Google so it never competes with the
+# real domain. (Cloudflare Pages placeholder syntax – confirm after the first deploy with
+# `curl -I https://<project>.pages.dev/` and look for X-Robots-Tag.)
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex, nofollow

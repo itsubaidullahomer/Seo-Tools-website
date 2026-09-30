@@ -5,6 +5,7 @@ import { getAllTools, getToolsByCategory, toolPath } from "@/lib/tools/registry"
 import { getAllPosts } from "@/lib/blog";
 import { MIN_TOOLS_FOR_INDEXED_CATEGORY } from "@/lib/seo/metadata";
 
+export const dynamic = "force-static";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const tools = getAllTools();
   const posts = await getAllPosts();

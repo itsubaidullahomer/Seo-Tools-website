@@ -13,7 +13,8 @@
     "new-tool": "tsx scripts/new-tool.ts",
     "check": "npm run gen && npm run validate && npm run typecheck && npm run lint",
     "seo-audit": "node scripts/seo-audit.mjs",
-    "content-check": "tsx scripts/content-quality.ts"
+    "content-check": "tsx scripts/content-quality.ts",
+    "build:static": "node scripts/build-static.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.3.7",

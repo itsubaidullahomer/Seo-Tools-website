@@ -16,6 +16,7 @@ import { absoluteUrl } from "@/config/site";
 const AI_SEARCH_AND_USER_BOTS = ["OAI-SearchBot", "ChatGPT-User", "PerplexityBot", "Perplexity-User", "Claude-SearchBot", "Claude-User"];
 const AI_TRAINING_BOTS = ["GPTBot", "ClaudeBot", "Google-Extended", "Applebot-Extended", "CCBot"];
 
+export const dynamic = "force-static";
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [

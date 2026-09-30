@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 import { getCategory } from "@/lib/tools/categories";
 import { getAllTools, getToolBySlug } from "@/lib/tools/registry";
 
+export const dynamic = "force-static";
 export const alt = "Tool preview";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

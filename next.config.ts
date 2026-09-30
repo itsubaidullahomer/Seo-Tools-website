@@ -7,7 +7,16 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(self), microphone=(self), geolocation=()" },
 ];
 
+/**
+ * Set STATIC_EXPORT=1 (via `npm run build:static`) to produce a plain HTML/JS/CSS
+ * folder in ./out that any static host can serve (Cloudflare Pages, Netlify, S3…).
+ * On Vercel the normal server build is used and `headers()` below applies; in export
+ * mode headers/redirects are ignored, so static-host/_headers is used instead.
+ */
+const staticExport = process.env.STATIC_EXPORT === "1";
+
 const nextConfig: NextConfig = {
+  ...(staticExport ? { output: "export" as const } : {}),
   reactStrictMode: true,
   poweredByHeader: false,
   async headers() {
