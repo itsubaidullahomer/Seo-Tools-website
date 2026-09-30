@@ -19,15 +19,25 @@ export interface PageMetaInput {
   ogType?: "website" | "article";
   publishedTime?: string;
   modifiedTime?: string;
-  /** Absolute or site-relative OG image. Defaults to the route's opengraph-image. */
-  image?: string;
+  /**
+   * Absolute or site-relative social image. Defaults to the site-wide
+   * /opengraph-image. Pass `false` when the route has its own
+   * `opengraph-image` file (tools, blog posts) so that file is used instead.
+   */
+  image?: string | false;
 }
+
+/** Longest "Title | Site" that still fits a Google result title (~600px) without truncation. */
+const MAX_BRANDED_TITLE = 65;
 
 export function buildPageMetadata(input: PageMetaInput): Metadata {
   const url = absoluteUrl(input.path);
-  const image = input.image ? (input.image.startsWith("http") ? input.image : absoluteUrl(input.image)) : undefined;
+  const imagePath = input.image === false ? undefined : (input.image ?? "/opengraph-image");
+  const image = imagePath ? (imagePath.startsWith("http") ? imagePath : absoluteUrl(imagePath)) : undefined;
+  // The root layout appends " | SiteName"; skip it when that would get the title truncated in search results.
+  const branded = `${input.title} | ${siteConfig.name}`;
   return {
-    title: input.title,
+    title: branded.length > MAX_BRANDED_TITLE ? { absolute: input.title } : input.title,
     description: input.description,
     keywords: input.keywords,
     alternates: { canonical: url },
@@ -65,13 +75,18 @@ export function buildToolMetadata(tool: ToolMeta): Metadata {
     path: `/tools/${tool.slug}`,
     keywords: tool.keywords,
     ogType: "website",
+    image: false, // src/app/tools/[slug]/opengraph-image.tsx
   });
 }
 
+/** Category hubs with fewer tools than this are noindexed (thin page) until they fill up. */
+export const MIN_TOOLS_FOR_INDEXED_CATEGORY = 3;
+
 export function buildCategoryMetadata(category: Category, count: number): Metadata {
   return buildPageMetadata({
-    title: `${category.name} – ${count} Free Online Tools`,
+    title: count >= MIN_TOOLS_FOR_INDEXED_CATEGORY ? `${category.name} – ${count} Free Online Tools` : category.name,
     description: category.description,
     path: `/category/${category.slug}`,
+    noindex: count < MIN_TOOLS_FOR_INDEXED_CATEGORY,
   });
 }

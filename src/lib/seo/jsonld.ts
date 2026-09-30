@@ -18,12 +18,18 @@ export type JsonLd = Record<string, unknown>;
 export const ORG_ID = `${siteConfig.url}/#organization`;
 export const WEBSITE_ID = `${siteConfig.url}/#website`;
 
+/** The named person behind the site – used as article author and organisation founder. */
+export function personSchema(): JsonLd {
+  return { "@type": "Person", name: siteConfig.author.name, url: absoluteUrl("/about") };
+}
+
 export function organizationSchema(): JsonLd {
   return {
     "@type": "Organization",
     "@id": ORG_ID,
     name: siteConfig.name,
     url: siteConfig.url,
+    founder: personSchema(),
     logo: {
       "@type": "ImageObject",
       url: absoluteUrl("/icon.svg"),
@@ -180,7 +186,7 @@ export function articleSchema(opts: { title: string; description: string; path: 
     mainEntityOfPage: absoluteUrl(opts.path),
     datePublished: opts.datePublished,
     dateModified: opts.dateModified,
-    author: { "@type": "Organization", name: siteConfig.author.name, url: absoluteUrl("/about") },
+    author: personSchema(),
     publisher: { "@id": ORG_ID },
     image: opts.image ?? absoluteUrl(`${opts.path}/opengraph-image`),
     inLanguage: "en",

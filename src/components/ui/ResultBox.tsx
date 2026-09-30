@@ -16,15 +16,15 @@ export interface ResultBoxProps {
   className?: string;
 }
 
-/** Read-only output area with an integrated copy button. */
+/** Read-only output area with an integrated header bar and copy button. */
 export function ResultBox({ label = "Result", value, placeholder = "Result will appear here", mono, copy = true, actions, rows = 6, className }: ResultBoxProps) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-fg">{label}</span>
-        <div className="flex items-center gap-2">
+    <div className={cn("overflow-hidden rounded-lg border border-border-strong bg-surface-2", className)}>
+      <div className="flex items-center justify-between gap-2 border-b border-border bg-surface px-3 py-1.5">
+        <span className="label-mono">{label}</span>
+        <div className="flex items-center gap-1.5">
           {actions}
-          {copy && <CopyButton text={value} size="sm" variant="secondary" disabled={!value} />}
+          {copy && <CopyButton text={value} size="sm" variant="ghost" disabled={!value} />}
         </div>
       </div>
       <textarea
@@ -34,8 +34,8 @@ export function ResultBox({ label = "Result", value, placeholder = "Result will 
         placeholder={placeholder}
         rows={rows}
         className={cn(
-          "w-full resize-y rounded-lg border border-border bg-surface-2 px-3 py-2.5 text-sm leading-relaxed text-fg placeholder:text-muted/70 focus:outline-none",
-          mono && "font-mono",
+          "block w-full resize-y bg-transparent px-3 py-2.5 text-sm leading-relaxed text-fg placeholder:text-muted/70 focus:outline-none",
+          mono && "font-mono text-[13px]",
         )}
       />
     </div>

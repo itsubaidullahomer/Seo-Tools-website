@@ -1,8 +1,23 @@
 import { clsx, type ClassValue } from "clsx";
+import { extendTailwindMerge } from "tailwind-merge";
 
-/** Merge class names; thin wrapper so components read the same everywhere. */
+// Teach tailwind-merge about our semantic color tokens so e.g. `text-muted` and
+// `text-sm` are not treated as conflicting, while `bg-surface` vs `bg-primary` is.
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      color: [
+        "bg", "surface", "surface-2", "surface-3", "border", "border-strong", "fg", "fg-secondary", "muted",
+        "primary", "primary-hover", "primary-soft", "primary-fg", "accent-bright", "ink", "ink-hover", "ink-fg",
+        "accent", "success", "success-soft", "warning", "warning-soft", "danger", "danger-soft", "ring",
+      ],
+    },
+  },
+});
+
+/** Merge class names; later classes override conflicting earlier ones (className props win). */
 export function cn(...inputs: ClassValue[]): string {
-  return clsx(inputs);
+  return twMerge(clsx(inputs));
 }
 
 /** Format a number with locale separators, e.g. 12345 -> "12,345". */

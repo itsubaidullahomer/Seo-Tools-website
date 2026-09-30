@@ -13,6 +13,8 @@ Everything in this list is something only the site owner can do (accounts, domai
   - `NEXT_PUBLIC_CONTACT_EMAIL` = a real mailbox you check
   - `NEXT_PUBLIC_AUTHOR_NAME` = your name or team name (shown on the About page)
 - [ ] Redeploy so the sitemap, canonical URLs and Open Graph URLs use the real domain.
+- [ ] Note: every `*.vercel.app` address is automatically marked `noindex` (see `next.config.ts`), so the temporary Vercel links can never compete with your real domain in Google. Only the custom domain gets indexed.
+- [ ] Run the SEO audit against the live site: `node scripts/seo-audit.mjs https://toolkitjar.com` (should print `0 error(s)`).
 - [ ] Create the contact mailbox (e.g. `hello@` on your domain, or forward it to Gmail via your registrar's free email forwarding).
 
 ## 2. Google Search Console (day 1)
@@ -28,9 +30,10 @@ Everything in this list is something only the site owner can do (accounts, domai
 - [ ] analytics.google.com → create a GA4 property → Web data stream → copy the Measurement ID (`G-XXXXXXXXXX`).
 - [ ] Set `NEXT_PUBLIC_GA_ID` in Vercel and redeploy. Analytics loads only when this is set.
 
-## 4. Bing Webmaster Tools (optional, 10 minutes)
+## 4. Bing Webmaster Tools (10 minutes – worth doing)
 
-- [ ] bing.com/webmasters → import from Google Search Console. Free extra traffic from Bing/DuckDuckGo.
+- [ ] bing.com/webmasters → import from Google Search Console. Bing's index feeds Bing, DuckDuckGo, Ecosia and is one of the sources behind ChatGPT search, so being indexed there helps you show up in AI answers as well.
+- [ ] In Bing Webmaster Tools turn on **IndexNow** (free) so new tools are picked up within minutes of each deploy.
 
 ## 5. Before applying for AdSense (weeks 4-8)
 

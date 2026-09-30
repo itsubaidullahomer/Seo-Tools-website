@@ -116,7 +116,7 @@ function styleFor(mode: Mode, indent: Indent): FormatStyle {
 function buildOutput(a: Analysis, s: Settings): Output {
   if (a.empty) return { text: "" };
   if (s.mode === "escape") {
-    const source = s.minifyBeforeEscape && a.parse?.ok ? stringifyJson(a.parse.value, { kind: "minify" }, s.sortKeys) : a.text;
+    const source = s.minifyBeforeEscape && a.parse?.ok ? stringifyJson(a.parse.value, { kind: "minify" }, false) : a.text;
     return { text: escapeJsonString(source) };
   }
   if (s.mode === "unescape") {
@@ -228,7 +228,7 @@ export default function JsonFormatter() {
     if (output.text.length <= PREVIEW_CHARS) return null;
     const cut = output.text.lastIndexOf("\n", PREVIEW_CHARS);
     const text = output.text.slice(0, cut > PREVIEW_CHARS / 2 ? cut : PREVIEW_CHARS);
-    return { text, lines: countLines(text) };
+    return { text, lines: countLines(text), bytes: utf8Length(text) };
   }, [output.text]);
 
   const jsonMode = mode === "format" || mode === "oneline" || mode === "minify";
@@ -321,7 +321,7 @@ export default function JsonFormatter() {
           wrap="off"
           autoCapitalize="off"
           autoCorrect="off"
-          className="text-[13px]"
+          className="text-[13px] max-sm:h-56"
         />
       </div>
 
@@ -399,7 +399,8 @@ export default function JsonFormatter() {
 
       {jsonMode && parse?.ok && !lastFix && (
         <Alert variant="success" title="Valid JSON">
-          The document is {describeRoot(parse)}, {stats ? `${formatNumber(stats.maxDepth)} ${stats.maxDepth === 1 ? "level" : "levels"} deep` : ""}.
+          The document is {describeRoot(parse)}
+          {stats && stats.maxDepth > 0 ? `, ${formatNumber(stats.maxDepth)} ${stats.maxDepth === 1 ? "level" : "levels"} deep` : ""}.
         </Alert>
       )}
 
@@ -469,7 +470,7 @@ export default function JsonFormatter() {
 
       {preview && (
         <p className="-mt-3 text-xs text-muted">
-          Showing the first {formatNumber(preview.lines)} of {formatNumber(outputLines)} lines ({formatBytes(preview.text.length)} of {formatBytes(outputBytes)}) to keep the page fast. Copy and Download include the full result.
+          Showing the first {formatNumber(preview.lines)} of {formatNumber(outputLines)} lines ({formatBytes(preview.bytes)} of {formatBytes(outputBytes)}) to keep the page fast. Copy and Download include the full result.
         </p>
       )}
 
@@ -518,7 +519,7 @@ export default function JsonFormatter() {
       {jsonMode && stats && stats.unsafeCount > 0 && (
         <Alert variant="warning" title={`${formatNumber(stats.unsafeCount)} ${stats.unsafeCount === 1 ? "number" : "numbers"} too large for JavaScript`}>
           {unsafeLines.map((u) => `${u.raw.length > 30 ? u.raw.slice(0, 30) + "…" : u.raw} (line ${u.line})`).join(", ")}
-          {stats.unsafeCount > unsafeLines.length ? " and more" : ""}. This formatter keeps the digits exactly, but JSON.parse in browsers and Node.js rounds integers above 9,007,199,254,740,991. Store IDs like these as strings if a JavaScript app will read them.
+          {stats.unsafeCount > unsafeLines.length ? " and more" : ""}. This formatter keeps the digits exactly, but JSON.parse in browsers and Node.js rounds numbers above 9,007,199,254,740,991 to the nearest value a double can hold, and turns anything beyond about 1.8e308 into Infinity. Store IDs like these as strings if a JavaScript app will read them.
         </Alert>
       )}
     </ToolPanel>

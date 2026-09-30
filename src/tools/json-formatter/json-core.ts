@@ -248,8 +248,13 @@ class Parser {
     this.i = end;
     this.stats.numbers++;
     // Flag numbers that JavaScript (and many other JSON parsers) cannot hold exactly.
-    const hasFraction = raw.includes(".") || raw.includes("e") || raw.includes("E");
-    const unsafe = hasFraction ? !Number.isFinite(Number(raw)) : raw.replace("-", "").length > 15 && !Number.isSafeInteger(Number(raw));
+    // Unsafe = overflows to Infinity, or is above 2^53 with more significant digits than a double keeps.
+    const value = Number(raw);
+    let unsafe = !Number.isFinite(value);
+    if (!unsafe && Math.abs(value) > Number.MAX_SAFE_INTEGER) {
+      const digits = raw.replace(/^-/, "").replace(/[eE].*$/, "").replace(".", "").replace(/^0+/, "").replace(/0+$/, "");
+      unsafe = digits.length > 15;
+    }
     if (unsafe) {
       this.stats.unsafeCount++;
       if (this.stats.unsafeNumbers.length < MAX_LISTED) this.stats.unsafeNumbers.push({ raw, pos: start });
@@ -448,8 +453,21 @@ export function parseJson(text: string): ParseResult {
 
 export type FormatStyle = { kind: "pretty"; indent: string } | { kind: "oneline" } | { kind: "minify" };
 
+/** Compare by Unicode code point (not UTF-16 code unit), so emoji sort after U+FFFF like in jq and Python. */
 function compareKeys(a: JsonEntry, b: JsonEntry): number {
-  return a.key < b.key ? -1 : a.key > b.key ? 1 : 0;
+  const x = a.key;
+  const y = b.key;
+  const n = Math.min(x.length, y.length);
+  for (let i = 0; i < n; i++) {
+    const cx = x.charCodeAt(i);
+    const cy = y.charCodeAt(i);
+    if (cx === cy) continue;
+    // Surrogates (U+D800-DFFF) encode code points above U+FFFF, so they rank above U+E000-FFFF.
+    const rx = cx >= 0xd800 && cx <= 0xdfff ? cx + 0x2000 : cx >= 0xe000 ? cx - 0x800 : cx;
+    const ry = cy >= 0xd800 && cy <= 0xdfff ? cy + 0x2000 : cy >= 0xe000 ? cy - 0x800 : cy;
+    return rx - ry;
+  }
+  return x.length - y.length;
 }
 
 /** Serialize a parsed tree. Keys keep their original spelling; sorting is by code point like jq -S. */
@@ -740,8 +758,8 @@ function tokenize(text: string, note: (kind: FixKind, pos: number) => void): Tok
       i = j + 1;
       continue;
     }
-    if (ch === "'" || ch === "“" || ch === "‘" || ch === "”") {
-      const closers = ch === "'" ? "'" : ch === "‘" ? "’'" : "”“\"";
+    if (ch === "'" || ch === "“" || ch === "‘" || ch === "”" || ch === "’") {
+      const closers = ch === "'" ? "'" : ch === "‘" || ch === "’" ? "’'" : "”“\"";
       let j = i + 1;
       while (j < n && !closers.includes(text[j])) {
         if (text[j] === "\\" && ch === "'") j++;

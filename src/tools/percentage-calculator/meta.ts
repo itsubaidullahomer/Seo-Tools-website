@@ -22,7 +22,7 @@ export const meta: ToolMeta = {
   ],
   aliases: ["percent of calculator", "percentage finder", "discount percentage calculator", "percent change formula"],
   icon: "percent",
-  featured: false,
+  featured: true,
   datePublished: "2026-09-29",
   dateModified: "2026-09-29",
   related: ["word-counter", "character-counter", "password-generator", "json-formatter"],

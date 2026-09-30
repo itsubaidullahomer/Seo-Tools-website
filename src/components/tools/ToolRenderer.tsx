@@ -1,7 +1,8 @@
 "use client";
 
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Component, useEffect, type ErrorInfo, type ReactNode } from "react";
 import { toolComponents } from "@/lib/tools/registry.client.generated";
+import { pushRecentTool } from "@/lib/tools/recent";
 import { Alert } from "@/components/ui/Alert";
 
 class ToolErrorBoundary extends Component<{ children: ReactNode; name: string }, { error: Error | null }> {
@@ -27,6 +28,12 @@ class ToolErrorBoundary extends Component<{ children: ReactNode; name: string },
 /** Looks up the code-split component for `slug` and renders it inside an error boundary. */
 export function ToolRenderer({ slug }: { slug: string }) {
   const Tool = toolComponents[slug];
+
+  // Remember the tool for the command palette's "Recently used" list (device-local).
+  useEffect(() => {
+    pushRecentTool(slug);
+  }, [slug]);
+
   if (!Tool) {
     return <Alert variant="warning">This tool is not available yet.</Alert>;
   }

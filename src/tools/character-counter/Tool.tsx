@@ -127,7 +127,7 @@ export default function CharacterCounter() {
           setPasteBlocked(false);
         }}
         placeholder="Type or paste your text here. Characters, words, sentences and bytes are counted as you type…"
-        rows={8}
+        rows={6}
         error={over ? `${formatNumber(used - limit)} ${unitLabel(rule)} over ${limitName}.` : undefined}
       />
 

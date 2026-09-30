@@ -119,6 +119,48 @@ const useIsClient = () =>
     () => false,
   );
 
+/**
+ * Slider plus a typeable number box. The box keeps a draft while you type, so
+ * entering "20" does not snap to the minimum after the "2"; it commits whole
+ * numbers inside the range as you type and clamps/rounds on blur or Enter.
+ */
+function RangeField({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (v: number) => void }) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const commit = () => {
+    if (draft !== null && draft.trim() !== "" && Number.isFinite(Number(draft))) {
+      onChange(Math.min(max, Math.max(min, Math.round(Number(draft)))));
+    }
+    setDraft(null);
+  };
+  return (
+    <div className="flex items-end gap-3">
+      <Slider label={label} value={value} min={min} max={max} editable={false} format={() => `${min}–${max}`} onChange={(v) => onChange(Math.round(v))} className="min-w-0 flex-1" />
+      <Input
+        type="number"
+        inputMode="numeric"
+        aria-label={`${label} (number)`}
+        value={draft ?? String(value)}
+        min={min}
+        max={max}
+        step={1}
+        inputSize="sm"
+        containerClassName="w-20 shrink-0"
+        className="no-spinner text-right tabular-nums"
+        onChange={(e) => {
+          const raw = e.target.value;
+          setDraft(raw);
+          const n = Number(raw);
+          if (raw.trim() !== "" && Number.isInteger(n) && n >= min && n <= max) onChange(n);
+        }}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") commit();
+        }}
+      />
+    </div>
+  );
+}
+
 export default function PasswordGenerator() {
   const [settings, setSettings] = usePersistentState<Settings>("password-generator:settings", DEFAULTS, {
     storage: "local",
@@ -253,10 +295,10 @@ export default function PasswordGenerator() {
               <span key={l} className={cn("h-2 rounded-full", i <= levelIndex ? LEVEL_STYLE[level].bar : "bg-surface-3")} />
             ))}
           </div>
-          <StatGrid className="lg:grid-cols-3">
+          <StatGrid className="lg:grid-cols-3!">
             <Stat label="Entropy" value={<span data-testid="bits">{(Math.floor(bits * 10) / 10).toFixed(1)} bits</span>} emphasis />
             <Stat label="Average time to guess" value={<span className="text-lg sm:text-xl">{formatGuessTime(bits)}</span>} hint="at 10 billion guesses per second" />
-            <Stat label="Possible results" value={<span className="text-lg sm:text-xl">{formatCombinations(bits)}</span>} hint="every one equally likely" />
+            <Stat className="col-span-2 sm:col-span-1" label="Possible results" value={<span className="text-lg sm:text-xl">{formatCombinations(bits)}</span>} hint="every one equally likely" />
           </StatGrid>
           <p className="text-xs text-muted" data-testid="formula">
             {formula}.
@@ -272,7 +314,7 @@ export default function PasswordGenerator() {
       <ToolSection title="Settings" description="Changes apply instantly. Your settings are remembered in this browser; generated passwords are never saved.">
         {s.mode === "random" ? (
           <div className="flex flex-col gap-4">
-            <Slider label="Length" value={s.length} min={MIN_LENGTH} max={MAX_LENGTH} onChange={(length) => update({ length })} />
+            <RangeField label="Length" value={s.length} min={MIN_LENGTH} max={MAX_LENGTH} onChange={(length) => update({ length })} />
             <div className="grid gap-4 sm:grid-cols-2">
               <Toggle checked={s.upper} onChange={(upper) => update({ upper })} label="Uppercase (A–Z)" />
               <Toggle checked={s.lower} onChange={(lower) => update({ lower })} label="Lowercase (a–z)" />
@@ -303,7 +345,7 @@ export default function PasswordGenerator() {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <Slider label="Number of words" value={s.words} min={MIN_WORDS} max={MAX_WORDS} onChange={(words) => update({ words })} />
+            <RangeField label="Number of words" value={s.words} min={MIN_WORDS} max={MAX_WORDS} onChange={(words) => update({ words })} />
             <div className="grid gap-4 sm:grid-cols-2">
               <Select
                 label="Separator"
@@ -334,7 +376,7 @@ export default function PasswordGenerator() {
             )}
           </div>
         )}
-        <Slider label="How many to generate" value={s.count} min={1} max={MAX_COUNT} onChange={(count) => update({ count })} />
+        <RangeField label="How many to generate" value={s.count} min={1} max={MAX_COUNT} onChange={(count) => update({ count })} />
       </ToolSection>
     </ToolPanel>
   );

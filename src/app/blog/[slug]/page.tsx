@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     publishedTime: post.date,
     modifiedTime: post.updated,
     keywords: post.tags,
+    image: false, // src/app/blog/[slug]/opengraph-image.tsx
   });
 }
 

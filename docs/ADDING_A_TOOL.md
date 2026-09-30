@@ -36,6 +36,7 @@ export const meta: ToolMeta = {
   dateModified: "2026-10-01",        // bump when the tool or article changes meaningfully
   related: ["rem-to-px", "px-to-em"],// existing slugs only
   processesFiles: false,             // true for image/file tools (shows the files-stay-local badge)
+  highInteraction: false,            // true for rapid click/type tools (keyboard test, click speed): hides ads near the tool
   faq: [ /* 5-8 items, each answer 40-90 words, genuinely useful */ ],
 };
 ```

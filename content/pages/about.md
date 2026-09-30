@@ -20,9 +20,15 @@ The site exists because most "free online tool" websites are slow, cluttered wit
 
 ## Who is behind the site
 
-{{siteName}} is built and maintained by {{authorName}}, a small independent team of developers and writers. We build the tools we needed ourselves and write the guides we wished existed when we searched for them.
+{{siteName}} is built and maintained by {{authorName}}, a software developer. You can reach {{authorName}} directly through the [contact page](/contact).
 
 We are not affiliated with Google, Instagram, YouTube, X, LinkedIn, TikTok or any other platform mentioned on the site. Platform names are used only to describe what a tool is for.
+
+## How the tools and guides are made
+
+Every tool is working software that runs in your browser, not just a page of text. Tools are tested in a real browser and their results are checked against independently calculated values before they are published.
+
+The written guides and explanations are drafted with the help of AI writing tools, then checked for accuracy, and {{authorName}} is responsible for what is published. The full details, including how we handle corrections, are on the [editorial policy](/editorial-policy) page.
 
 ## How we choose what to build
 
@@ -31,6 +37,16 @@ We look at three things: what people search for, where existing tools fall short
 ## Corrections and feedback
 
 Accuracy matters to us. If you find an error in a tool or a guide, or you have an idea for a new tool, please [get in touch](/contact). We fix confirmed bugs quickly and credit helpful reports where appropriate.
+
+## Open-source credits
+
+{{siteName}} is built on open-source software and data. We are grateful to the people who maintain it:
+
+- [Next.js](https://nextjs.org) and [React](https://react.dev) (MIT License) – the framework the site runs on.
+- [Tailwind CSS](https://tailwindcss.com) (MIT License) – styling.
+- [Lucide](https://lucide.dev) icons (ISC License).
+- [Geist](https://vercel.com/font) typeface by Vercel (SIL Open Font License 1.1).
+- Character advance-width measurements derived from the [Liberation Sans](https://github.com/liberationfonts/liberation-fonts) font (SIL Open Font License 1.1), used by the title/meta description length checker and the SERP snippet preview to estimate pixel widths. Only numeric width data is included; no font files are distributed.
 
 ## Legal
 

@@ -2,7 +2,7 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline" | "accent";
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,18 +14,21 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "bg-primary text-primary-fg hover:bg-primary-hover shadow-sm",
-  secondary: "bg-surface-2 text-fg hover:bg-surface-3 border border-border",
+  // Ink button – the main action.
+  primary: "bg-ink text-ink-fg hover:bg-ink-hover shadow-[inset_0_-2px_0_rgb(0_0_0/0.25)]",
+  // Signal-orange button – use sparingly for the single most important CTA on a page.
+  accent: "bg-primary text-primary-fg hover:bg-primary-hover shadow-[inset_0_-2px_0_rgb(0_0_0/0.18)]",
+  secondary: "bg-surface text-fg border border-border-strong hover:bg-surface-2 hover:border-fg/30 shadow-[inset_0_-1px_0_var(--border)]",
   outline: "bg-transparent text-fg border border-border-strong hover:bg-surface-2",
   ghost: "bg-transparent text-fg-secondary hover:bg-surface-2 hover:text-fg",
   danger: "bg-danger text-white hover:opacity-90",
 };
 
 const sizes: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-sm gap-1.5 rounded-lg",
-  md: "h-10 px-4 text-sm gap-2 rounded-lg",
-  lg: "h-12 px-6 text-base gap-2 rounded-xl",
-  icon: "h-10 w-10 rounded-lg",
+  sm: "h-8 px-2.5 text-[13px] gap-1.5 rounded-md",
+  md: "h-9 px-3.5 text-sm gap-2 rounded-lg",
+  lg: "h-11 px-5 text-[15px] gap-2 rounded-lg",
+  icon: "h-9 w-9 rounded-lg",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -38,8 +41,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       type={type}
       disabled={disabled || loading}
       className={cn(
-        "inline-flex items-center justify-center font-medium whitespace-nowrap transition-colors select-none",
-        "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+        "inline-flex items-center justify-center font-medium whitespace-nowrap transition-[background-color,border-color,color,transform] select-none active:translate-y-px",
+        "disabled:opacity-45 disabled:cursor-not-allowed disabled:pointer-events-none",
         variants[variant],
         sizes[size],
         className,

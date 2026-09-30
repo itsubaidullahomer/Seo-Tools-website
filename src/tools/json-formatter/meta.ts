@@ -22,7 +22,7 @@ export const meta: ToolMeta = {
   ],
   aliases: ["json lint", "jsonlint", "pretty json", "json checker", "json beautify", "json escape", "json unescape"],
   icon: "braces",
-  featured: false,
+  featured: true,
   datePublished: "2026-09-29",
   dateModified: "2026-09-29",
   related: ["remove-line-breaks", "case-converter", "character-counter", "password-generator"],
@@ -55,7 +55,7 @@ export const meta: ToolMeta = {
     {
       question: "Should I indent JSON with 2 spaces, 4 spaces or tabs?",
       answer:
-        "Match the project you are working in. Two spaces is what JSON.stringify(value, null, 2), Prettier and most JavaScript projects use; Python’s json.tool defaults to four; tabs give the smallest pretty-printed file. On a real 650-package package-lock.json we measured 263 KB minified, 311 KB with tabs, 341 KB with two spaces and 402 KB with four spaces.",
+        "Match the project you are working in. Two spaces is what JSON.stringify(value, null, 2), Prettier and most JavaScript projects use; Python’s json.tool defaults to four; tabs give the smallest pretty-printed file. On a real package-lock.json listing 649 packages we measured 263 KB minified, 311 KB with tabs, 341 KB with two spaces and 402 KB with four spaces.",
     },
     {
       question: "When should I minify JSON?",

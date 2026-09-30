@@ -6,8 +6,11 @@ import "./globals.css";
 import { siteConfig } from "@/config/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { Sidebar } from "@/components/shell/Sidebar";
+import { CommandPalette } from "@/components/shell/CommandPalette";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { graph, organizationSchema, websiteSchema } from "@/lib/seo/jsonld";
+import { getNavTree, getToolSummaries } from "@/lib/tools/registry";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
@@ -52,26 +55,36 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b1020" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f5f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#121211" },
   ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const tree = getNavTree();
+  const tools = getToolSummaries();
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+      <body className="min-h-full">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-fg"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-ink-fg"
         >
           Skip to content
         </a>
         <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <div className="mx-auto flex max-w-[1440px]">
+          <aside className="scroll-thin sticky top-14 hidden h-[calc(100dvh-3.5rem)] w-[248px] shrink-0 overflow-y-auto border-r border-border lg:block">
+            <Sidebar tree={tree} />
+          </aside>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <main id="main" className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </div>
+        <CommandPalette tools={tools} />
         <JsonLd data={graph(organizationSchema(), websiteSchema())} />
         {siteConfig.gaId && <GoogleAnalytics gaId={siteConfig.gaId} />}
         {siteConfig.adsenseClient && (

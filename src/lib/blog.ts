@@ -27,6 +27,12 @@ export interface BlogPost {
 
 const blogDir = join(process.cwd(), "content", "blog");
 
+/** gray-matter parses unquoted YYYY-MM-DD as a Date; accept both forms. */
+function toIsoDate(v: unknown, fallback: string): string {
+  if (v instanceof Date && !Number.isNaN(v.getTime())) return v.toISOString().slice(0, 10);
+  return v ? String(v) : fallback;
+}
+
 async function readPost(file: string): Promise<BlogPost | null> {
   const slug = file.replace(/\.md$/, "");
   const raw = await readFile(join(blogDir, file), "utf8");
@@ -37,8 +43,8 @@ async function readPost(file: string): Promise<BlogPost | null> {
     slug,
     title: String(data.title),
     description: String(data.description),
-    date: String(data.date),
-    updated: String(data.updated ?? data.date),
+    date: toIsoDate(data.date, ""),
+    updated: toIsoDate(data.updated ?? data.date, ""),
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     relatedTools: Array.isArray(data.relatedTools) ? data.relatedTools.map(String) : [],
     markdown: content,

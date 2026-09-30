@@ -24,6 +24,7 @@ npm run dev                  # http://localhost:3000
 | `npm run new-tool -- --slug my-tool --name "My Tool" --category text` | Scaffold a new tool folder |
 | `npm run validate` | Check every tool's metadata, FAQ and article length |
 | `npm run check` | gen + validate + typecheck + lint |
+| `node scripts/seo-audit.mjs <url>` | Crawl every sitemap URL and check titles, descriptions, canonicals, H1s, JSON-LD, FAQ markup, internal links, robots.txt, 404 handling |
 | `node scripts/tool-check.mjs <slug>` | Load a tool page in headless Chromium, fail on errors, save screenshots |
 
 ## Project layout

@@ -1,0 +1,70 @@
+{
+  "asOf": "2026-09-29",
+  "currency": "USD",
+  "about": "Single source of truth for every rate, split and threshold used by the calculator. The niche and region tables in content.md are copied from this file, so update both together at each quarterly review.",
+  "sources": [
+    { "label": "YouTube Help: YouTube Partner Program overview and eligibility", "url": "https://support.google.com/youtube/answer/72851" },
+    { "label": "YouTube Help: Changes to the YouTube Partner Program", "url": "https://support.google.com/youtube/answer/12843009" },
+    { "label": "YouTube Help: Shorts monetization policies", "url": "https://support.google.com/youtube/answer/12504220" },
+    { "label": "YouTube Help: Understand ad revenue analytics", "url": "https://support.google.com/youtube/answer/9314357" }
+  ],
+  "revenueShare": {
+    "longFormCreatorPct": 55,
+    "shortsCreatorPct": 45,
+    "musicCutPct": 50,
+    "note": "Long-form: the creator keeps 55% of net ad revenue from the watch page. Shorts: ad revenue from the Shorts feed is pooled, part of it covers music licensing, the pool is split by share of engaged views, and the creator keeps 45% of the amount allocated to them. The 50% music cut is the figure YouTube documented for a Short that uses one licensed track."
+  },
+  "partnerProgram": {
+    "adRevenue": { "subscribers": 1000, "watchHours": 4000, "watchWindowDays": 365, "shortsViews": 10000000, "shortsWindowDays": 90 },
+    "fanFunding": { "subscribers": 500, "uploads": 3, "uploadWindowDays": 90, "watchHours": 3000, "shortsViews": 3000000 },
+    "upcoming": {
+      "effective": "2027-02-01",
+      "subscribers": 1000,
+      "watchHours": 8000,
+      "shortsViews": 20000000,
+      "shortsPoolViews": 10000000,
+      "shortsPoolWindowDays": 90,
+      "status": "Announced in August 2026 and reported by several outlets. Confirm the final wording on YouTube Help before relying on it."
+    },
+    "adsensePaymentThresholdUsd": 100
+  },
+  "rpmBasis": "Creator-facing RPM in US dollars per 1,000 views for a channel whose views all come from the United States. A channel with a mixed international audience lands lower, which is what the audience multiplier models.",
+  "rpmSourcesNote": "Planning ranges reconciled from several public creator and agency RPM/CPM roundups published in 2026. Those roundups disagree widely with each other, so the low and high columns are deliberately wide. They are not YouTube data.",
+  "niches": [
+    { "id": "finance", "name": "Finance, investing & business", "low": 10, "typical": 18, "high": 35 },
+    { "id": "technology", "name": "Technology & software", "low": 4, "typical": 9, "high": 18 },
+    { "id": "education", "name": "Education & how-to", "low": 3, "typical": 7, "high": 14 },
+    { "id": "health", "name": "Health, fitness & wellness", "low": 3, "typical": 7, "high": 13 },
+    { "id": "automotive", "name": "Cars & automotive", "low": 3, "typical": 6, "high": 12 },
+    { "id": "food", "name": "Food & cooking", "low": 2.5, "typical": 5, "high": 10 },
+    { "id": "travel", "name": "Travel & lifestyle", "low": 2, "typical": 5, "high": 10 },
+    { "id": "beauty", "name": "Beauty & fashion", "low": 2, "typical": 4.5, "high": 9 },
+    { "id": "gaming", "name": "Gaming", "low": 1, "typical": 3, "high": 6 },
+    { "id": "entertainment", "name": "Entertainment, comedy & vlogs", "low": 0.5, "typical": 1.5, "high": 4 }
+  ],
+  "regions": [
+    { "id": "us", "name": "United States", "examples": "United States", "multiplier": 1 },
+    { "id": "english", "name": "Canada, UK, Australia, NZ, Ireland", "examples": "Canada, United Kingdom, Australia, New Zealand, Ireland", "multiplier": 0.7 },
+    { "id": "highincome", "name": "Other high-income (W. Europe, Japan, S. Korea, Gulf)", "examples": "Germany, France, Netherlands, Nordics, Japan, South Korea, Gulf states", "multiplier": 0.5 },
+    { "id": "middle", "name": "Middle-income (Latin America, E. Europe, Turkey)", "examples": "Brazil, Mexico, Poland, Turkey, South Africa", "multiplier": 0.25 },
+    { "id": "lower", "name": "Lower-income, high-volume (India, SE Asia, Africa)", "examples": "India, Indonesia, Philippines, Pakistan, Nigeria, Bangladesh", "multiplier": 0.1 }
+  ],
+  "audiencePresets": [
+    { "id": "us-heavy", "name": "Mostly US and high-income", "shares": [70, 12, 8, 6, 4] },
+    { "id": "english", "name": "English-speaking", "shares": [50, 35, 8, 4, 3] },
+    { "id": "mixed", "name": "Mixed international", "shares": [45, 15, 15, 15, 10] },
+    { "id": "emerging", "name": "Mostly lower-income markets", "shares": [10, 5, 10, 25, 50] }
+  ],
+  "seasons": [
+    { "id": "avg", "name": "Average month (no adjustment)", "multiplier": 1 },
+    { "id": "q1", "name": "January to March (softer ad demand)", "multiplier": 0.85 },
+    { "id": "q4", "name": "October to December (holiday ad demand)", "multiplier": 1.25 }
+  ],
+  "shorts": {
+    "grossPer1000": { "low": 0.1, "typical": 0.25, "high": 0.55 },
+    "basis": "Ad revenue attributed to 1,000 Shorts feed views for an all-US audience, before the music cut and before the creator's 45% share. YouTube does not publish this number, so the three values are planning assumptions calibrated so that the creator-facing Shorts RPM lands in the low-cents range creators commonly report."
+  },
+  "defaults": {
+    "swingPct": { "long": 25, "shorts": 30 }
+  }
+}

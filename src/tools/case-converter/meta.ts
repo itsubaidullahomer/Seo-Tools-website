@@ -23,7 +23,7 @@ export const meta: ToolMeta = {
   ],
   aliases: ["change case", "text case converter", "caps converter", "kebab case converter", "alternating case generator", "inverse case"],
   icon: "case-sensitive",
-  featured: false,
+  featured: true,
   datePublished: "2026-09-29",
   dateModified: "2026-09-29",
   related: ["word-counter", "character-counter", "remove-line-breaks"],

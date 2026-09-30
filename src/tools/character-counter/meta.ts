@@ -23,7 +23,7 @@ export const meta: ToolMeta = {
   ],
   aliases: ["char counter", "letter count", "text length checker", "count letters", "x character counter"],
   icon: "text-cursor-input",
-  featured: false,
+  featured: true,
   datePublished: "2026-09-29",
   dateModified: "2026-09-29",
   related: ["word-counter", "case-converter", "remove-line-breaks"],
