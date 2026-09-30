@@ -1,0 +1,47 @@
+{
+  "asOf": "2026-09-29",
+  "about": "Single source of truth for every Partner Program threshold the calculator uses. The tier table in content.md and the FAQ answers quote these numbers, so update all three together at each review. To change a threshold on a date, add a tier with effectiveFrom, set effectiveUntil on the one it replaces, and the page switches on that date.",
+  "sources": [
+    { "label": "YouTube Help: YouTube Partner Program overview and eligibility", "url": "https://support.google.com/youtube/answer/72851" },
+    { "label": "YouTube Help: Changes to the YouTube Partner Program", "url": "https://support.google.com/youtube/answer/12843009" }
+  ],
+  "verification": "Checked September 29, 2026. YouTube Help could not be opened from the research environment, so the figures rest on several independent published summaries that agree with each other, including the August 2026 announcement of higher ad-revenue thresholds from February 1, 2027. Confirm the exact wording on YouTube Help before you plan around a date.",
+  "windows": { "watchDays": 365, "shortsDays": 90 },
+  "tiers": [
+    {
+      "id": "ad-2026",
+      "kind": "ad",
+      "label": "Ad revenue tier",
+      "effectiveFrom": null,
+      "effectiveUntil": "2027-01-31",
+      "subscribers": 1000,
+      "watchHours": 4000,
+      "shortsViews": 10000000,
+      "status": "in force until the announced change"
+    },
+    {
+      "id": "ad-2027",
+      "kind": "ad",
+      "label": "Ad revenue tier",
+      "effectiveFrom": "2027-02-01",
+      "effectiveUntil": null,
+      "subscribers": 1000,
+      "watchHours": 8000,
+      "shortsViews": 20000000,
+      "status": "announced in August 2026 for new applicants; confirm on YouTube Help"
+    },
+    {
+      "id": "early",
+      "kind": "early",
+      "label": "Fan-funding early access",
+      "effectiveFrom": null,
+      "effectiveUntil": null,
+      "subscribers": 500,
+      "uploads": 3,
+      "uploadWindowDays": 90,
+      "watchHours": 3000,
+      "shortsViews": 3000000,
+      "status": "reported as unchanged by the 2027 announcement"
+    }
+  ]
+}
