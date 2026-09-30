@@ -128,7 +128,10 @@ async function main() {
       const d = String(data.description ?? "");
       if (!d) err(id, "frontmatter description is required");
       else if (d.length < 120 || d.length > 165) warn(id, `description is ${d.length} chars (aim for 140-160)`);
-      for (const k of ["date", "updated"]) if (data[k] && !/^\d{4}-\d{2}-\d{2}$/.test(String(data[k]))) err(id, `${k} must be YYYY-MM-DD`);
+      for (const k of ["date", "updated"]) {
+        const v = data[k] instanceof Date ? (data[k] as Date).toISOString().slice(0, 10) : String(data[k] ?? "");
+        if (v && !/^\d{4}-\d{2}-\d{2}$/.test(v)) err(id, `${k} must be YYYY-MM-DD`);
+      }
       if (!data.date) err(id, "frontmatter date is required");
       if (!Array.isArray(data.tags) || !data.tags.length) warn(id, "add at least one tag");
       const words = content.trim() ? content.trim().split(/\s+/).length : 0;
