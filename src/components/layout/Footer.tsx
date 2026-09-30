@@ -8,6 +8,7 @@ const companyLinks = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/blog", label: "Guides" },
+  { href: "/editorial-policy", label: "Editorial Policy" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms", label: "Terms of Service" },
   { href: "/disclaimer", label: "Disclaimer" },

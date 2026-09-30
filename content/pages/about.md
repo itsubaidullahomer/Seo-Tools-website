@@ -20,9 +20,15 @@ The site exists because most "free online tool" websites are slow, cluttered wit
 
 ## Who is behind the site
 
-{{siteName}} is built and maintained by {{authorName}}, a small independent team of developers and writers. We build the tools we needed ourselves and write the guides we wished existed when we searched for them.
+{{siteName}} is built and maintained by {{authorName}}, a software developer. You can reach {{authorName}} directly through the [contact page](/contact).
 
 We are not affiliated with Google, Instagram, YouTube, X, LinkedIn, TikTok or any other platform mentioned on the site. Platform names are used only to describe what a tool is for.
+
+## How the tools and guides are made
+
+Every tool is working software that runs in your browser, not just a page of text. Tools are tested in a real browser and their results are checked against independently calculated values before they are published.
+
+The written guides and explanations are drafted with the help of AI writing tools, then checked for accuracy, and {{authorName}} is responsible for what is published. The full details, including how we handle corrections, are on the [editorial policy](/editorial-policy) page.
 
 ## How we choose what to build
 

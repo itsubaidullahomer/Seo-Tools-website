@@ -115,6 +115,36 @@ async function main() {
     names.set(n, slug);
   }
 
+  // ---- blog posts (content/blog/*.md) ----
+  const blogDir = join(root, "content", "blog");
+  if (existsSync(blogDir)) {
+    const matter = (await import("gray-matter")).default;
+    for (const f of readdirSync(blogDir).filter((n) => n.endsWith(".md") && !n.startsWith("_"))) {
+      const id = `blog/${f.replace(/\.md$/, "")}`;
+      const { data, content } = matter(readFileSync(join(blogDir, f), "utf8"));
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(f)) err(id, "file name must be a lowercase hyphenated slug");
+      if (!data.title) err(id, "frontmatter title is required");
+      else if (String(data.title).length > 65) warn(id, `title is ${String(data.title).length} chars (aim for <= 60)`);
+      const d = String(data.description ?? "");
+      if (!d) err(id, "frontmatter description is required");
+      else if (d.length < 120 || d.length > 165) warn(id, `description is ${d.length} chars (aim for 140-160)`);
+      for (const k of ["date", "updated"]) if (data[k] && !/^\d{4}-\d{2}-\d{2}$/.test(String(data[k]))) err(id, `${k} must be YYYY-MM-DD`);
+      if (!data.date) err(id, "frontmatter date is required");
+      if (!Array.isArray(data.tags) || !data.tags.length) warn(id, "add at least one tag");
+      const words = content.trim() ? content.trim().split(/\s+/).length : 0;
+      if (words < 900) err(id, `only ${words} words (minimum 900)`);
+      if ((content.match(/^##\s+/gm) ?? []).length < 4) err(id, "needs at least 4 '## ' sections");
+      if (/^#\s+/m.test(content)) warn(id, "contains an H1 – the page already renders the title");
+      if (/\bTODO\b|\bTBD\b|\[insert/i.test(content)) err(id, "contains TODO/TBD/placeholder markers");
+      const related = Array.isArray(data.relatedTools) ? (data.relatedTools as string[]) : [];
+      if (!related.length) warn(id, "relatedTools is empty – every guide should link to a tool");
+      for (const r of related) if (!metas.has(r)) err(id, `relatedTools slug "${r}" does not exist`);
+      const toolLinks = (content.match(/\]\(\/tools\/([a-z0-9-]+)\)/g) ?? []).length;
+      if (toolLinks < 2) warn(id, `only ${toolLinks} in-text link(s) to tools (aim for 3+)`);
+      for (const m of content.matchAll(/\]\(\/tools\/([a-z0-9-]+)\)/g)) if (!metas.has(m[1])) err(id, `links to missing tool /tools/${m[1]}`);
+    }
+  }
+
   const errors = problems.filter((p) => p.level === "error");
   const warns = problems.filter((p) => p.level === "warn");
   for (const p of [...errors, ...warns]) {

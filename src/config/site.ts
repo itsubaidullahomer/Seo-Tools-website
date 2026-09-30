@@ -21,7 +21,7 @@ export const siteConfig = {
   locale: "en_US",
   /** Site owner shown on About/legal pages and in the Organization schema. */
   author: {
-    name: process.env.NEXT_PUBLIC_AUTHOR_NAME ?? "ToolkitJar Team",
+    name: process.env.NEXT_PUBLIC_AUTHOR_NAME ?? "Ubaidullah",
   },
   /** Social handles are optional; leave empty to hide the links. */
   social: {
