@@ -55,7 +55,7 @@ export const meta: ToolMeta = {
     {
       question: "Can I preview a date, a favicon and a site name?",
       answer:
-        "Yes. Pick a date and it appears before the description, for example Sep 12, 2026, and it uses roughly 100 pixels of the description budget. Upload an image and it replaces the letter in the favicon circle. Google requires a square favicon of at least 8 by 8 pixels and recommends a larger one, such as 48 by 48 or more. The site name normally comes from WebSite structured data on your home page, so type the name you use there.",
+        "Yes. Pick a date and it appears before the description, for example Sep 12, 2026, and it uses about 105 pixels of the description budget. Upload an image and it replaces the letter in the favicon circle. Google requires a square favicon of at least 8 by 8 pixels and recommends a larger one, such as 48 by 48 or more. The site name normally comes from WebSite structured data on your home page, so type the name you use there.",
     },
     {
       question: "Do FAQ rich results and other rich snippets still show up?",

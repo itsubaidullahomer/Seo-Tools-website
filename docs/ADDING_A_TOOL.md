@@ -48,9 +48,13 @@ outside 120-165 characters.
 
 ## 2. `content.md`
 
-The article is what makes the page rank and what makes AdSense reviewers see a
-"real" page rather than a bare widget. It must be **original**, **specific to this
-tool**, and **genuinely useful**. Minimum 800 words; aim for 1,000-1,500.
+The article turns a bare widget into a page that answers the searcher's question.
+It must be **original**, **specific to this tool**, **accurate** and **genuinely
+useful**. The build requires at least 800 words, but Google has no preferred word
+count – a correct worked example beats another paragraph. Every number in a worked
+example must come from the tool itself: put the calculation in a pure module
+(`logic.ts`) and assert the article's examples in `tests/<slug>.test.ts`
+(`npm test` runs as part of `npm run check`).
 
 Structure (use `##` for sections – the page already renders the H1):
 
@@ -105,7 +109,7 @@ npm run lint
 npm run dev        # open http://localhost:3000/tools/<slug> and test on a phone-sized viewport
 ```
 
-Then commit. Vercel builds and deploys automatically; the new page is added to
+Then run `npm run check` and commit. Cloudflare Pages builds and deploys `main` automatically; the new page is added to
 `/sitemap.xml`, the category hub, related-tools lists and site search with no
 further configuration.
 

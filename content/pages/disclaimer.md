@@ -1,7 +1,7 @@
 ---
 title: Disclaimer
 description: Important information about the accuracy and intended use of the tools and guides on {{siteName}}.
-updated: 2026-09-29
+updated: 2026-10-01
 ---
 
 The tools and articles on {{siteName}} are provided for general information and productivity purposes. We work hard to make them accurate and we explain how each result is produced, but please keep the following in mind.
@@ -10,11 +10,10 @@ The tools and articles on {{siteName}} are provided for general information and 
 
 Nothing on this Site constitutes professional advice of any kind. In particular:
 
-- **Financial calculators** (loans, interest, savings, taxes, discounts) use standard formulas and the numbers you enter. They do not account for every fee, rounding rule, tax law or lender-specific practice. Confirm figures with your bank, lender, accountant or a qualified financial adviser before making decisions.
-- **Health and fitness calculators** (such as BMI, calorie or body-composition estimates) are population-level estimates and are not a diagnosis or a substitute for advice from a doctor, dietitian or other qualified health professional. Do not use them to make medical decisions.
-- **Date, age and time tools** follow common calendar conventions; legal definitions (for example of age or deadlines) may differ by jurisdiction.
+- **Pay and earnings calculators** (hourly-to-salary, salary-to-hourly, YouTube earnings estimates) use standard formulas, published averages and the numbers you enter. They do not account for every tax rule, deduction, contract term or platform-specific practice, and earnings estimates are ranges, not predictions. Confirm figures with your employer, an accountant or a qualified financial adviser before making decisions.
+- **Date and time tools** (military time, Discord timestamps, watch-time and reading-time estimates) follow common conventions; legal or contractual definitions of time and deadlines may differ.
 - **SEO, social media and marketing tools** reflect publicly documented limits and best practices at the time of writing. Platforms change their rules frequently; always check the platform's current official documentation.
-- **Developer tools** (formatters, encoders, generators) produce output based on published standards. Review generated code before deploying it to production.
+- **Developer tools** (formatters, generators, permission calculators) produce output based on published standards. Review generated code before deploying it to production.
 
 ## Accuracy and completeness
 

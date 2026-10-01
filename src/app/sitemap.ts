@@ -17,12 +17,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl("/"), lastModified: latest(toolDates), changeFrequency: "weekly", priority: 1 },
     { url: absoluteUrl("/tools"), lastModified: latest(toolDates), changeFrequency: "weekly", priority: 0.9 },
     { url: absoluteUrl("/blog"), lastModified: latest(posts.map((p) => p.updated)), changeFrequency: "weekly", priority: 0.6 },
-    { url: absoluteUrl("/about"), lastModified: new Date("2026-09-29"), changeFrequency: "yearly", priority: 0.3 },
+    { url: absoluteUrl("/about"), lastModified: new Date("2026-10-01"), changeFrequency: "yearly", priority: 0.3 },
     { url: absoluteUrl("/contact"), lastModified: new Date("2026-09-29"), changeFrequency: "yearly", priority: 0.3 },
     { url: absoluteUrl("/editorial-policy"), lastModified: new Date("2026-09-30"), changeFrequency: "yearly", priority: 0.3 },
-    { url: absoluteUrl("/privacy-policy"), lastModified: new Date("2026-09-29"), changeFrequency: "yearly", priority: 0.2 },
-    { url: absoluteUrl("/terms"), lastModified: new Date("2026-09-29"), changeFrequency: "yearly", priority: 0.2 },
-    { url: absoluteUrl("/disclaimer"), lastModified: new Date("2026-09-29"), changeFrequency: "yearly", priority: 0.2 },
+    { url: absoluteUrl("/privacy-policy"), lastModified: new Date("2026-10-01"), changeFrequency: "yearly", priority: 0.2 },
+    { url: absoluteUrl("/terms"), lastModified: new Date("2026-10-01"), changeFrequency: "yearly", priority: 0.2 },
+    { url: absoluteUrl("/disclaimer"), lastModified: new Date("2026-10-01"), changeFrequency: "yearly", priority: 0.2 },
   ];
 
   const categoryPages: MetadataRoute.Sitemap = categories

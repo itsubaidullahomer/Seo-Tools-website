@@ -50,7 +50,7 @@ export const meta: ToolMeta = {
     {
       question: "How is the time-to-guess estimate calculated?",
       answer:
-        "The tool divides half the number of possible passwords (the average an attacker must try) by 10 billion guesses per second. That is a middle-of-the-road rate for an offline attack on a stolen database: one high-end graphics card tests about 22 billion SHA-256 or 164 billion MD5 guesses per second, but only around 184,000 bcrypt guesses. Treat it as security education, not a guarantee. Even at 100 times the speed, the default 16-character password needs 250 billion years.",
+        "The tool divides half the number of possible passwords (the average an attacker must try) by 10 billion guesses per second. That is a middle-of-the-road rate for an offline attack on a stolen database: one high-end graphics card tests about 22 billion SHA-256 or 164 billion MD5 guesses per second, but only around 184,000 bcrypt guesses. Treat it as security education, not a guarantee. Even at 100 times the speed, the default 16-character password needs about 250 billion years.",
     },
     {
       question: "Why does a website reject my generated password?",

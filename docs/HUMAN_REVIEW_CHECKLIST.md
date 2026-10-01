@@ -167,3 +167,20 @@ The same applies to the tool articles: these are claims the reviewers could not 
 - [ ] Threshold figures could not be checked at support.google.com or blog.youtube (proxy-blocked). They rest on multiple agreeing web summaries dated after the Aug 10, 2026 announcement. Someone should open the two YouTube Help pages once and confirm the wording; rules.json, the tier table in content.md and the FAQ must be updated together if it differs.
 - [ ] The claim that applications submitted before Feb 1, 2027 keep the old bar came from one summary. The page only says the higher bar is 'for new applicants from Feb 1' and tells readers to confirm on YouTube Help.
 
+
+## Added after the October 1, 2026 tool verification pass
+
+Every tool now has automated tests that reproduce the article's worked examples (`npm test`). These outside facts can't be checked by a test and still need a person to confirm against the source:
+
+- [ ] **svg-to-png:** the size table calls 48 × 48 the "smallest favicon size Google Search documents". Google's favicon guidance may now say at least 8 × 8 and recommend larger than 48 × 48; check developers.google.com and adjust.
+- [ ] **roman-numeral-converter:** "LXI scheduled for February 14, 2027" (the Super Bowl date).
+- [ ] **webp-to-jpg:** "Chromium switches off chroma subsampling only at quality 100, Firefox from 90" (hedged as "was reported").
+- [ ] **click-speed-test:** the Guinness record (760 clicks in a minute, 10 Feb 2026) and the Ekşioğlu & İşeri 2015 *Human Factors* 57(4) citation.
+- [ ] **salary-to-hourly-calculator:** the BLS paid-vacation and paid-holiday figures have no link; add the BLS source or remove them.
+- [ ] **hourly-to-salary / salary-to-hourly:** the $684 a week ($35,568) overtime-exempt threshold is time-sensitive; confirm it on dol.gov.
+- [ ] **youtube-money-calculator:** the FAQ lines "roughly $2 to $10", "finance channels can earn several times that" and "a few cents per 1,000" have no citation.
+- [ ] **discord-colored-text-generator:** the "August 2026 background palette change" and the mobile rendering claims.
+- [ ] **title-meta-description-length-checker:** "kerning up to 1.5% narrower", the Ahrefs/Portent percentages and the Mueller "April 2022" date.
+- [ ] **invisible-character:** the font-width observation about U+3164; the Python 3.11 `strip()` claims were checked by hand only.
+- [ ] **keyboard-tester:** the AZERTY "keyCode = 65" browser behaviour.
+- [ ] **alphabetical-order:** language sort orders were tested with Node's ICU 78.2; browsers ship different ICU versions, so spot-check in Chrome, Firefox and Safari.

@@ -68,7 +68,7 @@ export default async function BlogPostPage({ params }: Props) {
             <h1 className="mt-3 text-3xl font-bold tracking-tight text-fg sm:text-4xl">{post.title}</h1>
             <p className="mt-4 text-lg leading-relaxed text-muted">{post.description}</p>
           </header>
-          <AdSlot minHeight={250} format="horizontal" />
+          <AdSlot placement="inline" minHeight={250} format="horizontal" />
           <div className="mt-8">
             <Markdown>{post.markdown}</Markdown>
           </div>
@@ -89,7 +89,7 @@ export default async function BlogPostPage({ params }: Props) {
         <aside className="hidden lg:block">
           <div className="sticky top-32 space-y-6">
             <TableOfContents headings={post.headings} />
-            <AdSlot minHeight={600} format="vertical" className="my-0" />
+            <AdSlot placement="sidebar" minHeight={600} format="vertical" className="my-0" />
           </div>
         </aside>
       </div>

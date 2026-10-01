@@ -35,7 +35,7 @@ export const meta: ToolMeta = {
     {
       question: "Why is a trailing comma invalid in JSON?",
       answer:
-        "The JSON grammar (RFC 8259) defines arrays and objects as values separated by commas, with nothing allowed between the last value and the closing bracket. JavaScript and Python accept a trailing comma, which is why it slips into hand-edited files, but strict JSON parsers reject it – Chrome reports “Expected double-quoted property name”. Delete the comma, or use “Fix common issues” to remove every trailing comma at once.",
+        "The JSON grammar (RFC 8259) defines arrays and objects as values separated by commas, with nothing allowed between the last value and the closing bracket. JavaScript and Python accept a trailing comma, which is why it slips into hand-edited files, but strict JSON parsers reject it – for a comma before }, Chrome reports “Expected double-quoted property name”. Delete the comma, or use “Fix common issues” to remove every trailing comma at once.",
     },
     {
       question: "Can JSON contain comments?",

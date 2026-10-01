@@ -10,6 +10,7 @@ import { Sidebar } from "@/components/shell/Sidebar";
 import { CommandPalette } from "@/components/shell/CommandPalette";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { graph, organizationSchema, websiteSchema } from "@/lib/seo/jsonld";
+import { consentDefaultsScript } from "@/components/consent/consent";
 import { getNavTree, getToolSummaries } from "@/lib/tools/registry";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
@@ -86,6 +87,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <CommandPalette tools={tools} />
         <JsonLd data={graph(organizationSchema(), websiteSchema())} />
+        {(siteConfig.gaId || siteConfig.adsenseClient) && (
+          // Consent Mode defaults must be in place before any Google tag runs.
+          <Script id="consent-defaults" strategy="beforeInteractive">
+            {consentDefaultsScript}
+          </Script>
+        )}
         {siteConfig.gaId && <GoogleAnalytics gaId={siteConfig.gaId} />}
         {siteConfig.adsenseClient && (
           <Script

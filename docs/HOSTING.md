@@ -16,17 +16,15 @@ Vercel's free **Hobby** plan is for personal, non-commercial use only. Their ter
 
 Prices change; confirm on each provider's pricing page.
 
-## Rough cost at scale (Vercel Pro), with assumptions
+## Rough cost and income at scale – hypothetical, not a forecast
 
-Assumptions: about 0.3 MB and 12 requests per page view, and about $3 earned per 1,000 page views.
+The site currently runs on **Cloudflare Pages**, where static bandwidth costs nothing, so hosting stays at $0 at any of these volumes. The table shows what the same traffic would cost on Vercel Pro (about 0.3 MB and 12 requests per page view) and what it *could* earn at three example page RPMs (ad revenue per 1,000 page views). Real RPM depends on visitor countries, topic, ad settings and consent rates, and can be well below or above these examples. Profit is income minus costs, including your own time.
 
-| Page views / month | Bandwidth | Approx. Vercel bill | Approx. ad income |
-| --- | --- | --- | --- |
-| 100,000 | 30 GB | $20 | ~$300 |
-| 1 million | 300 GB | ~$24 | ~$3,000 |
-| 10 million | 3 TB | ~$540 | ~$30,000 |
-
-Hosting stays around 1–2% of ad income, so it is not a reason to worry early. Past a few million page views a month, moving to Cloudflare Pages saves several hundred dollars a month.
+| Page views / month | On Vercel Pro | Income at $2 RPM | at $5 RPM | at $10 RPM |
+| --- | --- | --- | --- | --- |
+| 10,000 | $20 | $20 | $50 | $100 |
+| 100,000 | $20 | $200 | $500 | $1,000 |
+| 1 million | ~$24 | $2,000 | $5,000 | $10,000 |
 
 ## Deploying to Cloudflare Pages
 

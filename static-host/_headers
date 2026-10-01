@@ -16,3 +16,14 @@
 # `curl -I https://<project>.pages.dev/` and look for X-Robots-Tag.)
 https://:project.pages.dev/*
   X-Robots-Tag: noindex, nofollow
+
+# Generated icons and social images are PNGs exported without a file extension, so Cloudflare
+# would otherwise serve them as application/octet-stream. Link previews and icons need image/png.
+/apple-icon
+  Content-Type: image/png
+/opengraph-image
+  Content-Type: image/png
+/tools/:slug/opengraph-image
+  Content-Type: image/png
+/blog/:slug/opengraph-image
+  Content-Type: image/png

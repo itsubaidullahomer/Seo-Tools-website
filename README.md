@@ -4,7 +4,7 @@ A fast, SEO-first collection of free browser-based tools (text, SEO, developer, 
 
 - Every tool is a self-contained folder: `src/tools/<slug>/{meta.ts,content.md,Tool.tsx}`
 - Every page is statically generated with full metadata, Open Graph images, JSON-LD and a sitemap entry
-- Every tool page carries a 1,000+ word original article and FAQ (what Google and AdSense reviewers want to see)
+- Every tool page carries an original article and FAQ. Google has no preferred word count – accuracy, worked examples and usefulness are what matter, so tool logic and article examples are covered by `npm test`
 - All processing happens in the visitor's browser – no uploads, no database, no API keys
 
 ## Quick start
@@ -48,6 +48,6 @@ See [docs/ADDING_A_TOOL.md](docs/ADDING_A_TOOL.md). In short: scaffold the folde
 
 ## Deploying
 
-The site deploys on Vercel with zero configuration. Set the environment variables from `.env.example` in the Vercel project (at minimum `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_SITE_NAME`). Ads only render when `NEXT_PUBLIC_ADSENSE_CLIENT` is set, so the site stays clean during the AdSense review.
+Production runs on Cloudflare Pages as a static export (`npm run build:static`, output `out`); see [docs/HOSTING.md](docs/HOSTING.md). The normal `npm run build` still works on Vercel or any Node host. Set the environment variables from `.env.example` (at minimum `NEXT_PUBLIC_SITE_URL`). The AdSense script loads only when `NEXT_PUBLIC_ADSENSE_CLIENT` is set, and manual ad units render only when their slot IDs are set too.
 
 See [docs/LAUNCH_CHECKLIST.md](docs/LAUNCH_CHECKLIST.md) for the domain, Search Console, Analytics and AdSense steps.

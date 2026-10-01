@@ -3,6 +3,7 @@ import { LogoMark } from "./Logo";
 import { siteConfig } from "@/config/site";
 import { categories } from "@/lib/tools/categories";
 import { getFeaturedTools, getToolCount, toolPath } from "@/lib/tools/registry";
+import { PrivacySettingsButton } from "@/components/consent/PrivacySettingsButton";
 
 const companyLinks = [
   { href: "/about", label: "About" },
@@ -74,6 +75,11 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            {siteConfig.adsenseClient && (
+              <li>
+                <PrivacySettingsButton className="text-left text-fg-secondary hover:text-primary" />
+              </li>
+            )}
           </ul>
         </div>
       </div>

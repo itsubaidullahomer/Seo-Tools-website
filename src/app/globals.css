@@ -251,6 +251,10 @@ body {
   border: 1px solid var(--border);
   border-radius: 0.6rem;
 }
+/* Long unbreakable strings (formulas, URLs, hashes) wrap instead of widening the page on phones. */
+.article {
+  overflow-wrap: break-word;
+}
 .article :where(table) {
   display: block;
   overflow-x: auto;

@@ -2,7 +2,7 @@
 
 This free WebP to PNG converter turns .webp images into standard .png files without leaving the page. Drop a file, pick several from a folder, or paste an image with Ctrl+V, and each one is decoded and saved as PNG within seconds. Transparent backgrounds stay transparent, original file names are kept, and one click downloads a whole batch as a ZIP.
 
-It is built for the moment a WebP file will not open where you need it: a slide deck, an older photo editor, a marketplace upload form or an email client. PNG is understood almost everywhere, so converting removes the friction. There is no watermark and no sign-up, and the only limit is the batch size: 50 files or 300 MB at a time. Files are processed in your browser; we do not upload or store them.
+It is built for the moment a WebP file will not open where you need it: a slide deck, an older photo editor, a marketplace upload form or an email client. PNG is understood almost everywhere, so converting removes the friction. There is no watermark and no sign-up, and a batch holds up to 50 files or 300 MB at a time. Files are processed in your browser; we do not upload or store them.
 
 ## How to convert WebP to PNG
 

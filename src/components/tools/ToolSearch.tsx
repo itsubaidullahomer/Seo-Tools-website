@@ -10,13 +10,31 @@ import { ToolGrid } from "./ToolCard";
 import { cn } from "@/lib/utils";
 
 /**
- * Filterable tool directory used on /tools. Reads `?q=` on first render so the
- * header search and the WebSite SearchAction land on a pre-filtered list.
+ * Filterable tool directory used on /tools. The query lives in `?q=` so the header search,
+ * the command palette and the WebSite SearchAction land on a pre-filtered list – and the box
+ * follows the URL when it changes while the page stays mounted (e.g. a new search from the
+ * palette), instead of showing the previous results.
  */
 export function ToolSearch({ tools }: { tools: ToolSummary[] }) {
   const params = useSearchParams();
-  const [q, setQ] = useState(params.get("q") ?? "");
+  const urlQ = params.get("q") ?? "";
+  const [q, setQ] = useState(urlQ);
+  const [seenUrlQ, setSeenUrlQ] = useState(urlQ);
+  if (urlQ !== seenUrlQ) {
+    setSeenUrlQ(urlQ);
+    setQ(urlQ);
+  }
   const [cat, setCat] = useState<CategorySlug | "all">("all");
+
+  const updateQuery = (value: string) => {
+    setQ(value);
+    // Keep the address shareable without adding a history entry per keystroke.
+    const next = new URLSearchParams(window.location.search);
+    if (value) next.set("q", value);
+    else next.delete("q");
+    const qs = next.toString();
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  };
 
   const filtered = useMemo(() => {
     const base = cat === "all" ? tools : tools.filter((t) => t.category === cat);
@@ -39,12 +57,12 @@ export function ToolSearch({ tools }: { tools: ToolSummary[] }) {
           <input
             type="search"
             value={q}
-            onChange={(e) => setQ(e.target.value)}
+            onChange={(e) => updateQuery(e.target.value)}
             placeholder="Search by name, task or keyword…"
             className="h-12 w-full rounded-xl border border-border bg-surface pl-10 pr-10 text-base text-fg shadow-sm placeholder:text-muted/80 focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/40"
           />
           {q && (
-            <button type="button" onClick={() => setQ("")} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted hover:text-fg">
+            <button type="button" onClick={() => updateQuery("")} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted hover:text-fg">
               <X className="h-4 w-4" aria-hidden />
             </button>
           )}

@@ -104,7 +104,7 @@ export default async function ToolPage({ params }: Props) {
 
       <Container size="xl">
         {/* High-interaction tools (rapid clicking/typing) get no ad near the tool – AdSense accidental-click policy. */}
-        {!tool.highInteraction && <AdSlot minHeight={250} format="horizontal" />}
+        {!tool.highInteraction && <AdSlot placement="inline" minHeight={250} format="horizontal" />}
 
         <div className="mt-10 grid gap-12 xl:grid-cols-[minmax(0,1fr)_220px]">
           <article id="guide" className="min-w-0 max-w-3xl scroll-mt-28">
@@ -114,14 +114,14 @@ export default async function ToolPage({ params }: Props) {
           <aside className="hidden xl:block">
             <div className="sticky top-32 space-y-8">
               <TableOfContents headings={content.headings} faq={tool.faq.length > 0} />
-              {!tool.highInteraction && <AdSlot minHeight={600} format="vertical" className="my-0" />}
+              {!tool.highInteraction && <AdSlot placement="sidebar" minHeight={600} format="vertical" className="my-0" />}
             </div>
           </aside>
         </div>
 
         <RelatedTools tools={related} category={category} />
 
-        <AdSlot minHeight={250} format="horizontal" />
+        <AdSlot placement="inline" minHeight={250} format="horizontal" />
 
         <footer className="mt-12 flex flex-col gap-2 border-t border-border pt-5 font-mono text-[11px] text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>

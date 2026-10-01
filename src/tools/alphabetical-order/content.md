@@ -34,7 +34,7 @@ When lines start with different kinds of characters, dictionary order arranges t
 
 | Class | Examples | Position |
 | --- | --- | --- |
-| Spaces and punctuation | leading space, `_`, `-`, `(`, `#` | First |
+| Punctuation | `_`, `-`, `(`, `#` | First |
 | Currency and symbols | `$` | Next |
 | Digits | 1, 9, 10 | Next |
 | Latin letters | A, b, é | Next |
