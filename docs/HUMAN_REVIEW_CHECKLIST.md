@@ -184,3 +184,12 @@ Every tool now has automated tests that reproduce the article's worked examples 
 - [ ] **invisible-character:** the font-width observation about U+3164; the Python 3.11 `strip()` claims were checked by hand only.
 - [ ] **keyboard-tester:** the AZERTY "keyCode = 65" browser behaviour.
 - [ ] **alphabetical-order:** language sort orders were tested with Node's ICU 78.2; browsers ship different ICU versions, so spot-check in Chrome, Firefox and Safari.
+
+## New tools – October 1, 2026
+
+Both tools have full test suites (`tests/text-compare.test.ts`, `tests/data-transfer-calculator.test.ts`); every number in their articles is asserted against the tool's output. Outside facts to confirm against the source:
+
+- [ ] **data-transfer-calculator:** the source links (NIST binary prefixes, Apple's storage note support.apple.com/en-us/102119, RFC 894/791/9293/7323, USB-IF USB 3.2 naming PDF) were confirmed through search results only, because the pages were blocked from this environment. Open each once.
+- [ ] **data-transfer-calculator:** uncited statements – USB 3.2 Gen 1 uses 8b/10b encoding; storage makers state capacity in decimal units; many connections upload much more slowly than they download. Add a source or soften.
+- [ ] **data-transfer-calculator:** Ethernet framing sizes cite IEEE 802.3 by name without a link.
+- [ ] **text-compare:** "the same family of algorithm behind `git diff`" (Git's default diff algorithm is Myers) and the difflib `ratio()` formula link – quick check against the Git and Python docs.

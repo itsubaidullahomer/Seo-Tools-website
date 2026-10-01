@@ -27,9 +27,9 @@ export const categories = [
     name: "Text & Writing Tools",
     shortName: "Text",
     description:
-      "Free online text tools: count words and characters, convert case, clean up formatting, remove duplicates and more. Fast, private and no sign-up.",
+      "Free online text tools: count words and characters, compare two texts, convert case, clean up formatting and remove duplicates. Fast, private, no sign-up.",
     intro:
-      "Everything you need to count, clean, convert and transform text. Paste your content, get an instant result, and copy it back with one click.",
+      "Everything you need to count, compare, clean, convert and transform text. Paste your content, get an instant result, and copy it back with one click.",
     icon: "type",
     color: "indigo",
   },
@@ -71,7 +71,7 @@ export const categories = [
     name: "Number & Format Converters",
     shortName: "Converters",
     description:
-      "Free converters that show their working: px to rem, military time, Roman numerals and numbers to words. Instant, accurate and private, with no sign-up.",
+      "Free converters that show their working: data transfer time, px to rem, military time, Roman numerals and numbers to words. Instant, accurate and private.",
     intro:
       "Quick, accurate conversions with the formula shown, so you learn the relationship instead of just getting a number.",
     icon: "arrow-left-right",
