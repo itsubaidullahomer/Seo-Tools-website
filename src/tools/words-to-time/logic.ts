@@ -2,7 +2,6 @@
  * Pure helpers for the Words to Time calculator. No DOM access, so every
  * function here can be tested in Node.
  */
-import { countWords } from "@/lib/utils";
 
 export type Mode = "forward" | "reverse";
 export type Source = "text" | "count";
@@ -234,6 +233,18 @@ export function formatClock(totalSeconds: number): string {
 /* ------------------------------------------------------------------ */
 /* Paragraphs and timing                                               */
 /* ------------------------------------------------------------------ */
+
+/** A whitespace-separated chunk counts as a word only if it contains a letter or a digit, as in the Word Counter. */
+const HAS_WORD_CHAR = /[\p{L}\p{N}]/u;
+
+/** Words in a text: runs of non-whitespace that contain a letter or number. A stand-alone "—" or "&" is not a word. */
+export function countWords(text: string): number {
+  const trimmed = text.trim();
+  if (!trimmed) return 0;
+  let n = 0;
+  for (const chunk of trimmed.split(/\s+/)) if (HAS_WORD_CHAR.test(chunk)) n++;
+  return n;
+}
 
 /** Split a script into the blocks a speaker would pause between. */
 export function splitBlocks(text: string, mode: BreakMode): string[] {

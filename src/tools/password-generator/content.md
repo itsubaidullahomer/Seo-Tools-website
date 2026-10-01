@@ -41,7 +41,7 @@ The labels are: **Weak** under 48 bits, **Fair** 48–63, **Strong** 64–79 and
 
 ### Why 10 billion guesses per second?
 
-The real speed depends on how the site stored your password. In hashcat's published benchmark for a single RTX 4090 graphics card, it tests about 164 billion MD5 guesses per second, 22 billion SHA-256 guesses, and only about 184,000 bcrypt guesses at a low cost setting (most sites use a higher, slower one). Ten billion per second sits between those extremes, so treat the estimate as a reference point, not a promise. If you want a safety margin, multiply the speed by 100: the default 16-character password still needs an average of 250 billion years, while 8 random characters from all four types fall in about 36 minutes instead of 2 days.
+The real speed depends on how the site stored your password. In hashcat's published benchmark for a single RTX 4090 graphics card, it tests about 164 billion MD5 guesses per second, 22 billion SHA-256 guesses, and only about 184,000 bcrypt guesses at a low cost setting (most sites use a higher, slower one). Ten billion per second sits between those extremes, so treat the estimate as a reference point, not a promise. If you want a safety margin, multiply the speed by 100: the default 16-character password still needs an average of about 250 billion years, while 8 random characters from all four types fall in about 36 minutes instead of 2 days.
 
 ### Reference table
 

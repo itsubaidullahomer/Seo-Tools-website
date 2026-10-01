@@ -33,7 +33,7 @@ words   = seconds ÷ 60 × words per minute
 
 **Example 2: a slot to fill.** You have 10 minutes and plan 15 pauses of 4 seconds. The pauses use 60 seconds, leaving 540 for speech: 540 ÷ 60 × 150 = 1,350 words, not the 1,500 you would get by ignoring pauses. Each 3-second pause costs about 7 or 8 words at that pace.
 
-Times are rounded to the nearest second and word targets to the nearest whole word. Words are counted the way most word processors count them: any run of characters between spaces, tabs or line breaks is one word, the same rule the [word counter](/tools/word-counter) uses.
+Times are rounded to the nearest second and word targets to the nearest whole word. Words are counted the same way as in the [word counter](/tools/word-counter): any run of characters between spaces, tabs or line breaks that contains a letter or a number is one word, so a stand-alone dash or symbol is not counted.
 
 ## Where the speeds come from
 

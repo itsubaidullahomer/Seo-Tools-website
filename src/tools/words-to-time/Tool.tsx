@@ -19,7 +19,7 @@ import {
   ToolPanel,
   ToolSection,
 } from "@/components/ui";
-import { cn, countWords } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import {
   DEFAULT_SETTINGS,
   MAX_MINUTES,
@@ -34,6 +34,7 @@ import {
   SPEAKING_PACES,
   SPEAK_MAX,
   SPEAK_MIN,
+  countWords,
   fmt,
   forwardSummary,
   forwardTimes,

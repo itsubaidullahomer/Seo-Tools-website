@@ -88,7 +88,7 @@ The code converter splits text into words at spaces, hyphens, underscores, dots 
 
 - **Microsoft Word:** select the text and press Shift+F3 to cycle between lowercase, UPPERCASE and Capitalize Each Word. Home → Change Case (the Aa button) lists all five options including tOGGLE cASE. On a Mac laptop you may need fn+Shift+F3.
 - **Google Docs:** Format → Text → Capitalization offers lowercase, UPPERCASE and Title Case. There is no sentence case option and no default shortcut, and Title Case capitalizes every word.
-- **Excel and Google Sheets:** use =UPPER(A1), =LOWER(A1) and =PROPER(A1). There is no sentence case function; the usual workaround is =UPPER(LEFT(A1,1))&LOWER(MID(A1,2,LEN(A1))).
+- **Excel and Google Sheets:** use `=UPPER(A1)`, `=LOWER(A1)` and `=PROPER(A1)`. There is no sentence case function; the usual workaround is `=UPPER(LEFT(A1,1))&LOWER(MID(A1,2,LEN(A1)))`.
 - **VS Code:** the Command Palette has Transform to Uppercase, Lowercase, Title Case, Snake Case, Camel Case and Kebab Case, none with a default shortcut.
 
 Those commands are fine for a single word. The reasons to paste text here instead are style-guide-aware title case, acronym handling, the code cases, and converting a whole document on any device – including a phone, where Shift+F3 does not exist.

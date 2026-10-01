@@ -193,7 +193,8 @@ function decodeNamedEntity(name: string): string {
 
 /**
  * Real HTML tag names only, so pasted headlines such as "Array<string> explained" or
- * "a<b and c>d" keep their words. Anything else in angle brackets is treated as text.
+ * "Vec<T> in Rust" keep their words. Anything else in angle brackets is treated as text
+ * (but "<b ...>" is a real tag, so "a<b and c>d" loses "b and c").
  */
 const HTML_TAG =
   /<\/?(?:a|abbr|article|aside|b|blockquote|br|button|center|cite|code|dd|del|div|dl|dt|em|figure|figcaption|font|footer|form|h[1-6]|header|hr|i|iframe|img|input|ins|kbd|label|li|main|mark|nav|ol|p|pre|q|s|section|small|span|strike|strong|sub|summary|sup|table|tbody|td|tfoot|th|thead|time|tr|u|ul|wbr)(?=[\s/>])[^>]*>/gi;
