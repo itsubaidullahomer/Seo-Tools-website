@@ -7,7 +7,7 @@ Account, domain and verification steps that only the site owner can do. Ticked i
 - [x] Domain `toolkitjar.com` bought (registrar: GoDaddy). Nameservers point to Cloudflare.
 - [x] Hosting on **Cloudflare Pages** (free, ads allowed), project `seo-tools-website`, production branch `main`, build command `npm run build:static`, output directory `out`, env `NODE_VERSION=22` and `NEXT_PUBLIC_SITE_URL=https://toolkitjar.com`. See `docs/HOSTING.md`.
 - [x] Custom domains `toolkitjar.com` and `www.toolkitjar.com` attached, SSL active.
-- [ ] **Redirect `www` → root.** Cloudflare Pages can't redirect by hostname from `_redirects`, so do it once in the dashboard: Cloudflare → `toolkitjar.com` → **Rules → Redirect Rules → Create rule → template "Redirect from WWW to root"** (301, keep path and query string). Until then both hosts serve the same pages; the canonical tags already point to `toolkitjar.com`.
+- [x] `www` → root: Cloudflare Redirect Rule "www to root" (301, path and query string kept). Cloudflare Pages can't redirect by hostname from `_redirects`, so this lives in the dashboard under Rules → Redirect Rules.
 - [x] Contact mailbox `hello@toolkitjar.com` forwarded to Gmail with Cloudflare Email Routing (free), plus a Gmail filter so it never lands in spam.
 - [ ] After each deploy that touches headers, run the SEO audit against the live site: `node scripts/seo-audit.mjs https://toolkitjar.com`. It now also checks `X-Robots-Tag` headers, image content types and the www redirect. A clean result means none of the checked problems were found; it is not proof that pages will rank.
 
