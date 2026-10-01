@@ -1,19 +1,19 @@
 ---
 title: About {{siteName}}
 description: Who builds {{siteName}}, why the tools are free, and the principles behind every tool on the site.
-updated: 2026-09-29
+updated: 2026-10-01
 ---
 
 ## What {{siteName}} is
 
-{{siteName}} is a collection of free online tools for everyday tasks: counting words, converting units and colors, formatting code, compressing images, generating SEO tags and much more. Every tool runs directly in your web browser, so results are instant and nothing you enter is sent to a server.
+{{siteName}} is a collection of free online tools for everyday tasks: counting words, converting numbers and units, formatting JSON, converting images, checking titles and meta descriptions, testing your keyboard and mouse, and more. Every tool runs directly in your web browser, so results are instant and nothing you enter is sent to a server.
 
 The site exists because most "free online tool" websites are slow, cluttered with pop-ups, and often upload your data to unknown servers. We wanted a place where the tool loads fast, does exactly one job well, explains how it works, and respects your privacy.
 
 ## Our principles
 
 - **Private by default.** Text, numbers and files are processed on your device using JavaScript. We cannot see them, and we do not store them.
-- **Free, with no limits.** No accounts, no daily quotas, no watermarks, no "pro" version. The site is funded by unobtrusive advertising.
+- **Free, with no quotas.** No accounts, no daily usage caps, no watermarks, no "pro" version. (Very large inputs are limited only by your device's memory.) The site is funded by unobtrusive advertising.
 - **Accurate and explained.** Each tool page describes the method or formula behind the result, with worked examples and answers to common questions, so you can verify the output yourself.
 - **Fast on any device.** Pages are pre-rendered and each tool loads only the code it needs. Everything works on phones, tablets and desktops.
 - **Continuously improved.** New tools are added every week and existing tools are refined based on feedback from visitors.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CornerDownLeft, Search } from "lucide-react";
 import { Icon } from "@/components/Icon";
@@ -25,9 +25,13 @@ export function CommandPalette({ tools }: { tools: ToolSummary[] }) {
   const [recent, setRecent] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  /** Element that had focus before the palette opened; focus returns there on close. */
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
   const router = useRouter();
 
   const show = useCallback(() => {
+    restoreFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setRecent(readRecentTools());
     setQ("");
     setActive(0);
@@ -61,10 +65,39 @@ export function CommandPalette({ tools }: { tools: ToolSummary[] }) {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     inputRef.current?.focus();
+    // Modal focus trap: if focus lands anywhere outside the dialog, bring it back to the input.
+    const onFocusIn = (e: FocusEvent) => {
+      if (dialogRef.current && e.target instanceof Node && !dialogRef.current.contains(e.target)) inputRef.current?.focus();
+    };
+    document.addEventListener("focusin", onFocusIn);
     return () => {
       document.body.style.overflow = prev;
+      document.removeEventListener("focusin", onFocusIn);
+      const restore = restoreFocusRef.current;
+      if (restore?.isConnected) restore.focus();
     };
   }, [open]);
+
+  /** Keeps Tab / Shift+Tab cycling inside the dialog. */
+  const trapTab = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setOpen(false);
+      return;
+    }
+    if (e.key !== "Tab" || !dialogRef.current) return;
+    const focusable = [...dialogRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')];
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   const items = useMemo<Item[]>(() => {
     const query = q.trim();
@@ -105,9 +138,11 @@ export function CommandPalette({ tools }: { tools: ToolSummary[] }) {
   return (
     <div className="fixed inset-0 z-[60] flex items-start justify-center bg-[rgb(18_18_17/0.45)] px-3 pt-[10vh] backdrop-blur-[2px]" onMouseDown={() => setOpen(false)}>
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Search tools"
+        onKeyDown={trapTab}
         onMouseDown={(e) => e.stopPropagation()}
         className="animate-palette w-full max-w-xl overflow-hidden rounded-xl border border-border-strong bg-surface shadow-card-lg"
       >

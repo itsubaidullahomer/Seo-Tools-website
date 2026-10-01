@@ -1,71 +1,65 @@
 # Launch checklist
 
-Everything in this list is something only the site owner can do (accounts, domain, verification). The code side is already done.
+Account, domain and verification steps that only the site owner can do. Ticked items were completed on 1 October 2026. "Done" here means the step was carried out – not that the site is guaranteed to rank or be approved; those depend on Google.
 
-## 1. Domain and hosting (day 1)
+## 1. Domain and hosting
 
-- [ ] Buy the domain (e.g. `toolkitjar.com`). Namecheap, Cloudflare or Vercel all work.
-- [ ] In Vercel → Project → **Settings → Domains**, add the domain. Vercel shows the DNS records to add at your registrar (an `A` record `76.76.21.21` for the root and a `CNAME` `cname.vercel-dns.com` for `www`). HTTPS is automatic.
-- [ ] Decide the canonical host (`toolkitjar.com` recommended) and let Vercel redirect `www` → root.
-- [ ] In Vercel → **Settings → Environment Variables** set, for Production:
-  - `NEXT_PUBLIC_SITE_URL` = `https://toolkitjar.com`
-  - `NEXT_PUBLIC_SITE_NAME` = `ToolkitJar`
-  - `NEXT_PUBLIC_CONTACT_EMAIL` = a real mailbox you check
-  - `NEXT_PUBLIC_AUTHOR_NAME` = your name or team name (shown on the About page)
-- [ ] Redeploy so the sitemap, canonical URLs and Open Graph URLs use the real domain.
-- [ ] Note: every `*.vercel.app` address is automatically marked `noindex` (see `next.config.ts`), so the temporary Vercel links can never compete with your real domain in Google. Only the custom domain gets indexed.
-- [ ] Run the SEO audit against the live site: `node scripts/seo-audit.mjs https://toolkitjar.com` (should print `0 error(s)`).
-- [ ] Create the contact mailbox (e.g. `hello@` on your domain, or forward it to Gmail via your registrar's free email forwarding).
+- [x] Domain `toolkitjar.com` bought (registrar: GoDaddy). Nameservers point to Cloudflare.
+- [x] Hosting on **Cloudflare Pages** (free, ads allowed), project `seo-tools-website`, production branch `main`, build command `npm run build:static`, output directory `out`, env `NODE_VERSION=22` and `NEXT_PUBLIC_SITE_URL=https://toolkitjar.com`. See `docs/HOSTING.md`.
+- [x] Custom domains `toolkitjar.com` and `www.toolkitjar.com` attached, SSL active.
+- [ ] **Redirect `www` → root.** Cloudflare Pages can't redirect by hostname from `_redirects`, so do it once in the dashboard: Cloudflare → `toolkitjar.com` → **Rules → Redirect Rules → Create rule → template "Redirect from WWW to root"** (301, keep path and query string). Until then both hosts serve the same pages; the canonical tags already point to `toolkitjar.com`.
+- [x] Contact mailbox `hello@toolkitjar.com` forwarded to Gmail with Cloudflare Email Routing (free), plus a Gmail filter so it never lands in spam.
+- [ ] After each deploy that touches headers, run the SEO audit against the live site: `node scripts/seo-audit.mjs https://toolkitjar.com`. It now also checks `X-Robots-Tag` headers, image content types and the www redirect. A clean result means none of the checked problems were found; it is not proof that pages will rank.
 
-## 2. Google Search Console (day 1)
+## 2. Google Search Console
 
-- [ ] Go to search.google.com/search-console → **Add property** → choose *Domain* → enter `toolkitjar.com`.
-- [ ] Verify with the DNS TXT record Google shows (add it at your registrar). Alternatively use the HTML-tag method and put the token in `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`.
-- [ ] **Sitemaps** → submit `https://toolkitjar.com/sitemap.xml`.
-- [ ] Use **URL Inspection → Request indexing** for the homepage, `/tools`, and each category page.
-- [ ] Check back weekly: *Pages* report (indexed vs not), *Performance* (queries bringing traffic – this tells you which tools to build next).
+- [x] Domain property `toolkitjar.com` verified with a DNS TXT record (keep that record in Cloudflare DNS).
+- [x] Sitemap submitted as the full URL `https://toolkitjar.com/sitemap.xml` (Domain properties need the full URL).
+- [x] Homepage confirmed indexed with URL Inspection.
+- [ ] Check weekly: **Pages** (indexed vs not) and **Performance → Queries** (what people search to find you – this decides what to build next).
 
-## 3. Google Analytics (day 1)
+## 3. Bing Webmaster Tools
+
+- [x] Imported from Google Search Console; sitemap read successfully (65 URLs).
+- [ ] Optional: turn on **IndexNow** so new pages are picked up quickly.
+
+## 4. Google Analytics (optional)
 
 - [ ] analytics.google.com → create a GA4 property → Web data stream → copy the Measurement ID (`G-XXXXXXXXXX`).
-- [ ] Set `NEXT_PUBLIC_GA_ID` in Vercel and redeploy. Analytics loads only when this is set.
+- [ ] Add `NEXT_PUBLIC_GA_ID` in Cloudflare Pages → Settings → Environment variables, then redeploy. Consent Mode defaults (storage denied in the EEA, UK and Switzerland until the visitor chooses) load automatically before the tag.
 
-## 4. Bing Webmaster Tools (10 minutes – worth doing)
+## 5. Before applying for AdSense
 
-- [ ] bing.com/webmasters → import from Google Search Console. Bing's index feeds Bing, DuckDuckGo, Ecosia and is one of the sources behind ChatGPT search, so being indexed there helps you show up in AI answers as well.
-- [ ] In Bing Webmaster Tools turn on **IndexNow** (free) so new tools are picked up within minutes of each deploy.
+There is no official page or tool count for approval. Google looks for a site with original, useful content that complies with its policies. Apply once the site is indexed and you have checked:
 
-## 5. Before applying for AdSense (weeks 4-8)
-
-Apply once the site has been live for a few weeks, is indexed, and receives some daily visitors. Check:
-
-- [ ] 40+ tools live, each with its article and FAQ (the build refuses to ship a tool without them).
-- [ ] At least 8-10 blog posts published.
-- [ ] About, Contact, Privacy Policy, Terms and Disclaimer pages are linked in the footer (already done) and the contact email works.
-- [ ] `https://toolkitjar.com/ads.txt` returns 200 (currently a comment-only placeholder – fine for review).
-- [ ] No broken links (`npm run build` catches internal ones; spot-check a few pages).
-- [ ] Site loads fast on mobile (PageSpeed Insights ≥ 90).
+- [ ] The tools work and their articles are accurate. Run `npm test`, and work through `docs/HUMAN_REVIEW_CHECKLIST.md` – every claim there should be confirmed against its source by a person.
+- [ ] Search Console shows a healthy share of pages indexed.
+- [ ] About, Contact, Privacy Policy, Terms and Disclaimer pages are linked in the footer and the contact email works (done).
+- [ ] `https://toolkitjar.com/ads.txt` returns 200 (currently a comment-only placeholder – replace it after approval, see below).
 - [ ] You have **one** Google account for AdSense and have never had an AdSense account closed.
 
 ## 6. Applying for AdSense
 
 - [ ] adsense.google.com → Get started → enter `https://toolkitjar.com`, your country and payment details.
-- [ ] AdSense shows a publisher ID like `ca-pub-1234567890123456`. Set it as `NEXT_PUBLIC_ADSENSE_CLIENT` in Vercel and redeploy. This adds the AdSense script and the `google-adsense-account` meta tag on every page.
-- [ ] Replace the contents of `public/ads.txt` with the line AdSense shows (`google.com, pub-…, DIRECT, f08c47fec0942fa0`) and redeploy.
-- [ ] In AdSense → **Privacy & messaging**, create and publish a GDPR consent message (required for visitors from the EU/UK/Switzerland). Google's own consent tool is a certified CMP; nothing else needs to be installed.
+- [ ] AdSense shows a publisher ID like `ca-pub-1234567890123456`. Set it as `NEXT_PUBLIC_ADSENSE_CLIENT` in Cloudflare Pages and redeploy. This loads the AdSense script and adds the `google-adsense-account` meta tag on every page. No ad boxes appear yet – manual units need slot IDs (step 7).
+- [ ] Replace the contents of `public/ads.txt` with the exact line AdSense shows (`google.com, pub-…, DIRECT, f08c47fec0942fa0`) and redeploy.
+- [ ] **Before ads can serve to EEA/UK/Swiss visitors:** AdSense → **Privacy & messaging** → create and publish a **European regulations (GDPR)** message. Google's message is a Google-certified consent management platform; nothing else needs to be installed. Once `NEXT_PUBLIC_ADSENSE_CLIENT` is set, the footer shows a "Privacy settings" link that reopens this message.
 - [ ] Click **Request review**. Typical wait: a few days to a few weeks.
-- [ ] If rejected for "low value content": add more tools/articles, wait two weeks, re-apply. Do not re-apply without changing anything.
+- [ ] If rejected for "low value content": improve the weakest pages (accuracy, examples, usefulness), wait, then re-apply. Do not re-apply without changing anything.
 
 ## 7. After approval
 
-- [ ] Turn on **Auto ads** for the site in AdSense (simplest), or create ad units and pass their IDs to the `<AdSlot slot="…" />` components in `src/app/tools/[slug]/page.tsx`.
+- [ ] Simplest: turn on **Auto ads** for the site in AdSense. The publisher ID alone is enough for Auto ads.
+- [ ] Optional manual units: create ad units in AdSense → Ads → By ad unit, then set their numeric IDs as `NEXT_PUBLIC_ADSENSE_SLOT_INLINE` and `NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR` and redeploy. A placement only renders when its slot ID is set; tools marked `highInteraction` (click and keyboard tests) never show ads near the tool.
 - [ ] Never click your own ads or ask others to. Never buy traffic. Never add "click the ads" text.
-- [ ] Keep publishing 4-8 tools per week for the first six months; refresh `dateModified` when you improve a tool.
-- [ ] At $100 balance AdSense mails a PIN to your address; enter it to unlock payments.
+- [ ] Add tools when the data supports them (Search Console queries, weak competition), not to hit a quota. Refresh `dateModified` when you materially improve a tool.
+- [ ] **Address verification:** when your earnings reach US$10 (or the local equivalent), AdSense posts a PIN to your payment address; enter it within four months or ads stop showing.
+- [ ] **Payment:** AdSense pays once your balance reaches the payment threshold – US$100 for USD accounts – after you have also added payment details.
 
 ## 8. Ongoing growth loop
 
 1. Every week, open Search Console → Performance → Queries. Sort by impressions.
-2. Queries with many impressions but low clicks → improve that page's title/description.
-3. Queries you rank #8-20 for → expand that article and add the related tool(s) from `docs/research/launch-plan.md` (roadmap section).
-4. Add the new tools, commit, done – Vercel deploys automatically.
+2. Queries with many impressions but few clicks → improve that page's title and description.
+3. Queries you rank about #8-30 for → improve that page (accuracy, examples, missing features) before writing anything new.
+4. Queries that suggest a tool you don't have → research it (search demand, weak top results, can we build something clearly better) before building it.
+5. Commit to `main` – Cloudflare Pages deploys automatically.

@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
     "gen": "tsx scripts/generate-registry.ts",
     "validate": "tsx scripts/validate-tools.ts",
     "new-tool": "tsx scripts/new-tool.ts",
-    "check": "npm run gen && npm run validate && npm run typecheck && npm run lint",
+    "check": "npm run gen && npm run validate && npm run typecheck && npm run lint && npm test",
     "seo-audit": "node scripts/seo-audit.mjs",
     "content-check": "tsx scripts/content-quality.ts",
     "build:static": "node scripts/build-static.mjs"

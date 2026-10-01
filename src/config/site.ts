@@ -14,7 +14,7 @@ export const siteConfig = {
   url: rawUrl.replace(/\/+$/, ""),
   tagline: "Free online tools that just work",
   description:
-    "Fast, free and private online tools for writers, marketers, developers and designers. Everything runs in your browser – no sign-up, no uploads, no limits.",
+    "Fast, free and private online tools for writers, marketers, developers and designers. Everything runs in your browser – no sign-up, no uploads, no usage quotas.",
   /** Public contact address shown on the Contact and Privacy pages. */
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@toolkitjar.com",
   /** Default locale for metadata and Open Graph. */
@@ -28,8 +28,20 @@ export const siteConfig = {
     twitter: process.env.NEXT_PUBLIC_TWITTER_HANDLE ?? "",
     github: process.env.NEXT_PUBLIC_GITHUB_URL ?? "",
   },
-  /** Google AdSense publisher ID, e.g. "ca-pub-1234567890123456". Ads render only when set. */
+  /**
+   * Google AdSense publisher ID, e.g. "ca-pub-1234567890123456". When set, the AdSense script
+   * loads, which is all Auto ads needs; ad placement is then controlled in the AdSense dashboard.
+   */
   adsenseClient: process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "",
+  /**
+   * Optional manual ad units (numeric "data-ad-slot" IDs created under AdSense → Ads → By ad unit).
+   * A placement renders only when the publisher ID AND its slot ID are set; leave these empty to
+   * rely on Auto ads alone.
+   */
+  adsenseSlots: {
+    inline: process.env.NEXT_PUBLIC_ADSENSE_SLOT_INLINE ?? "",
+    sidebar: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR ?? "",
+  },
   /** Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX". Analytics loads only when set. */
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
   /** Google Search Console HTML-tag verification token (optional). */

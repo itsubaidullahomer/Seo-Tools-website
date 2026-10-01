@@ -38,9 +38,9 @@ export const categories = [
     name: "SEO Tools",
     shortName: "SEO",
     description:
-      "Free SEO tools for on-page optimization: meta tag generators, SERP preview, robots.txt and schema generators, keyword density and more.",
+      "Free on-page SEO tools: preview your Google search snippet, check title tag and meta description length, and turn titles into clean URL slugs.",
     intro:
-      "Practical on-page SEO tools that help you write better titles and descriptions, generate technical files correctly and preview how your pages look in Google.",
+      "Practical on-page SEO tools that help you write better titles and descriptions, preview how your pages look in Google and create clean, readable URLs.",
     icon: "search",
     color: "emerald",
   },
@@ -49,9 +49,9 @@ export const categories = [
     name: "Developer Tools",
     shortName: "Developer",
     description:
-      "Free developer tools that run in your browser: JSON formatter, Base64, URL encoder, hash generator, regex tester, timestamp converter and more.",
+      "Free developer tools that run in your browser: format and validate JSON, generate UUIDs and GUIDs, and work out chmod file permissions. Private and instant.",
     intro:
-      "Formatters, encoders, generators and testers for everyday development work. Everything runs locally in your browser, so your data stays on your machine.",
+      "Formatters, generators and calculators for everyday development work. Everything runs locally in your browser, so your data stays on your machine.",
     icon: "code",
     color: "sky",
   },
@@ -60,9 +60,9 @@ export const categories = [
     name: "Image Tools",
     shortName: "Image",
     description:
-      "Free online image tools: compress, resize, crop and convert images between PNG, JPG and WebP directly in your browser. No uploads, no watermarks.",
+      "Free image converters that run in your browser: SVG to PNG, WebP to JPG and WebP to PNG, one file or a whole batch. No uploads and no watermarks.",
     intro:
-      "Edit and convert images without uploading them anywhere. Your files are processed on your device using your browser's built-in image engine.",
+      "Convert images without uploading them anywhere. Your files are processed on your device using your browser's built-in image engine.",
     icon: "image",
     color: "rose",
   },
@@ -71,7 +71,7 @@ export const categories = [
     name: "Number & Format Converters",
     shortName: "Converters",
     description:
-      "Free converters that show the formula: CSS units like px to rem, military time, Roman numerals, numbers to words, Morse code and more. Instant and private.",
+      "Free converters that show their working: px to rem, military time, Roman numerals and numbers to words. Instant, accurate and private, with no sign-up.",
     intro:
       "Quick, accurate conversions with the formula shown, so you learn the relationship instead of just getting a number.",
     icon: "arrow-left-right",
@@ -82,7 +82,7 @@ export const categories = [
     name: "Calculators",
     shortName: "Calculators",
     description:
-      "Free online calculators for percentages, dates, age, BMI, loans, tips, discounts and grades. Instant results with a clear breakdown of the math.",
+      "Free calculators for percentages and pay: percentage change, increase and decrease, hourly to salary and salary to hourly, with the math shown step by step.",
     intro:
       "Everyday calculators that show their work. Each one explains the formula used, so you can trust the result and reuse the method.",
     icon: "calculator",
@@ -93,7 +93,7 @@ export const categories = [
     name: "Creator & Community Tools",
     shortName: "Creators",
     description:
-      "Free tools for creators and community managers: YouTube earnings estimates, Discord timestamps and text formatting, and more. Independent, not affiliated with any platform.",
+      "Free tools for creators and communities: YouTube earnings and watch-time estimates, Discord timestamps and colored text. Not affiliated with any platform.",
     intro:
       "Estimate, format and plan before you publish. Independent tools for creators and community managers – not affiliated with any of the platforms mentioned.",
     icon: "share-2",
@@ -104,7 +104,7 @@ export const categories = [
     name: "Color & CSS Tools",
     shortName: "Design",
     description:
-      "Free color and CSS generator tools: gradients, box shadows, border radius, color palettes, contrast checker and more, with copy-ready code.",
+      "Free color and CSS tools: build box shadows and rounded corners visually, check WCAG color contrast, and copy production-ready CSS. Private and instant.",
     intro:
       "Visual generators that write the CSS for you. Tweak the controls, preview the result live and copy production-ready code.",
     icon: "palette",
@@ -115,7 +115,7 @@ export const categories = [
     name: "Utilities & Device Tests",
     shortName: "Utilities",
     description:
-      "Free browser utilities: strong password generator, keyboard tester, click speed test and other device checks. Nothing to install, nothing uploaded.",
+      "Free browser utilities: password generator, keyboard tester, mouse test, dead pixel test and click speed test. Nothing to install and nothing uploaded.",
     intro:
       "Test your keyboard, mouse and screen, measure your click speed and generate strong passwords – all in the browser, with nothing stored or sent to a server.",
     icon: "shield-check",

@@ -1,14 +1,14 @@
 ---
 title: Terms of Service
 description: The terms that apply when you use the free tools and content on {{siteName}}.
-updated: 2026-09-29
+updated: 2026-10-01
 ---
 
 Welcome to {{siteName}}. These Terms of Service ("Terms") govern your use of {{siteUrl}} and all tools, content and services available on it (together, the "Site"). By accessing or using the Site you agree to these Terms. If you do not agree, please do not use the Site.
 
 ## 1. Use of the tools
 
-The tools on the Site are provided free of charge for personal and commercial use. You may use the output of any tool (for example converted text, generated code, compressed images or calculated values) for any lawful purpose without attribution.
+The tools on the Site are provided free of charge for personal and commercial use. You may use the output of any tool (for example converted text, generated code, converted images or calculated values) for any lawful purpose without attribution.
 
 You agree not to:
 

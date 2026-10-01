@@ -11,8 +11,8 @@ declare global {
 }
 
 export interface AdSlotProps {
-  /** AdSense ad unit ID (data-ad-slot). Optional while using Auto ads only. */
-  slot?: string;
+  /** Which configured manual ad unit to use (see `siteConfig.adsenseSlots`). */
+  placement: keyof typeof siteConfig.adsenseSlots;
   format?: "auto" | "rectangle" | "horizontal" | "vertical" | "fluid";
   /** Reserve this height so the layout never shifts when the ad loads (CLS). */
   minHeight?: number;
@@ -22,19 +22,23 @@ export interface AdSlotProps {
 }
 
 /**
- * Reserved-space AdSense unit. Renders NOTHING when no publisher ID is configured,
- * so the site never shows empty boxes or fake ads during the AdSense review.
+ * Reserved-space manual AdSense unit. Renders NOTHING unless both the publisher ID and the
+ * placement's slot ID are configured – a manual unit without `data-ad-slot` is invalid, and the
+ * site must never show empty boxes or fake ads. With only the publisher ID set, the AdSense
+ * script still loads (layout.tsx) and Auto ads decides placement.
  *
  * Placement rules (AdSense policy): keep ads away from tool buttons, never place
  * them where they could be mistaken for the tool's output, and never ask for clicks.
  */
-export function AdSlot({ slot, format = "auto", minHeight = 280, className, label = true }: AdSlotProps) {
+export function AdSlot({ placement, format = "auto", minHeight = 280, className, label = true }: AdSlotProps) {
   const ref = useRef<HTMLModElement>(null);
   const pushed = useRef(false);
   const client = siteConfig.adsenseClient;
+  const slot = siteConfig.adsenseSlots[placement];
+  const enabled = Boolean(client && slot);
 
   useEffect(() => {
-    if (!client || pushed.current || !ref.current) return;
+    if (!enabled || pushed.current || !ref.current) return;
     // Avoid double-push on fast refresh / re-mounts.
     if (ref.current.getAttribute("data-adsbygoogle-status")) return;
     try {
@@ -43,9 +47,9 @@ export function AdSlot({ slot, format = "auto", minHeight = 280, className, labe
     } catch {
       // Ad blockers throw here; nothing to do.
     }
-  }, [client]);
+  }, [enabled]);
 
-  if (!client) return null;
+  if (!enabled) return null;
 
   return (
     <div className={cn("ad-slot my-8 flex flex-col items-center", className)} style={{ ["--ad-min-height" as string]: `${minHeight}px` }}>
@@ -55,7 +59,7 @@ export function AdSlot({ slot, format = "auto", minHeight = 280, className, labe
         className="adsbygoogle block w-full"
         style={{ display: "block", minHeight }}
         data-ad-client={client}
-        {...(slot ? { "data-ad-slot": slot } : {})}
+        data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive="true"
       />

@@ -18,7 +18,9 @@ The tool handles very long documents – tens of thousands of words – without 
 
 Counting rules matter when you are working to a limit, so here is exactly what the tool does.
 
-**Words.** Text is split on whitespace (spaces, tabs and line breaks). Each resulting chunk is one word. This matches Microsoft Word, Google Docs and LibreOffice, so a hyphenated term like "state-of-the-art" counts as one word, "3.5" counts as one word, and a stand-alone em dash surrounded by spaces counts as a word too (as it does in Word). If your recipient uses a different editor, expect differences of well under one percent.
+**Words.** Text is split on whitespace (spaces, tabs and line breaks), and each chunk that contains at least one letter or number is one word. That is the same basic rule Microsoft Word, Google Docs and LibreOffice follow, so a hyphenated term like "state-of-the-art" counts as one word and "3.5" counts as one word. A stand-alone symbol surrounded by spaces – an em dash, an ampersand, a bullet – is not counted, because it carries no word. Editors do not all agree on that last case, so if your recipient uses a different program, expect a difference of a word or two in a long document.
+
+**Unique words.** The number of different words in the text, ignoring capital letters and punctuation at either end, so "The", "the" and "the," are one unique word. "The cat and the dog" has five words and four unique words. The "Ignore common words" switch only changes the keyword table below; it never changes the unique-word count.
 
 **Characters.** Every character in the box, including spaces, punctuation and line breaks, is counted for the "characters" figure. The "without spaces" figure removes all whitespace. Platform limits – 280 characters on X, 2,200 in an Instagram caption, roughly 155–160 in a Google meta description – all count spaces, so use the first number for those.
 
@@ -33,7 +35,7 @@ Counting rules matter when you are working to a limit, so here is exactly what t
 Take the sentence: *"The quick brown fox jumps over the lazy dog. It was a well-known trick."*
 
 - Words: **14** ("well-known" is one word).
-- Characters: **73** including spaces; **60** without.
+- Characters: **71** including spaces; **58** without.
 - Sentences: **2**.
 - Reading time: 14 ÷ 238 × 60 ≈ **4 seconds**.
 - Top keyword with common words ignored: "the" is skipped, so "quick", "brown", "fox" and the rest each appear once at 7.1 % density.

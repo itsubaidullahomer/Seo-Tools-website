@@ -18,7 +18,7 @@ const homeFaq = [
   {
     question: `Are the tools on ${siteConfig.name} really free?`,
     answer:
-      "Yes. Every tool is free to use with no limits, no account and no watermarks. The site is supported by unobtrusive advertising, which lets us keep everything free and add new tools regularly.",
+      "Yes. Every tool is free to use, with no account, no daily quotas and no watermarks. The site is supported by unobtrusive advertising, which lets us keep everything free and add new tools regularly.",
   },
   {
     question: "Is my data safe when I use these tools?",

@@ -22,7 +22,7 @@ export const meta: ToolMeta = {
     },
     {
       question: "Is it free to use?",
-      answer: "Yes. Explain that there are no limits, no sign-up and no watermarks, and that processing happens in the browser.",
+      answer: "Yes. Explain that there is no sign-up, no usage quota and no watermark (mention any real input-size limits), and that processing happens in the browser.",
     },
     {
       question: "Is my data safe?",

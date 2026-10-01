@@ -29,7 +29,7 @@ export const meta: ToolMeta = {
     {
       question: "How does the word counter count words?",
       answer:
-        "A word is any run of characters separated by spaces, tabs or line breaks, which is the same rule Microsoft Word and Google Docs use. Hyphenated words such as “well-known” count as one word, numbers count as words, and stray punctuation on its own does not count. Because the rule matches the major editors, the number you see here will match the number your teacher, editor or client sees.",
+        "A word is any run of characters separated by spaces, tabs or line breaks that contains at least one letter or number – the same basic rule Microsoft Word and Google Docs use. Hyphenated words such as “well-known” count as one word, numbers count as words, and a stand-alone symbol such as a dash or “&” does not count. Because the rule follows the major editors, the number you see here should match what your teacher, editor or client sees, give or take a word where editors treat stand-alone symbols differently.",
     },
     {
       question: "Are characters counted with or without spaces?",

@@ -18,7 +18,7 @@ export async function GET() {
   lines.push(`# ${siteConfig.name}`, "");
   lines.push(`> ${siteConfig.description}`, "");
   lines.push(
-    `${siteConfig.name} is a collection of free online tools that run entirely in the visitor's browser: no sign-up, no uploads, no limits. ` +
+    `${siteConfig.name} is a collection of free online tools that run entirely in the visitor's browser: no sign-up, no uploads, no usage quotas. ` +
       `Each tool page contains the working tool, a plain-English explanation of how the result is calculated with worked examples, a reference table where useful, and answers to common questions. ` +
       `Content is maintained by ${siteConfig.author.name}; contact ${siteConfig.contactEmail}.`,
     "",

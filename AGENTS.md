@@ -18,4 +18,5 @@ This is a free online tools website (Next.js 16 App Router, React 19, Tailwind v
 - **Content is the product.** Every tool page has an original 1,000+ word article and 6-8 real FAQ answers. No filler, no copied text, no keyword stuffing, no placeholders.
 - **URLs are permanent.** Do not rename slugs or categories without a redirect in `next.config.ts`.
 - **Do not add dependencies casually.** Prefer browser built-ins; if a small library is unavoidable, import it only inside the tool folder.
-- Run `npm run check` (gen + validate + typecheck + lint) before committing.
+- **Prove tools are correct.** Keep calculations in pure modules (`logic.ts`) and add `tests/<slug>.test.ts` covering the core behaviour and every worked example in the article. Article numbers must match what the tool outputs.
+- Run `npm run check` (gen + validate + typecheck + lint + test) before committing.

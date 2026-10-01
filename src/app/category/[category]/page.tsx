@@ -67,7 +67,7 @@ export default async function CategoryPage({ params }: Props) {
           )}
         </section>
 
-        <AdSlot minHeight={250} format="horizontal" />
+        <AdSlot placement="inline" minHeight={250} format="horizontal" />
 
         {others.length > 0 && (
           <section aria-labelledby="other-categories" className="mt-14">

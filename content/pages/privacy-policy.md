@@ -1,7 +1,7 @@
 ---
 title: Privacy Policy
 description: How {{siteName}} handles your data – what the tools process locally, what analytics and advertising partners collect, and the choices you have.
-updated: 2026-09-29
+updated: 2026-10-01
 ---
 
 This Privacy Policy explains what information is (and is not) collected when you use {{siteUrl}} (the "Site"), how it is used, and the choices you have. By using the Site you agree to the practices described here.
@@ -9,9 +9,9 @@ This Privacy Policy explains what information is (and is not) collected when you
 ## The short version
 
 - **Your tool inputs never leave your device.** Text you paste, numbers you enter and files you open are processed by JavaScript running in your browser. They are not uploaded to our servers and we cannot see them.
-- We use **Google Analytics** to understand how the Site is used in aggregate (which pages are visited, from which countries, on which devices).
-- The Site is funded by **advertising served by Google AdSense**, which uses cookies to show relevant ads and measure their performance.
-- You can control cookies through your browser settings and opt out of personalised advertising as described below.
+- We may use **Google Analytics** to understand how the Site is used in aggregate (which pages are visited, from which countries, on which devices).
+- The Site is funded by **advertising served by Google AdSense**. Ads may not be shown yet; when they are, Google uses cookies to show and measure them.
+- In the EEA, the UK and Switzerland, analytics and advertising storage stays switched off until you make a choice in the consent message. Everywhere else you can control cookies through your browser and opt out of personalised advertising as described below.
 
 ## Information the tools process
 
@@ -27,17 +27,17 @@ Because of this design, we have no access to the content you work with and no ab
 
 ### Server logs
 
-Our hosting provider (Vercel Inc.) may record standard technical information when a page is requested, such as your IP address, browser type, referring page, and the date and time of the request. This information is used for security, capacity planning and diagnosing problems, and is retained only for a limited period.
+Our hosting provider (Cloudflare, Inc.) may record standard technical information when a page is requested, such as your IP address, browser type, referring page, and the date and time of the request. This information is used for security, capacity planning and diagnosing problems, and is retained only for a limited period.
 
 ### Analytics
 
-We use Google Analytics 4, a web analytics service provided by Google LLC ("Google"). Google Analytics uses cookies and similar identifiers to report how visitors use the Site: pages viewed, approximate location (country or city), device and browser type, and how you arrived at the Site. IP addresses are not logged or stored by Google Analytics 4. We use these aggregated reports to decide which tools to improve and build next.
+We may use Google Analytics 4, a web analytics service provided by Google LLC ("Google"). When it is enabled, Google Analytics uses cookies and similar identifiers to report how visitors use the Site: pages viewed, approximate location (country or city), device and browser type, and how you arrived at the Site. IP addresses are not logged or stored by Google Analytics 4. We use these aggregated reports to decide which tools to improve and build next.
 
 You can prevent Google Analytics from collecting data by installing the [Google Analytics opt-out browser add-on](https://tools.google.com/dlpage/gaoptout) or by blocking analytics cookies in your browser.
 
 ## Advertising and cookies
 
-We use Google AdSense to display advertisements. Google and its partners use cookies and similar technologies to serve ads based on your prior visits to this and other websites.
+We use Google AdSense to display advertisements (ads may not be shown on every page, or at all while the Site is new). Google and its partners use cookies and similar technologies to serve ads based on your prior visits to this and other websites.
 
 - Third-party vendors, including Google, use cookies to serve ads based on a user's previous visits to this website or other websites.
 - Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to this Site and/or other sites on the Internet.
@@ -47,13 +47,13 @@ Google's advertising practices are described in the [Google Privacy & Terms – 
 
 ### Consent in the EEA, UK and Switzerland
 
-If you visit from the European Economic Area, the United Kingdom or Switzerland, you will see a consent message before any advertising or analytics cookies are set. You can accept, refuse, or manage your choices, and you can change your decision at any time using the "Privacy settings" link in the footer or the consent message.
+If you visit from the European Economic Area, the United Kingdom or Switzerland, Google Analytics and advertising storage are set to "denied" by default (Google Consent Mode) and stay that way until you make a choice. When ads are enabled, the choice is collected by Google's consent message, a Google-certified consent management platform: you can accept, refuse, or manage your choices per purpose and vendor. You can change your decision at any time using the "Privacy settings" link in the footer, which reopens that message.
 
 ## Cookies we use
 
 | Cookie type | Purpose | Set by |
 | --- | --- | --- |
-| Strictly necessary | Remembering your cookie choices | {{siteName}} / Google consent tools |
+| Strictly necessary | Remembering your consent choices | Google's consent message |
 | Analytics | Measuring how the Site is used (aggregated) | Google Analytics |
 | Advertising | Serving and measuring ads, frequency capping, fraud prevention | Google AdSense and partners |
 | Preferences (optional) | Remembering tool settings you chose | Stored locally in your browser only |
@@ -62,7 +62,7 @@ You can delete or block cookies in your browser settings. Blocking cookies does 
 
 ## Information you send us
 
-If you contact us by email, we receive your email address and whatever you include in the message. We use it only to reply to you and keep it only as long as needed to resolve your request.
+If you contact us by email, we receive your email address and whatever you include in the message. Mail sent to our address is forwarded to our inbox by Cloudflare Email Routing. We use it only to reply to you and keep it only as long as needed to resolve your request.
 
 ## Children
 
@@ -74,7 +74,7 @@ Tool guides may link to external websites (for example official documentation). 
 
 ## Data transfers
 
-Our hosting, analytics and advertising providers are based in the United States and may process information there. These providers rely on recognised legal mechanisms for international transfers, such as standard contractual clauses.
+Our hosting, email-forwarding, analytics and advertising providers are based in the United States and may process information there. These providers rely on recognised legal mechanisms for international transfers, such as standard contractual clauses.
 
 ## Your rights
 
