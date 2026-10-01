@@ -33,7 +33,7 @@ Here `1` is bold, `32` is green text, `m` closes the opening sequence, and `ESC[
 
 ### Worked example: counting the characters
 
-The message above has 44 characters: 8 for the opening fence and its line break, 21 for the text, 7 for `ESC[1;32m`, 4 for `ESC[0m`, and 4 for the final line break and closing fence. A single-code color such as `ESC[31m` costs 5 characters, so each colored section costs at least 9 once its reset is counted. The built-in server rules example is 150 characters of text and 271 as a message, with five colored sections.
+The message above has 44 characters: 8 for the opening fence and its line break, 21 for the text, 7 for `ESC[1;32m`, 4 for `ESC[0m`, and 4 for the final line break and closing fence. A single-code color such as `ESC[31m` costs 5 characters, so each colored section costs at least 9 once its reset is counted. The built-in server rules example is 150 characters of text and 211 as a message, with five colored sections.
 
 ### Why sections stop at line breaks
 

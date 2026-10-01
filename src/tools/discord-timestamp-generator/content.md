@@ -62,7 +62,7 @@ Twice a year, zones that use daylight saving skip a block of clock time or repea
 - **Skipped time.** On Sunday, March 8, 2026, clocks in America/New_York jump from 2:00 AM to 3:00 AM, so 2:30 AM never happens. The tool says so and uses 3:30 AM EDT (1772955000), one hour later than you typed.
 - **Repeated time.** On Sunday, November 1, 2026, 1:30 AM happens twice in New York. The first is 1:30 AM EDT (1793511000), the second is 1:30 AM EST (1793514600). A menu lets you choose. London has the same situation on Sunday, October 25, 2026.
 
-Countries also change their clocks on different dates. In 2026 the United Kingdom goes back on October 25 and the United States on November 1, so for that week New York is four hours behind London instead of five. A weekly Saturday 8:00 PM New York event lands at midnight in London on October 31, then at 1:00 AM a week later, which is 169 hours apart instead of 168.
+Countries also change their clocks on different dates. In 2026 the United Kingdom goes back on October 25 and the United States on November 1, so for that week New York is four hours behind London instead of five. A weekly Saturday 8:00 PM New York event lands at midnight in London as October 31 turns into November 1, then at 1:00 AM a week later, which is 169 hours apart instead of 168.
 
 Because a timestamp is one fixed moment, a recurring event needs a fresh code each time, or a bot that recalculates it. In the announcement, also say in words which zone the schedule follows, for example "every Saturday at 8 PM New York time".
 

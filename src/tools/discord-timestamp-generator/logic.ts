@@ -288,6 +288,17 @@ export function parseTimeInput(raw: string): { h: number; mi: number; s: number 
   return { h, mi, s };
 }
 
+const HOUR_MS = 3_600_000;
+
+/** The next whole hour (in the zone) after an instant, as date and time field values. */
+export function nextHour(nowMs: number, tz: string): { date: string; time: string } {
+  const offset = tzOffsetMs(nowMs, tz);
+  const local = nowMs + offset;
+  const target = local - (((local % HOUR_MS) + HOUR_MS) % HOUR_MS) + HOUR_MS - offset;
+  const wall = wallParts(target, tz);
+  return { date: formatDateInput(wall), time: formatTimeInput(wall) };
+}
+
 export type PickerOutcome =
   | { kind: "empty" }
   | { kind: "invalid"; message: string }

@@ -24,12 +24,12 @@ import {
   isStyleLetter,
   isValidTimeZone,
   isoUtc,
+  nextHour,
   parseUnixInput,
   preview,
   resolveLocal,
   resolvePicker,
   tagFor,
-  tzOffsetMs,
   wallParts,
   type SnippetLang,
   type StyleLetter,
@@ -96,15 +96,6 @@ interface Env {
 }
 
 const HOUR = 3_600_000;
-
-/** The next whole hour (in the zone) after an instant, as date and time field values. */
-function nextHour(nowMs: number, tz: string): { date: string; time: string } {
-  const offset = tzOffsetMs(nowMs, tz);
-  const local = nowMs + offset;
-  const target = local - (((local % HOUR) + HOUR) % HOUR) + HOUR - offset;
-  const wall = wallParts(target, tz);
-  return { date: formatDateInput(wall), time: formatTimeInput(wall) };
-}
 
 function shortTime(w: Wall): string {
   const hm = `${String(w.h).padStart(2, "0")}:${String(w.mi).padStart(2, "0")}`;
